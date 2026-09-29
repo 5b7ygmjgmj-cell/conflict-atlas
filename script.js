@@ -9,17 +9,39 @@
 
 const map = L.map("map", {
     worldCopyJump: true,
-    minZoom: 2
+    minZoom: 2,
+    maxZoom: 10,
+    zoomControl: true
 }).setView([20, 10], 2);
 
 
-// Add OpenStreetMap base layer
+// ==========================================
+// DARK BASEMAP
+// ==========================================
+
+// CARTO dark map tiles
+L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+    {
+        attribution:
+            "&copy; OpenStreetMap contributors &copy; CARTO",
+        subdomains: "abcd",
+        maxZoom: 20
+    }
+).addTo(map);
+
+
+// Separate label layer so labels remain visible
+// above future conflict shading.
 
 L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
     {
-        maxZoom: 18,
-        attribution: "&copy; OpenStreetMap contributors"
+        attribution:
+            "&copy; OpenStreetMap contributors &copy; CARTO",
+        subdomains: "abcd",
+        maxZoom: 20,
+        pane: "shadowPane"
     }
 ).addTo(map);
 
@@ -29,12 +51,11 @@ L.tileLayer(
 // ==========================================
 
 const categoryColors = {
-    conflict: "#dc3545",
+    conflict: "#e63946",
     humanitarian: "#f28c28",
     displacement: "#e6c229",
     disaster: "#3282d8"
 };
-
 
 const categoryNames = {
     conflict: "Armed Conflict",
@@ -54,7 +75,6 @@ const infoPanel =
 const closePanelButton =
     document.getElementById("close-panel");
 
-
 const crisisCategory =
     document.getElementById("crisis-category");
 
@@ -63,7 +83,6 @@ const crisisName =
 
 const lastUpdated =
     document.getElementById("last-updated");
-
 
 const crisisOverview =
     document.getElementById("crisis-overview");
@@ -74,20 +93,17 @@ const crisisCurrentSituation =
 const currentSituationSection =
     document.getElementById("current-situation-section");
 
-
 const crisisActors =
     document.getElementById("crisis-actors");
 
 const crisisImpact =
     document.getElementById("crisis-impact");
 
-
 const crisisTimeline =
     document.getElementById("crisis-timeline");
 
 const timelineSection =
     document.getElementById("timeline-section");
-
 
 const crisisSources =
     document.getElementById("crisis-sources");
@@ -97,36 +113,48 @@ const crisisAid =
 
 
 // ==========================================
-// KEEP TRACK OF MAP MARKERS
+// MARKER STORAGE
 // ==========================================
 
 const conflictMarkers = [];
 
 
 // ==========================================
-// CREATE MAP MARKERS
+// CREATE TEMPORARY CONFLICT MARKERS
 // ==========================================
+
+// These dots are temporary.
+//
+// Later we will replace them with geographic
+// conflict intensity areas.
 
 conflicts.forEach((conflict) => {
 
     const color =
-        categoryColors[conflict.category] || "#dc3545";
-
+        categoryColors[conflict.category] || "#e63946";
 
     const marker = L.circleMarker(
         conflict.coordinates,
         {
-            radius: 9,
-            color: color,
+            radius: 8,
+
+            color: "#ffffff",
+
+            weight: 1.5,
+
             fillColor: color,
-            fillOpacity: 0.8,
-            weight: 2
+
+            fillOpacity: 0.9
         }
     );
 
-
-    marker.bindTooltip(conflict.name);
-
+    marker.bindTooltip(
+        conflict.name,
+        {
+            direction: "top",
+            offset: [0, -8]
+        }
+    );
 
     marker.on("click", () => {
 
@@ -134,9 +162,7 @@ conflicts.forEach((conflict) => {
 
     });
 
-
     marker.addTo(map);
-
 
     conflictMarkers.push({
         marker: marker,
@@ -152,44 +178,33 @@ conflicts.forEach((conflict) => {
 
 function openConflictPanel(conflict) {
 
-
-    // --------------------------------------
     // CATEGORY
-    // --------------------------------------
 
     crisisCategory.textContent =
         categoryNames[conflict.category] ||
         conflict.category;
 
 
-    // --------------------------------------
     // NAME
-    // --------------------------------------
 
     crisisName.textContent =
         conflict.name;
 
 
-    // --------------------------------------
-    // LAST VERIFIED DATE
-    // --------------------------------------
+    // LAST VERIFIED
 
     lastUpdated.textContent =
         "Last verified: " + conflict.lastUpdated;
 
 
-    // --------------------------------------
     // OVERVIEW
-    // --------------------------------------
 
     crisisOverview.textContent =
         conflict.overview ||
         "Information not yet available.";
 
 
-    // --------------------------------------
     // CURRENT SITUATION
-    // --------------------------------------
 
     if (conflict.currentSituation) {
 
@@ -207,14 +222,14 @@ function openConflictPanel(conflict) {
     }
 
 
-    // --------------------------------------
     // KEY ACTORS
-    // --------------------------------------
 
     crisisActors.innerHTML = "";
 
-
-    if (conflict.actors && conflict.actors.length > 0) {
+    if (
+        conflict.actors &&
+        conflict.actors.length > 0
+    ) {
 
         conflict.actors.forEach((actorName) => {
 
@@ -238,21 +253,16 @@ function openConflictPanel(conflict) {
     }
 
 
-    // --------------------------------------
     // HUMANITARIAN IMPACT
-    // --------------------------------------
 
     crisisImpact.textContent =
         conflict.humanitarianImpact ||
         "Humanitarian information not yet available.";
 
 
-    // --------------------------------------
     // TIMELINE
-    // --------------------------------------
 
     crisisTimeline.innerHTML = "";
-
 
     if (
         conflict.timeline &&
@@ -261,7 +271,6 @@ function openConflictPanel(conflict) {
 
         timelineSection.style.display =
             "block";
-
 
         conflict.timeline.forEach((item) => {
 
@@ -306,7 +315,6 @@ function openConflictPanel(conflict) {
 
         });
 
-
     } else {
 
         timelineSection.style.display =
@@ -315,12 +323,9 @@ function openConflictPanel(conflict) {
     }
 
 
-    // --------------------------------------
     // SOURCES
-    // --------------------------------------
 
     crisisSources.innerHTML = "";
-
 
     if (
         conflict.sources &&
@@ -334,7 +339,6 @@ function openConflictPanel(conflict) {
 
             link.textContent =
                 source.name;
-
 
             if (
                 source.url &&
@@ -352,8 +356,7 @@ function openConflictPanel(conflict) {
 
             } else {
 
-                link.href =
-                    "#";
+                link.href = "#";
 
                 link.addEventListener(
                     "click",
@@ -366,13 +369,11 @@ function openConflictPanel(conflict) {
 
             }
 
-
             crisisSources.appendChild(
                 link
             );
 
         });
-
 
     } else {
 
@@ -382,12 +383,9 @@ function openConflictPanel(conflict) {
     }
 
 
-    // --------------------------------------
     // HUMANITARIAN AID
-    // --------------------------------------
 
     crisisAid.innerHTML = "";
-
 
     if (
         conflict.aid &&
@@ -400,10 +398,8 @@ function openConflictPanel(conflict) {
                 const link =
                     document.createElement("a");
 
-
                 link.textContent =
                     organization.name;
-
 
                 if (
                     organization.url &&
@@ -421,8 +417,7 @@ function openConflictPanel(conflict) {
 
                 } else {
 
-                    link.href =
-                        "#";
+                    link.href = "#";
 
                     link.addEventListener(
                         "click",
@@ -435,14 +430,12 @@ function openConflictPanel(conflict) {
 
                 }
 
-
                 crisisAid.appendChild(
                     link
                 );
 
             }
         );
-
 
     } else {
 
@@ -452,17 +445,14 @@ function openConflictPanel(conflict) {
     }
 
 
-    // --------------------------------------
     // OPEN PANEL
-    // --------------------------------------
 
     infoPanel.classList.add("open");
-
 }
 
 
 // ==========================================
-// CLOSE INFORMATION PANEL
+// CLOSE PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
@@ -482,16 +472,11 @@ closePanelButton.addEventListener(
 const filterButtons =
     document.querySelectorAll(".filter");
 
-
 filterButtons.forEach((button) => {
 
     button.addEventListener(
         "click",
         () => {
-
-
-            // Remove active state
-            // from every button
 
             filterButtons.forEach(
                 (otherButton) => {
@@ -503,19 +488,12 @@ filterButtons.forEach((button) => {
                 }
             );
 
-
-            // Make selected button active
-
             button.classList.add(
                 "active"
             );
 
-
             const selectedFilter =
                 button.dataset.filter;
-
-
-            // Show or hide markers
 
             conflictMarkers.forEach(
                 (item) => {
@@ -524,7 +502,6 @@ filterButtons.forEach((button) => {
                         selectedFilter === "all" ||
                         item.conflict.category ===
                         selectedFilter;
-
 
                     if (shouldShow) {
 
@@ -558,10 +535,6 @@ filterButtons.forEach((button) => {
 
                 }
             );
-
-
-            // Close panel when
-            // changing filters
 
             infoPanel.classList.remove(
                 "open"
