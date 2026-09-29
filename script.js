@@ -1,6 +1,6 @@
 // ==========================================
-// CONFLICT ATLAS — INTERACTIVE MAP
-// DOT MARKER VERSION
+// CONFLICT ATLAS — MAP
+// DOT-ONLY VERSION
 // ==========================================
 
 
@@ -11,13 +11,12 @@
 const map = L.map("map", {
     worldCopyJump: true,
     minZoom: 2,
-    maxZoom: 18,
-    zoomControl: true
+    maxZoom: 18
 }).setView([20, 10], 2);
 
 
 // ==========================================
-// OPENSTREETMAP BASEMAP
+// OPENSTREETMAP
 // ==========================================
 
 L.tileLayer(
@@ -39,7 +38,6 @@ const categoryColors = {
     displacement: "#e6c229",
     disaster: "#3282d8"
 };
-
 
 const categoryNames = {
     conflict: "Armed Conflict",
@@ -72,14 +70,10 @@ const crisisOverview =
     document.getElementById("crisis-overview");
 
 const crisisCurrentSituation =
-    document.getElementById(
-        "crisis-current-situation"
-    );
+    document.getElementById("crisis-current-situation");
 
 const currentSituationSection =
-    document.getElementById(
-        "current-situation-section"
-    );
+    document.getElementById("current-situation-section");
 
 const crisisActors =
     document.getElementById("crisis-actors");
@@ -101,41 +95,26 @@ const crisisAid =
 
 
 // ==========================================
-// MARKER STORAGE
+// CREATE DOT MARKERS
 // ==========================================
 
 const conflictMarkers = [];
 
-
-// ==========================================
-// CREATE ONE DOT PER CONFLICT
-// ==========================================
-
 conflicts.forEach((conflict) => {
 
     const color =
-        categoryColors[conflict.category] ||
-        "#dc3545";
+        categoryColors[conflict.category] || "#dc3545";
 
-
-    const marker =
-        L.circleMarker(
-            conflict.coordinates,
-            {
-                radius: 9,
-
-                color: "#ffffff",
-
-                weight: 1.5,
-
-                fillColor: color,
-
-                fillOpacity: 0.9
-            }
-        );
-
-
-    // Tooltip
+    const marker = L.circleMarker(
+        conflict.coordinates,
+        {
+            radius: 9,
+            color: "#ffffff",
+            weight: 1.5,
+            fillColor: color,
+            fillOpacity: 0.9
+        }
+    );
 
     marker.bindTooltip(
         conflict.name,
@@ -145,27 +124,11 @@ conflicts.forEach((conflict) => {
         }
     );
 
-
-    // Click
-
-    marker.on(
-        "click",
-        function() {
-
-            openConflictPanel(
-                conflict
-            );
-
-        }
-    );
-
-
-    // Add dot
+    marker.on("click", function () {
+        openConflictPanel(conflict);
+    });
 
     marker.addTo(map);
-
-
-    // Save marker
 
     conflictMarkers.push({
         marker: marker,
@@ -181,37 +144,22 @@ conflicts.forEach((conflict) => {
 
 function openConflictPanel(conflict) {
 
-
-    // CATEGORY
-
     crisisCategory.textContent =
         categoryNames[conflict.category] ||
         conflict.category;
 
-
-    // NAME
-
     crisisName.textContent =
         conflict.name;
 
-
-    // LAST VERIFIED
-
     lastUpdated.textContent =
-        "Last verified: " +
-        conflict.lastUpdated;
-
-
-    // OVERVIEW
+        "Last verified: " + conflict.lastUpdated;
 
     crisisOverview.textContent =
         conflict.overview ||
         "Information not yet available.";
 
 
-    // ======================================
     // CURRENT SITUATION
-    // ======================================
 
     if (conflict.currentSituation) {
 
@@ -223,71 +171,51 @@ function openConflictPanel(conflict) {
 
     } else {
 
-        crisisCurrentSituation.textContent =
-            "";
+        crisisCurrentSituation.textContent = "";
 
         currentSituationSection.style.display =
             "none";
-
     }
 
 
-    // ======================================
     // KEY ACTORS
-    // ======================================
 
     crisisActors.innerHTML = "";
-
 
     if (
         conflict.actors &&
         conflict.actors.length > 0
     ) {
 
-        conflict.actors.forEach(
-            function(actorName) {
+        conflict.actors.forEach((actorName) => {
 
-                const actor =
-                    document.createElement(
-                        "span"
-                    );
+            const actor =
+                document.createElement("span");
 
-                actor.className =
-                    "actor";
+            actor.className = "actor";
+            actor.textContent = actorName;
 
-                actor.textContent =
-                    actorName;
+            crisisActors.appendChild(actor);
 
-                crisisActors.appendChild(
-                    actor
-                );
-
-            }
-        );
+        });
 
     } else {
 
         crisisActors.textContent =
             "Actor information not yet available.";
-
     }
 
 
-    // ======================================
     // HUMANITARIAN IMPACT
-    // ======================================
 
     crisisImpact.textContent =
         conflict.humanitarianImpact ||
         "Humanitarian information not yet available.";
 
 
-    // ======================================
     // TIMELINE
-    // ======================================
 
     crisisTimeline.innerHTML = "";
-
 
     if (
         conflict.timeline &&
@@ -297,214 +225,158 @@ function openConflictPanel(conflict) {
         timelineSection.style.display =
             "block";
 
+        conflict.timeline.forEach((item) => {
 
-        conflict.timeline.forEach(
-            function(item) {
+            const timelineItem =
+                document.createElement("div");
 
-                const timelineItem =
-                    document.createElement(
-                        "div"
-                    );
-
-                timelineItem.className =
-                    "timeline-item";
+            timelineItem.className =
+                "timeline-item";
 
 
-                const timelineDate =
-                    document.createElement(
-                        "div"
-                    );
+            const timelineDate =
+                document.createElement("div");
 
-                timelineDate.className =
-                    "timeline-date";
+            timelineDate.className =
+                "timeline-date";
 
-                timelineDate.textContent =
-                    item.date;
+            timelineDate.textContent =
+                item.date;
 
 
-                const timelineEvent =
-                    document.createElement(
-                        "p"
-                    );
+            const timelineEvent =
+                document.createElement("p");
 
-                timelineEvent.className =
-                    "timeline-event";
+            timelineEvent.className =
+                "timeline-event";
 
-                timelineEvent.textContent =
-                    item.event;
+            timelineEvent.textContent =
+                item.event;
 
 
-                timelineItem.appendChild(
-                    timelineDate
-                );
+            timelineItem.appendChild(
+                timelineDate
+            );
 
-                timelineItem.appendChild(
-                    timelineEvent
-                );
+            timelineItem.appendChild(
+                timelineEvent
+            );
 
-                crisisTimeline.appendChild(
-                    timelineItem
-                );
+            crisisTimeline.appendChild(
+                timelineItem
+            );
 
-            }
-        );
+        });
 
     } else {
 
         timelineSection.style.display =
             "none";
-
     }
 
 
-    // ======================================
     // SOURCES
-    // ======================================
 
     crisisSources.innerHTML = "";
-
 
     if (
         conflict.sources &&
         conflict.sources.length > 0
     ) {
 
-        conflict.sources.forEach(
-            function(source) {
+        conflict.sources.forEach((source) => {
 
-                const link =
-                    document.createElement(
-                        "a"
-                    );
+            const link =
+                document.createElement("a");
 
-                link.textContent =
-                    source.name;
+            link.textContent = source.name;
 
+            if (
+                source.url &&
+                source.url !== "#"
+            ) {
 
-                if (
-                    source.url &&
-                    source.url !== "#"
-                ) {
+                link.href = source.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
 
-                    link.href =
-                        source.url;
+            } else {
 
-                    link.target =
-                        "_blank";
+                link.href = "#";
 
-                    link.rel =
-                        "noopener noreferrer";
-
-                } else {
-
-                    link.href =
-                        "#";
-
-                    link.addEventListener(
-                        "click",
-                        function(event) {
-
-                            event.preventDefault();
-
-                        }
-                    );
-
-                }
-
-
-                crisisSources.appendChild(
-                    link
+                link.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+                    }
                 );
-
             }
-        );
+
+            crisisSources.appendChild(link);
+
+        });
 
     } else {
 
         crisisSources.textContent =
             "Sources have not yet been added.";
-
     }
 
 
-    // ======================================
     // HUMANITARIAN AID
-    // ======================================
 
     crisisAid.innerHTML = "";
-
 
     if (
         conflict.aid &&
         conflict.aid.length > 0
     ) {
 
-        conflict.aid.forEach(
-            function(organization) {
+        conflict.aid.forEach((organization) => {
 
-                const link =
-                    document.createElement(
-                        "a"
-                    );
+            const link =
+                document.createElement("a");
 
-                link.textContent =
-                    organization.name;
+            link.textContent =
+                organization.name;
 
+            if (
+                organization.url &&
+                organization.url !== "#"
+            ) {
 
-                if (
-                    organization.url &&
-                    organization.url !== "#"
-                ) {
+                link.href =
+                    organization.url;
 
-                    link.href =
-                        organization.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
 
-                    link.target =
-                        "_blank";
+            } else {
 
-                    link.rel =
-                        "noopener noreferrer";
+                link.href = "#";
 
-                } else {
-
-                    link.href =
-                        "#";
-
-                    link.addEventListener(
-                        "click",
-                        function(event) {
-
-                            event.preventDefault();
-
-                        }
-                    );
-
-                }
-
-
-                crisisAid.appendChild(
-                    link
+                link.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+                    }
                 );
-
             }
-        );
+
+            crisisAid.appendChild(link);
+
+        });
 
     } else {
 
         crisisAid.textContent =
             "Humanitarian organizations have not yet been added.";
-
     }
 
 
-    // ======================================
     // OPEN PANEL
-    // ======================================
 
-    infoPanel.classList.add(
-        "open"
-    );
-
+    infoPanel.classList.add("open");
 }
 
 
@@ -514,130 +386,86 @@ function openConflictPanel(conflict) {
 
 closePanelButton.addEventListener(
     "click",
-    function() {
+    function () {
 
-        infoPanel.classList.remove(
-            "open"
-        );
+        infoPanel.classList.remove("open");
 
     }
 );
 
 
 // ==========================================
-// FILTER BUTTONS
+// FILTERS
 // ==========================================
 
 const filterButtons =
-    document.querySelectorAll(
-        ".filter"
+    document.querySelectorAll(".filter");
+
+filterButtons.forEach((button) => {
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            filterButtons.forEach(
+                (otherButton) => {
+
+                    otherButton.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+            button.classList.add("active");
+
+            const selectedFilter =
+                button.dataset.filter;
+
+
+            conflictMarkers.forEach((item) => {
+
+                const shouldShow =
+                    selectedFilter === "all" ||
+                    item.conflict.category ===
+                    selectedFilter;
+
+                if (shouldShow) {
+
+                    if (!map.hasLayer(item.marker)) {
+
+                        item.marker.addTo(map);
+                    }
+
+                } else {
+
+                    if (map.hasLayer(item.marker)) {
+
+                        map.removeLayer(item.marker);
+                    }
+                }
+
+            });
+
+            infoPanel.classList.remove("open");
+
+        }
     );
 
-
-filterButtons.forEach(
-    function(button) {
-
-        button.addEventListener(
-            "click",
-            function() {
-
-
-                // Remove active styling
-
-                filterButtons.forEach(
-                    function(otherButton) {
-
-                        otherButton.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
-
-
-                // Activate clicked filter
-
-                button.classList.add(
-                    "active"
-                );
-
-
-                const selectedFilter =
-                    button.dataset.filter;
-
-
-                // Filter dots
-
-                conflictMarkers.forEach(
-                    function(item) {
-
-                        const shouldShow =
-                            selectedFilter === "all" ||
-                            item.conflict.category ===
-                            selectedFilter;
-
-
-                        if (shouldShow) {
-
-                            if (
-                                !map.hasLayer(
-                                    item.marker
-                                )
-                            ) {
-
-                                item.marker.addTo(
-                                    map
-                                );
-
-                            }
-
-                        } else {
-
-                            if (
-                                map.hasLayer(
-                                    item.marker
-                                )
-                            ) {
-
-                                map.removeLayer(
-                                    item.marker
-                                );
-
-                            }
-
-                        }
-
-                    }
-                );
-
-
-                // Close panel
-
-                infoPanel.classList.remove(
-                    "open"
-                );
-
-            }
-        );
-
-    }
-);
+});
 
 
 // ==========================================
-// ESCAPE KEY
+// ESCAPE CLOSES PANEL
 // ==========================================
 
 document.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         if (event.key === "Escape") {
 
-            infoPanel.classList.remove(
-                "open"
-            );
-
+            infoPanel.classList.remove("open");
         }
 
     }
