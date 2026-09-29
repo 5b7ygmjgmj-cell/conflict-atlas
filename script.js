@@ -102,7 +102,7 @@ const conflictMapLayers = [];
 
 
 // ==========================================
-// FIND CONFLICT BY ID
+// FIND CONFLICT
 // ==========================================
 
 function getConflict(id) {
@@ -115,13 +115,13 @@ function getConflict(id) {
 
 
 // ==========================================
-// CREATE TEMPORARY DOTS
+// TEMPORARY DOTS
 // ==========================================
 
-// Sudan is handled separately below.
+// Sudan is now represented geographically.
 //
-// Ukraine and Israel/Gaza remain temporary
-// dots until their geographic layers are built.
+// Other conflicts remain dots until their
+// geographic layers are created.
 
 conflicts.forEach((conflict) => {
 
@@ -130,7 +130,8 @@ conflicts.forEach((conflict) => {
     }
 
     const color =
-        categoryColors[conflict.category] || "#dc3545";
+        categoryColors[conflict.category] ||
+        "#dc3545";
 
     const marker = L.circleMarker(
         conflict.coordinates,
@@ -168,20 +169,12 @@ conflicts.forEach((conflict) => {
 
 
 // ==========================================
-// SUDAN GEOGRAPHIC CONFLICT LAYER
+// SUDAN CONFLICT LAYER
 // ==========================================
 
 const sudanConflict =
     getConflict("sudan");
 
-
-// States included in this first geographic
-// version of the Sudan conflict layer.
-//
-// These represent currently documented
-// conflict-affected regions.
-//
-// They DO NOT represent territorial control.
 
 const sudanHighlightedStates = new Set([
 
@@ -198,10 +191,9 @@ const sudanHighlightedStates = new Set([
 ]);
 
 
-// OCHA Sudan polygon service.
-//
-// The service returns geographic state
-// boundaries as GeoJSON.
+// ==========================================
+// OCHA SUDAN GEOGRAPHIC DATA
+// ==========================================
 
 const sudanGeoJSONURL =
     "https://gis.unocha.org/server/rest/services/Hosted/sudan_View_Severity_2026/FeatureServer/40/query?where=1%3D1&outFields=*&returnGeometry=true&f=geojson&outSR=4326";
@@ -225,13 +217,15 @@ fetch(sudanGeoJSONURL)
 
     .then((geoData) => {
 
+
         const sudanRegionLayer =
             L.geoJSON(
                 geoData,
                 {
 
+
                     // ==================================
-                    // ONLY DISPLAY SELECTED STATES
+                    // SELECT SUDAN REGIONS
                     // ==================================
 
                     filter: function(feature) {
@@ -250,22 +244,28 @@ fetch(sudanGeoJSONURL)
 
 
                     // ==================================
-                    // REGION APPEARANCE
+                    // SOFT CONFLICT OVERLAY
                     // ==================================
 
                     style: function() {
 
                         return {
 
-                            color: "#8b1e2d",
+                            // Almost invisible internal
+                            // boundaries
 
-                            weight: 1.5,
+                            color: "#dc3545",
 
-                            opacity: 1,
+                            weight: 0.35,
+
+                            opacity: 0.25,
+
+
+                            // Transparent conflict red
 
                             fillColor: "#dc3545",
 
-                            fillOpacity: 0.55
+                            fillOpacity: 0.32
 
                         };
 
@@ -310,11 +310,15 @@ fetch(sudanGeoJSONURL)
 
                                     layer.setStyle({
 
-                                        fillOpacity: 0.75,
+                                        color: "#b51f32",
 
-                                        weight: 2.5,
+                                        weight: 0.7,
 
-                                        color: "#6e1423"
+                                        opacity: 0.6,
+
+                                        fillColor: "#dc3545",
+
+                                        fillOpacity: 0.48
 
                                     });
 
@@ -323,7 +327,7 @@ fetch(sudanGeoJSONURL)
 
 
                             // --------------------------
-                            // STOP HOVER
+                            // MOUSE LEAVES REGION
                             // --------------------------
 
                             layer.on(
@@ -332,15 +336,15 @@ fetch(sudanGeoJSONURL)
 
                                     layer.setStyle({
 
-                                        color: "#8b1e2d",
+                                        color: "#dc3545",
 
-                                        weight: 1.5,
+                                        weight: 0.35,
 
-                                        opacity: 1,
+                                        opacity: 0.25,
 
                                         fillColor: "#dc3545",
 
-                                        fillOpacity: 0.55
+                                        fillOpacity: 0.32
 
                                     });
 
@@ -349,7 +353,7 @@ fetch(sudanGeoJSONURL)
 
 
                             // --------------------------
-                            // CLICK REGION
+                            // CLICK
                             // --------------------------
 
                             layer.on(
@@ -373,12 +377,8 @@ fetch(sudanGeoJSONURL)
             );
 
 
-        // Add Sudan regions to map
-
         sudanRegionLayer.addTo(map);
 
-
-        // Store for filtering
 
         conflictMapLayers.push({
 
@@ -395,6 +395,11 @@ fetch(sudanGeoJSONURL)
 
     })
 
+
+    // ======================================
+    // FALLBACK
+    // ======================================
+
     .catch((error) => {
 
         console.error(
@@ -403,12 +408,8 @@ fetch(sudanGeoJSONURL)
         );
 
 
-        // ==================================
-        // FALLBACK SUDAN DOT
-        // ==================================
-
-        // If OCHA geographic data ever fails,
-        // Sudan still remains accessible.
+        // If the geographic service fails,
+        // display the original Sudan marker.
 
         if (sudanConflict) {
 
@@ -465,27 +466,35 @@ fetch(sudanGeoJSONURL)
 function openConflictPanel(conflict) {
 
 
+    // ======================================
     // CATEGORY
+    // ======================================
 
     crisisCategory.textContent =
         categoryNames[conflict.category] ||
         conflict.category;
 
 
+    // ======================================
     // NAME
+    // ======================================
 
     crisisName.textContent =
         conflict.name;
 
 
-    // LAST VERIFIED DATE
+    // ======================================
+    // LAST VERIFIED
+    // ======================================
 
     lastUpdated.textContent =
         "Last verified: " +
         conflict.lastUpdated;
 
 
+    // ======================================
     // OVERVIEW
+    // ======================================
 
     crisisOverview.textContent =
         conflict.overview ||
@@ -773,7 +782,7 @@ function openConflictPanel(conflict) {
 
 
 // ==========================================
-// CLOSE INFORMATION PANEL
+// CLOSE PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
@@ -789,7 +798,7 @@ closePanelButton.addEventListener(
 
 
 // ==========================================
-// FILTER BUTTONS
+// FILTERS
 // ==========================================
 
 const filterButtons =
@@ -803,8 +812,6 @@ filterButtons.forEach((button) => {
         () => {
 
 
-            // Remove active state
-
             filterButtons.forEach(
                 (otherButton) => {
 
@@ -816,8 +823,6 @@ filterButtons.forEach((button) => {
             );
 
 
-            // Activate selected button
-
             button.classList.add(
                 "active"
             );
@@ -826,8 +831,6 @@ filterButtons.forEach((button) => {
             const selectedFilter =
                 button.dataset.filter;
 
-
-            // Show / hide map layers
 
             conflictMapLayers.forEach(
                 (item) => {
@@ -883,7 +886,7 @@ filterButtons.forEach((button) => {
 
 
 // ==========================================
-// ESCAPE KEY CLOSES PANEL
+// ESCAPE CLOSES PANEL
 // ==========================================
 
 document.addEventListener(
