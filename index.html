@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Conflict Atlas</title>
+
+    <!-- Leaflet map styling -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- Our website styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Conflict Atlas</h1>
+            <p>Understand the world's conflicts. Support the people affected.</p>
+        </div>
+
+        <nav>
+            <button class="filter active" data-filter="all">All</button>
+            <button class="filter" data-filter="conflict">Armed Conflict</button>
+            <button class="filter" data-filter="humanitarian">Humanitarian Crisis</button>
+            <button class="filter" data-filter="displacement">Displacement</button>
+            <button class="filter" data-filter="disaster">Natural Disaster</button>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="map-section">
+
+            <div id="map"></div>
+
+            <div class="legend">
+                <h3>Map Legend</h3>
+
+                <div>
+                    <span class="legend-color conflict-color"></span>
+                    Armed Conflict
+                </div>
+
+                <div>
+                    <span class="legend-color humanitarian-color"></span>
+                    Humanitarian Crisis
+                </div>
+
+                <div>
+                    <span class="legend-color displacement-color"></span>
+                    Displacement Crisis
+                </div>
+
+                <div>
+                    <span class="legend-color disaster-color"></span>
+                    Natural Disaster
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Opens when someone selects a crisis -->
+        <aside id="info-panel" class="info-panel">
+
+            <button
+                id="close-panel"
+                class="close-button"
+                aria-label="Close information panel"
+            >
+                ×
+            </button>
+
+            <p id="crisis-category" class="category-label"></p>
+
+            <h2 id="crisis-name">Select a location</h2>
+
+            <p id="last-updated"></p>
+
+            <section>
+                <h3>Overview</h3>
+                <p id="crisis-overview">
+                    Select a highlighted location on the map to learn more.
+                </p>
+            </section>
+
+            <section>
+                <h3>Key Actors</h3>
+                <div id="crisis-actors"></div>
+            </section>
+
+            <section>
+                <h3>Humanitarian Impact</h3>
+                <p id="crisis-impact"></p>
+            </section>
+
+            <section>
+                <h3>Sources</h3>
+                <div id="crisis-sources"></div>
+            </section>
+
+            <section class="aid-section">
+                <h3>Humanitarian Aid</h3>
+
+                <p>
+                    Organizations listed here provide humanitarian assistance
+                    related to this crisis.
+                </p>
+
+                <div id="crisis-aid"></div>
+            </section>
+
+        </aside>
+
+    </main>
+
+    <footer>
+        <p>
+            Conflict Atlas is an independent informational project.
+            Information is presented using cited sources and does not represent
+            support for any government, political organization, or armed group.
+        </p>
+    </footer>
+
+    <!-- Leaflet mapping library -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Our conflict database -->
+    <script src="conflicts.js"></script>
+
+    <!-- Our map and website interactions -->
+    <script src="script.js"></script>
+
+</body>
+</html>
