@@ -1,10 +1,11 @@
 // ==========================================
 // CONFLICT ATLAS — INTERACTIVE MAP
+// DOT MARKER VERSION
 // ==========================================
 
 
 // ==========================================
-// CREATE WORLD MAP
+// CREATE MAP
 // ==========================================
 
 const map = L.map("map", {
@@ -29,7 +30,7 @@ L.tileLayer(
 
 
 // ==========================================
-// CATEGORY COLORS
+// CATEGORY SETTINGS
 // ==========================================
 
 const categoryColors = {
@@ -49,7 +50,7 @@ const categoryNames = {
 
 
 // ==========================================
-// HTML ELEMENTS
+// PAGE ELEMENTS
 // ==========================================
 
 const infoPanel =
@@ -71,10 +72,14 @@ const crisisOverview =
     document.getElementById("crisis-overview");
 
 const crisisCurrentSituation =
-    document.getElementById("crisis-current-situation");
+    document.getElementById(
+        "crisis-current-situation"
+    );
 
 const currentSituationSection =
-    document.getElementById("current-situation-section");
+    document.getElementById(
+        "current-situation-section"
+    );
 
 const crisisActors =
     document.getElementById("crisis-actors");
@@ -96,14 +101,14 @@ const crisisAid =
 
 
 // ==========================================
-// STORE MAP MARKERS
+// MARKER STORAGE
 // ==========================================
 
 const conflictMarkers = [];
 
 
 // ==========================================
-// CREATE CONFLICT MARKERS
+// CREATE ONE DOT PER CONFLICT
 // ==========================================
 
 conflicts.forEach((conflict) => {
@@ -130,9 +135,7 @@ conflicts.forEach((conflict) => {
         );
 
 
-    // ======================================
-    // TOOLTIP
-    // ======================================
+    // Tooltip
 
     marker.bindTooltip(
         conflict.name,
@@ -143,43 +146,11 @@ conflicts.forEach((conflict) => {
     );
 
 
-    // ======================================
-    // HOVER EFFECT
-    // ======================================
-
-    marker.on(
-        "mouseover",
-        () => {
-
-            marker.setStyle({
-                radius: 11,
-                fillOpacity: 1
-            });
-
-        }
-    );
-
-
-    marker.on(
-        "mouseout",
-        () => {
-
-            marker.setStyle({
-                radius: 9,
-                fillOpacity: 0.9
-            });
-
-        }
-    );
-
-
-    // ======================================
-    // CLICK
-    // ======================================
+    // Click
 
     marker.on(
         "click",
-        () => {
+        function() {
 
             openConflictPanel(
                 conflict
@@ -189,12 +160,12 @@ conflicts.forEach((conflict) => {
     );
 
 
-    // Add marker to map
+    // Add dot
 
     marker.addTo(map);
 
 
-    // Save marker for filters
+    // Save marker
 
     conflictMarkers.push({
         marker: marker,
@@ -211,35 +182,27 @@ conflicts.forEach((conflict) => {
 function openConflictPanel(conflict) {
 
 
-    // ======================================
     // CATEGORY
-    // ======================================
 
     crisisCategory.textContent =
         categoryNames[conflict.category] ||
         conflict.category;
 
 
-    // ======================================
-    // CONFLICT NAME
-    // ======================================
+    // NAME
 
     crisisName.textContent =
         conflict.name;
 
 
-    // ======================================
     // LAST VERIFIED
-    // ======================================
 
     lastUpdated.textContent =
         "Last verified: " +
         conflict.lastUpdated;
 
 
-    // ======================================
     // OVERVIEW
-    // ======================================
 
     crisisOverview.textContent =
         conflict.overview ||
@@ -260,6 +223,9 @@ function openConflictPanel(conflict) {
 
     } else {
 
+        crisisCurrentSituation.textContent =
+            "";
+
         currentSituationSection.style.display =
             "none";
 
@@ -279,10 +245,12 @@ function openConflictPanel(conflict) {
     ) {
 
         conflict.actors.forEach(
-            (actorName) => {
+            function(actorName) {
 
                 const actor =
-                    document.createElement("span");
+                    document.createElement(
+                        "span"
+                    );
 
                 actor.className =
                     "actor";
@@ -331,17 +299,21 @@ function openConflictPanel(conflict) {
 
 
         conflict.timeline.forEach(
-            (item) => {
+            function(item) {
 
                 const timelineItem =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 timelineItem.className =
                     "timeline-item";
 
 
                 const timelineDate =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 timelineDate.className =
                     "timeline-date";
@@ -351,7 +323,9 @@ function openConflictPanel(conflict) {
 
 
                 const timelineEvent =
-                    document.createElement("p");
+                    document.createElement(
+                        "p"
+                    );
 
                 timelineEvent.className =
                     "timeline-event";
@@ -396,10 +370,12 @@ function openConflictPanel(conflict) {
     ) {
 
         conflict.sources.forEach(
-            (source) => {
+            function(source) {
 
                 const link =
-                    document.createElement("a");
+                    document.createElement(
+                        "a"
+                    );
 
                 link.textContent =
                     source.name;
@@ -421,11 +397,12 @@ function openConflictPanel(conflict) {
 
                 } else {
 
-                    link.href = "#";
+                    link.href =
+                        "#";
 
                     link.addEventListener(
                         "click",
-                        (event) => {
+                        function(event) {
 
                             event.preventDefault();
 
@@ -463,10 +440,12 @@ function openConflictPanel(conflict) {
     ) {
 
         conflict.aid.forEach(
-            (organization) => {
+            function(organization) {
 
                 const link =
-                    document.createElement("a");
+                    document.createElement(
+                        "a"
+                    );
 
                 link.textContent =
                     organization.name;
@@ -488,11 +467,12 @@ function openConflictPanel(conflict) {
 
                 } else {
 
-                    link.href = "#";
+                    link.href =
+                        "#";
 
                     link.addEventListener(
                         "click",
-                        (event) => {
+                        function(event) {
 
                             event.preventDefault();
 
@@ -529,12 +509,12 @@ function openConflictPanel(conflict) {
 
 
 // ==========================================
-// CLOSE INFORMATION PANEL
+// CLOSE PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
     "click",
-    () => {
+    function() {
 
         infoPanel.classList.remove(
             "open"
@@ -555,19 +535,17 @@ const filterButtons =
 
 
 filterButtons.forEach(
-    (button) => {
+    function(button) {
 
         button.addEventListener(
             "click",
-            () => {
+            function() {
 
 
-                // --------------------------
-                // ACTIVE BUTTON
-                // --------------------------
+                // Remove active styling
 
                 filterButtons.forEach(
-                    (otherButton) => {
+                    function(otherButton) {
 
                         otherButton.classList.remove(
                             "active"
@@ -576,6 +554,8 @@ filterButtons.forEach(
                     }
                 );
 
+
+                // Activate clicked filter
 
                 button.classList.add(
                     "active"
@@ -586,12 +566,10 @@ filterButtons.forEach(
                     button.dataset.filter;
 
 
-                // --------------------------
-                // FILTER MARKERS
-                // --------------------------
+                // Filter dots
 
                 conflictMarkers.forEach(
-                    (item) => {
+                    function(item) {
 
                         const shouldShow =
                             selectedFilter === "all" ||
@@ -633,8 +611,7 @@ filterButtons.forEach(
                 );
 
 
-                // Close information panel
-                // when changing filters
+                // Close panel
 
                 infoPanel.classList.remove(
                     "open"
@@ -648,17 +625,14 @@ filterButtons.forEach(
 
 
 // ==========================================
-// ESCAPE KEY CLOSES PANEL
+// ESCAPE KEY
 // ==========================================
 
 document.addEventListener(
     "keydown",
-    (event) => {
+    function(event) {
 
-        if (
-            event.key ===
-            "Escape"
-        ) {
+        if (event.key === "Escape") {
 
             infoPanel.classList.remove(
                 "open"
