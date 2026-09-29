@@ -12,11 +12,15 @@
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-    <!-- Our website styling -->
+    <!-- Conflict Atlas styling -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
 
     <header>
         <div class="brand">
@@ -25,13 +29,32 @@
         </div>
 
         <nav>
-            <button class="filter active" data-filter="all">All</button>
-            <button class="filter" data-filter="conflict">Armed Conflict</button>
-            <button class="filter" data-filter="humanitarian">Humanitarian Crisis</button>
-            <button class="filter" data-filter="displacement">Displacement</button>
-            <button class="filter" data-filter="disaster">Natural Disaster</button>
+            <button class="filter active" data-filter="all">
+                All
+            </button>
+
+            <button class="filter" data-filter="conflict">
+                Armed Conflict
+            </button>
+
+            <button class="filter" data-filter="humanitarian">
+                Humanitarian Crisis
+            </button>
+
+            <button class="filter" data-filter="displacement">
+                Displacement
+            </button>
+
+            <button class="filter" data-filter="disaster">
+                Natural Disaster
+            </button>
         </nav>
     </header>
+
+
+    <!-- ==========================================
+         MAIN MAP AREA
+         ========================================== -->
 
     <main>
 
@@ -39,7 +62,11 @@
 
             <div id="map"></div>
 
+
+            <!-- MAP LEGEND -->
+
             <div class="legend">
+
                 <h3>Map Legend</h3>
 
                 <div>
@@ -61,11 +88,16 @@
                     <span class="legend-color disaster-color"></span>
                     Natural Disaster
                 </div>
+
             </div>
 
         </section>
 
-        <!-- Opens when someone selects a crisis -->
+
+        <!-- ==========================================
+             CRISIS INFORMATION PANEL
+             ========================================== -->
+
         <aside id="info-panel" class="info-panel">
 
             <button
@@ -76,64 +108,152 @@
                 ×
             </button>
 
+
+            <!-- CATEGORY -->
+
             <p id="crisis-category" class="category-label"></p>
 
-            <h2 id="crisis-name">Select a location</h2>
+
+            <!-- CRISIS NAME -->
+
+            <h2 id="crisis-name">
+                Select a location
+            </h2>
+
+
+            <!-- LAST VERIFIED DATE -->
 
             <p id="last-updated"></p>
 
+
+            <!-- OVERVIEW -->
+
             <section>
                 <h3>Overview</h3>
+
                 <p id="crisis-overview">
                     Select a highlighted location on the map to learn more.
                 </p>
             </section>
 
+
+            <!-- CURRENT SITUATION -->
+
+            <section id="current-situation-section">
+                <h3>Current Situation</h3>
+
+                <p id="crisis-current-situation"></p>
+            </section>
+
+
+            <!-- KEY ACTORS -->
+
             <section>
                 <h3>Key Actors</h3>
+
                 <div id="crisis-actors"></div>
             </section>
 
+
+            <!-- HUMANITARIAN IMPACT -->
+
             <section>
                 <h3>Humanitarian Impact</h3>
+
                 <p id="crisis-impact"></p>
             </section>
 
-            <section>
-                <h3>Sources</h3>
-                <div id="crisis-sources"></div>
+
+            <!-- TIMELINE -->
+
+            <section id="timeline-section">
+
+                <h3>Timeline</h3>
+
+                <div id="crisis-timeline"></div>
+
             </section>
 
+
+            <!-- SOURCES -->
+
+            <section>
+
+                <h3>Sources</h3>
+
+                <p class="section-description">
+                    Sources are provided so readers can verify the information
+                    presented in this entry.
+                </p>
+
+                <div id="crisis-sources"></div>
+
+            </section>
+
+
+            <!-- HUMANITARIAN AID -->
+
             <section class="aid-section">
+
                 <h3>Humanitarian Aid</h3>
 
                 <p>
                     Organizations listed here provide humanitarian assistance
-                    related to this crisis.
+                    related to this crisis. Conflict Atlas does not collect
+                    donations.
                 </p>
 
                 <div id="crisis-aid"></div>
+
+            </section>
+
+
+            <!-- EDITORIAL NOTE -->
+
+            <section class="editorial-note">
+
+                <h3>About This Entry</h3>
+
+                <p>
+                    Conflict Atlas aims to present factual information using
+                    cited sources. Listing an actor, government, organization,
+                    or armed group does not represent support for that entity.
+                    Information may change as events develop.
+                </p>
+
             </section>
 
         </aside>
 
     </main>
 
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+
     <footer>
+
         <p>
             Conflict Atlas is an independent informational project.
             Information is presented using cited sources and does not represent
             support for any government, political organization, or armed group.
         </p>
+
     </footer>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
 
     <!-- Leaflet mapping library -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Our conflict database -->
+    <!-- Conflict Atlas database -->
     <script src="conflicts.js"></script>
 
-    <!-- Our map and website interactions -->
+    <!-- Map and website interactions -->
     <script src="script.js"></script>
 
 </body>
