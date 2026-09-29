@@ -39,6 +39,7 @@ const categoryColors = {
     disaster: "#3282d8"
 };
 
+
 const categoryNames = {
     conflict: "Armed Conflict",
     humanitarian: "Humanitarian Crisis",
@@ -95,54 +96,43 @@ const crisisAid =
 
 
 // ==========================================
-// MAP LAYERS
+// STORE MAP MARKERS
 // ==========================================
 
-const conflictMapLayers = [];
-
-
-// ==========================================
-// FIND CONFLICT
-// ==========================================
-
-function getConflict(id) {
-
-    return conflicts.find(
-        (conflict) => conflict.id === id
-    );
-
-}
+const conflictMarkers = [];
 
 
 // ==========================================
-// TEMPORARY DOTS
+// CREATE CONFLICT MARKERS
 // ==========================================
-
-// Sudan is now represented geographically.
-//
-// Other conflicts remain dots until their
-// geographic layers are created.
 
 conflicts.forEach((conflict) => {
-
-    if (conflict.id === "sudan") {
-        return;
-    }
 
     const color =
         categoryColors[conflict.category] ||
         "#dc3545";
 
-    const marker = L.circleMarker(
-        conflict.coordinates,
-        {
-            radius: 9,
-            color: color,
-            fillColor: color,
-            fillOpacity: 0.8,
-            weight: 2
-        }
-    );
+
+    const marker =
+        L.circleMarker(
+            conflict.coordinates,
+            {
+                radius: 9,
+
+                color: "#ffffff",
+
+                weight: 1.5,
+
+                fillColor: color,
+
+                fillOpacity: 0.9
+            }
+        );
+
+
+    // ======================================
+    // TOOLTIP
+    // ======================================
 
     marker.bindTooltip(
         conflict.name,
@@ -152,311 +142,66 @@ conflicts.forEach((conflict) => {
         }
     );
 
-    marker.on("click", () => {
-
-        openConflictPanel(conflict);
-
-    });
-
-    marker.addTo(map);
-
-    conflictMapLayers.push({
-        layer: marker,
-        category: conflict.category
-    });
-
-});
-
-
-// ==========================================
-// SUDAN CONFLICT LAYER
-// ==========================================
-
-const sudanConflict =
-    getConflict("sudan");
-
-
-const sudanHighlightedStates = new Set([
-
-    "North Darfur",
-    "South Darfur",
-    "West Darfur",
-    "Central Darfur",
-    "East Darfur",
-
-    "North Kordofan",
-    "South Kordofan",
-    "West Kordofan"
-
-]);
-
-
-// ==========================================
-// OCHA SUDAN GEOGRAPHIC DATA
-// ==========================================
-
-const sudanGeoJSONURL =
-    "https://gis.unocha.org/server/rest/services/Hosted/sudan_View_Severity_2026/FeatureServer/40/query?where=1%3D1&outFields=*&returnGeometry=true&f=geojson&outSR=4326";
-
-
-fetch(sudanGeoJSONURL)
-
-    .then((response) => {
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Sudan geographic data could not be loaded."
-            );
-
-        }
-
-        return response.json();
-
-    })
-
-    .then((geoData) => {
-
-
-        const sudanRegionLayer =
-            L.geoJSON(
-                geoData,
-                {
-
-
-                    // ==================================
-                    // SELECT SUDAN REGIONS
-                    // ==================================
-
-                    filter: function(feature) {
-
-                        const properties =
-                            feature.properties || {};
-
-                        const stateName =
-                            properties.state_en;
-
-                        return sudanHighlightedStates.has(
-                            stateName
-                        );
-
-                    },
-
-
-                    // ==================================
-                    // SOFT CONFLICT OVERLAY
-                    // ==================================
-
-                    style: function() {
-
-                        return {
-
-                            // Almost invisible internal
-                            // boundaries
-
-                            color: "#dc3545",
-
-                            weight: 0.35,
-
-                            opacity: 0.25,
-
-
-                            // Transparent conflict red
-
-                            fillColor: "#dc3545",
-
-                            fillOpacity: 0.32
-
-                        };
-
-                    },
-
-
-                    // ==================================
-                    // REGION INTERACTION
-                    // ==================================
-
-                    onEachFeature:
-                        function(feature, layer) {
-
-                            const properties =
-                                feature.properties || {};
-
-                            const stateName =
-                                properties.state_en ||
-                                "Sudan";
-
-
-                            // --------------------------
-                            // TOOLTIP
-                            // --------------------------
-
-                            layer.bindTooltip(
-                                stateName +
-                                " — War in Sudan",
-                                {
-                                    sticky: true
-                                }
-                            );
-
-
-                            // --------------------------
-                            // HOVER
-                            // --------------------------
-
-                            layer.on(
-                                "mouseover",
-                                function() {
-
-                                    layer.setStyle({
-
-                                        color: "#b51f32",
-
-                                        weight: 0.7,
-
-                                        opacity: 0.6,
-
-                                        fillColor: "#dc3545",
-
-                                        fillOpacity: 0.48
-
-                                    });
-
-                                }
-                            );
-
-
-                            // --------------------------
-                            // MOUSE LEAVES REGION
-                            // --------------------------
-
-                            layer.on(
-                                "mouseout",
-                                function() {
-
-                                    layer.setStyle({
-
-                                        color: "#dc3545",
-
-                                        weight: 0.35,
-
-                                        opacity: 0.25,
-
-                                        fillColor: "#dc3545",
-
-                                        fillOpacity: 0.32
-
-                                    });
-
-                                }
-                            );
-
-
-                            // --------------------------
-                            // CLICK
-                            // --------------------------
-
-                            layer.on(
-                                "click",
-                                function() {
-
-                                    if (sudanConflict) {
-
-                                        openConflictPanel(
-                                            sudanConflict
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-                        }
-
-                }
-            );
-
-
-        sudanRegionLayer.addTo(map);
-
-
-        conflictMapLayers.push({
-
-            layer: sudanRegionLayer,
-
-            category: "conflict"
-
-        });
-
-
-        console.log(
-            "Sudan geographic conflict layer loaded."
-        );
-
-    })
-
 
     // ======================================
-    // FALLBACK
+    // HOVER EFFECT
     // ======================================
 
-    .catch((error) => {
+    marker.on(
+        "mouseover",
+        () => {
 
-        console.error(
-            "Conflict Atlas Sudan layer error:",
-            error
-        );
-
-
-        // If the geographic service fails,
-        // display the original Sudan marker.
-
-        if (sudanConflict) {
-
-            const fallbackMarker =
-                L.circleMarker(
-                    sudanConflict.coordinates,
-                    {
-                        radius: 9,
-                        color: "#dc3545",
-                        fillColor: "#dc3545",
-                        fillOpacity: 0.8,
-                        weight: 2
-                    }
-                );
-
-
-            fallbackMarker.bindTooltip(
-                sudanConflict.name
-            );
-
-
-            fallbackMarker.on(
-                "click",
-                () => {
-
-                    openConflictPanel(
-                        sudanConflict
-                    );
-
-                }
-            );
-
-
-            fallbackMarker.addTo(map);
-
-
-            conflictMapLayers.push({
-
-                layer: fallbackMarker,
-
-                category: "conflict"
-
+            marker.setStyle({
+                radius: 11,
+                fillOpacity: 1
             });
 
         }
+    );
 
+
+    marker.on(
+        "mouseout",
+        () => {
+
+            marker.setStyle({
+                radius: 9,
+                fillOpacity: 0.9
+            });
+
+        }
+    );
+
+
+    // ======================================
+    // CLICK
+    // ======================================
+
+    marker.on(
+        "click",
+        () => {
+
+            openConflictPanel(
+                conflict
+            );
+
+        }
+    );
+
+
+    // Add marker to map
+
+    marker.addTo(map);
+
+
+    // Save marker for filters
+
+    conflictMarkers.push({
+        marker: marker,
+        conflict: conflict
     });
+
+});
 
 
 // ==========================================
@@ -476,7 +221,7 @@ function openConflictPanel(conflict) {
 
 
     // ======================================
-    // NAME
+    // CONFLICT NAME
     // ======================================
 
     crisisName.textContent =
@@ -776,13 +521,15 @@ function openConflictPanel(conflict) {
     // OPEN PANEL
     // ======================================
 
-    infoPanel.classList.add("open");
+    infoPanel.classList.add(
+        "open"
+    );
 
 }
 
 
 // ==========================================
-// CLOSE PANEL
+// CLOSE INFORMATION PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
@@ -798,102 +545,120 @@ closePanelButton.addEventListener(
 
 
 // ==========================================
-// FILTERS
+// FILTER BUTTONS
 // ==========================================
 
 const filterButtons =
-    document.querySelectorAll(".filter");
+    document.querySelectorAll(
+        ".filter"
+    );
 
 
-filterButtons.forEach((button) => {
+filterButtons.forEach(
+    (button) => {
 
-    button.addEventListener(
-        "click",
-        () => {
-
-
-            filterButtons.forEach(
-                (otherButton) => {
-
-                    otherButton.classList.remove(
-                        "active"
-                    );
-
-                }
-            );
+        button.addEventListener(
+            "click",
+            () => {
 
 
-            button.classList.add(
-                "active"
-            );
+                // --------------------------
+                // ACTIVE BUTTON
+                // --------------------------
+
+                filterButtons.forEach(
+                    (otherButton) => {
+
+                        otherButton.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
 
 
-            const selectedFilter =
-                button.dataset.filter;
+                button.classList.add(
+                    "active"
+                );
 
 
-            conflictMapLayers.forEach(
-                (item) => {
-
-                    const shouldShow =
-                        selectedFilter === "all" ||
-                        item.category ===
-                        selectedFilter;
+                const selectedFilter =
+                    button.dataset.filter;
 
 
-                    if (shouldShow) {
+                // --------------------------
+                // FILTER MARKERS
+                // --------------------------
 
-                        if (
-                            !map.hasLayer(
-                                item.layer
-                            )
-                        ) {
+                conflictMarkers.forEach(
+                    (item) => {
 
-                            item.layer.addTo(
-                                map
-                            );
+                        const shouldShow =
+                            selectedFilter === "all" ||
+                            item.conflict.category ===
+                            selectedFilter;
 
-                        }
 
-                    } else {
+                        if (shouldShow) {
 
-                        if (
-                            map.hasLayer(
-                                item.layer
-                            )
-                        ) {
+                            if (
+                                !map.hasLayer(
+                                    item.marker
+                                )
+                            ) {
 
-                            map.removeLayer(
-                                item.layer
-                            );
+                                item.marker.addTo(
+                                    map
+                                );
+
+                            }
+
+                        } else {
+
+                            if (
+                                map.hasLayer(
+                                    item.marker
+                                )
+                            ) {
+
+                                map.removeLayer(
+                                    item.marker
+                                );
+
+                            }
 
                         }
 
                     }
-
-                }
-            );
+                );
 
 
-            infoPanel.classList.remove(
-                "open"
-            );
+                // Close information panel
+                // when changing filters
 
-        }
-    );
+                infoPanel.classList.remove(
+                    "open"
+                );
 
-});
+            }
+        );
+
+    }
+);
 
 
 // ==========================================
-// ESCAPE CLOSES PANEL
+// ESCAPE KEY CLOSES PANEL
 // ==========================================
 
 document.addEventListener(
     "keydown",
     (event) => {
 
-        if (event.key === "Escape") {
+        if (
+            event.key ===
+            "Escape"
+        ) {
 
             infoPanel.classList.remove(
                 "open"
