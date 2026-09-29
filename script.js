@@ -1,6 +1,6 @@
 // ==========================================
 // CONFLICT ATLAS — MAP
-// DOT-ONLY VERSION
+// MULTI-CATEGORY VERSION
 // ==========================================
 
 
@@ -39,6 +39,7 @@ const categoryColors = {
     disaster: "#3282d8"
 };
 
+
 const categoryNames = {
     conflict: "Armed Conflict",
     humanitarian: "Humanitarian Crisis",
@@ -70,10 +71,14 @@ const crisisOverview =
     document.getElementById("crisis-overview");
 
 const crisisCurrentSituation =
-    document.getElementById("crisis-current-situation");
+    document.getElementById(
+        "crisis-current-situation"
+    );
 
 const currentSituationSection =
-    document.getElementById("current-situation-section");
+    document.getElementById(
+        "current-situation-section"
+    );
 
 const crisisActors =
     document.getElementById("crisis-actors");
@@ -95,15 +100,26 @@ const crisisAid =
 
 
 // ==========================================
-// CREATE DOT MARKERS
+// MARKER STORAGE
 // ==========================================
 
 const conflictMarkers = [];
 
+
+// ==========================================
+// CREATE MARKERS
+// ==========================================
+
 conflicts.forEach((conflict) => {
 
+    const primaryCategory =
+        conflict.primaryCategory ||
+        conflict.categories[0];
+
     const color =
-        categoryColors[conflict.category] || "#dc3545";
+        categoryColors[primaryCategory] ||
+        "#dc3545";
+
 
     const marker = L.circleMarker(
         conflict.coordinates,
@@ -116,6 +132,7 @@ conflicts.forEach((conflict) => {
         }
     );
 
+
     marker.bindTooltip(
         conflict.name,
         {
@@ -124,11 +141,21 @@ conflicts.forEach((conflict) => {
         }
     );
 
-    marker.on("click", function () {
-        openConflictPanel(conflict);
-    });
+
+    marker.on(
+        "click",
+        function () {
+
+            openConflictPanel(
+                conflict
+            );
+
+        }
+    );
+
 
     marker.addTo(map);
+
 
     conflictMarkers.push({
         marker: marker,
@@ -144,22 +171,54 @@ conflicts.forEach((conflict) => {
 
 function openConflictPanel(conflict) {
 
+
+    // ======================================
+    // CATEGORIES
+    // ======================================
+
+    const readableCategories =
+        conflict.categories
+            .map(
+                (category) =>
+                    categoryNames[category] ||
+                    category
+            )
+            .join(" • ");
+
+
     crisisCategory.textContent =
-        categoryNames[conflict.category] ||
-        conflict.category;
+        readableCategories;
+
+
+    // ======================================
+    // NAME
+    // ======================================
 
     crisisName.textContent =
         conflict.name;
 
+
+    // ======================================
+    // LAST VERIFIED
+    // ======================================
+
     lastUpdated.textContent =
-        "Last verified: " + conflict.lastUpdated;
+        "Last verified: " +
+        conflict.lastUpdated;
+
+
+    // ======================================
+    // OVERVIEW
+    // ======================================
 
     crisisOverview.textContent =
         conflict.overview ||
         "Information not yet available.";
 
 
+    // ======================================
     // CURRENT SITUATION
+    // ======================================
 
     if (conflict.currentSituation) {
 
@@ -171,51 +230,71 @@ function openConflictPanel(conflict) {
 
     } else {
 
-        crisisCurrentSituation.textContent = "";
+        crisisCurrentSituation.textContent =
+            "";
 
         currentSituationSection.style.display =
             "none";
+
     }
 
 
+    // ======================================
     // KEY ACTORS
+    // ======================================
 
     crisisActors.innerHTML = "";
+
 
     if (
         conflict.actors &&
         conflict.actors.length > 0
     ) {
 
-        conflict.actors.forEach((actorName) => {
+        conflict.actors.forEach(
+            (actorName) => {
 
-            const actor =
-                document.createElement("span");
+                const actor =
+                    document.createElement(
+                        "span"
+                    );
 
-            actor.className = "actor";
-            actor.textContent = actorName;
+                actor.className =
+                    "actor";
 
-            crisisActors.appendChild(actor);
+                actor.textContent =
+                    actorName;
 
-        });
+                crisisActors.appendChild(
+                    actor
+                );
+
+            }
+        );
 
     } else {
 
         crisisActors.textContent =
             "Actor information not yet available.";
+
     }
 
 
+    // ======================================
     // HUMANITARIAN IMPACT
+    // ======================================
 
     crisisImpact.textContent =
         conflict.humanitarianImpact ||
         "Humanitarian information not yet available.";
 
 
+    // ======================================
     // TIMELINE
+    // ======================================
 
     crisisTimeline.innerHTML = "";
+
 
     if (
         conflict.timeline &&
@@ -225,158 +304,168 @@ function openConflictPanel(conflict) {
         timelineSection.style.display =
             "block";
 
-        conflict.timeline.forEach((item) => {
 
-            const timelineItem =
-                document.createElement("div");
+        conflict.timeline.forEach(
+            (item) => {
 
-            timelineItem.className =
-                "timeline-item";
+                const timelineItem =
+                    document.createElement(
+                        "div"
+                    );
 
-
-            const timelineDate =
-                document.createElement("div");
-
-            timelineDate.className =
-                "timeline-date";
-
-            timelineDate.textContent =
-                item.date;
+                timelineItem.className =
+                    "timeline-item";
 
 
-            const timelineEvent =
-                document.createElement("p");
+                const timelineDate =
+                    document.createElement(
+                        "div"
+                    );
 
-            timelineEvent.className =
-                "timeline-event";
+                timelineDate.className =
+                    "timeline-date";
 
-            timelineEvent.textContent =
-                item.event;
+                timelineDate.textContent =
+                    item.date;
 
 
-            timelineItem.appendChild(
-                timelineDate
-            );
+                const timelineEvent =
+                    document.createElement(
+                        "p"
+                    );
 
-            timelineItem.appendChild(
-                timelineEvent
-            );
+                timelineEvent.className =
+                    "timeline-event";
 
-            crisisTimeline.appendChild(
-                timelineItem
-            );
+                timelineEvent.textContent =
+                    item.event;
 
-        });
+
+                timelineItem.appendChild(
+                    timelineDate
+                );
+
+                timelineItem.appendChild(
+                    timelineEvent
+                );
+
+                crisisTimeline.appendChild(
+                    timelineItem
+                );
+
+            }
+        );
 
     } else {
 
         timelineSection.style.display =
             "none";
+
     }
 
 
+    // ======================================
     // SOURCES
+    // ======================================
 
     crisisSources.innerHTML = "";
+
 
     if (
         conflict.sources &&
         conflict.sources.length > 0
     ) {
 
-        conflict.sources.forEach((source) => {
+        conflict.sources.forEach(
+            (source) => {
 
-            const link =
-                document.createElement("a");
+                const link =
+                    document.createElement(
+                        "a"
+                    );
 
-            link.textContent = source.name;
+                link.textContent =
+                    source.name;
 
-            if (
-                source.url &&
-                source.url !== "#"
-            ) {
+                link.href =
+                    source.url;
 
-                link.href = source.url;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
+                link.target =
+                    "_blank";
 
-            } else {
+                link.rel =
+                    "noopener noreferrer";
 
-                link.href = "#";
-
-                link.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                    }
+                crisisSources.appendChild(
+                    link
                 );
+
             }
-
-            crisisSources.appendChild(link);
-
-        });
+        );
 
     } else {
 
         crisisSources.textContent =
             "Sources have not yet been added.";
+
     }
 
 
+    // ======================================
     // HUMANITARIAN AID
+    // ======================================
 
     crisisAid.innerHTML = "";
+
 
     if (
         conflict.aid &&
         conflict.aid.length > 0
     ) {
 
-        conflict.aid.forEach((organization) => {
+        conflict.aid.forEach(
+            (organization) => {
 
-            const link =
-                document.createElement("a");
+                const link =
+                    document.createElement(
+                        "a"
+                    );
 
-            link.textContent =
-                organization.name;
-
-            if (
-                organization.url &&
-                organization.url !== "#"
-            ) {
+                link.textContent =
+                    organization.name;
 
                 link.href =
                     organization.url;
 
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
+                link.target =
+                    "_blank";
 
-            } else {
+                link.rel =
+                    "noopener noreferrer";
 
-                link.href = "#";
-
-                link.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                    }
+                crisisAid.appendChild(
+                    link
                 );
+
             }
-
-            crisisAid.appendChild(link);
-
-        });
+        );
 
     } else {
 
         crisisAid.textContent =
             "Humanitarian organizations have not yet been added.";
+
     }
 
 
+    // ======================================
     // OPEN PANEL
+    // ======================================
 
-    infoPanel.classList.add("open");
+    infoPanel.classList.add(
+        "open"
+    );
+
 }
 
 
@@ -388,71 +477,121 @@ closePanelButton.addEventListener(
     "click",
     function () {
 
-        infoPanel.classList.remove("open");
+        infoPanel.classList.remove(
+            "open"
+        );
 
     }
 );
 
 
 // ==========================================
-// FILTERS
+// FILTER BUTTONS
 // ==========================================
 
 const filterButtons =
-    document.querySelectorAll(".filter");
-
-filterButtons.forEach((button) => {
-
-    button.addEventListener(
-        "click",
-        function () {
-
-            filterButtons.forEach(
-                (otherButton) => {
-
-                    otherButton.classList.remove(
-                        "active"
-                    );
-
-                }
-            );
-
-            button.classList.add("active");
-
-            const selectedFilter =
-                button.dataset.filter;
-
-
-            conflictMarkers.forEach((item) => {
-
-                const shouldShow =
-                    selectedFilter === "all" ||
-                    item.conflict.category ===
-                    selectedFilter;
-
-                if (shouldShow) {
-
-                    if (!map.hasLayer(item.marker)) {
-
-                        item.marker.addTo(map);
-                    }
-
-                } else {
-
-                    if (map.hasLayer(item.marker)) {
-
-                        map.removeLayer(item.marker);
-                    }
-                }
-
-            });
-
-            infoPanel.classList.remove("open");
-
-        }
+    document.querySelectorAll(
+        ".filter"
     );
 
-});
+
+filterButtons.forEach(
+    (button) => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+
+                // --------------------------
+                // ACTIVE BUTTON
+                // --------------------------
+
+                filterButtons.forEach(
+                    (otherButton) => {
+
+                        otherButton.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                const selectedFilter =
+                    button.dataset.filter;
+
+
+                // --------------------------
+                // FILTER MARKERS
+                // --------------------------
+
+                conflictMarkers.forEach(
+                    (item) => {
+
+                        const categories =
+                            item.conflict.categories ||
+                            [];
+
+
+                        const shouldShow =
+                            selectedFilter === "all" ||
+                            categories.includes(
+                                selectedFilter
+                            );
+
+
+                        if (shouldShow) {
+
+                            if (
+                                !map.hasLayer(
+                                    item.marker
+                                )
+                            ) {
+
+                                item.marker.addTo(
+                                    map
+                                );
+
+                            }
+
+                        } else {
+
+                            if (
+                                map.hasLayer(
+                                    item.marker
+                                )
+                            ) {
+
+                                map.removeLayer(
+                                    item.marker
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+
+                // Close panel after
+                // changing filter
+
+                infoPanel.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+);
 
 
 // ==========================================
@@ -465,7 +604,10 @@ document.addEventListener(
 
         if (event.key === "Escape") {
 
-            infoPanel.classList.remove("open");
+            infoPanel.classList.remove(
+                "open"
+            );
+
         }
 
     }
