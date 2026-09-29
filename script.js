@@ -2,13 +2,19 @@
 // CONFLICT ATLAS — INTERACTIVE MAP
 // ==========================================
 
-// Create the world map
+
+// ==========================================
+// CREATE WORLD MAP
+// ==========================================
+
 const map = L.map("map", {
     worldCopyJump: true,
     minZoom: 2
 }).setView([20, 10], 2);
 
-// Add the base world map
+
+// Add OpenStreetMap base layer
+
 L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
@@ -29,6 +35,7 @@ const categoryColors = {
     disaster: "#3282d8"
 };
 
+
 const categoryNames = {
     conflict: "Armed Conflict",
     humanitarian: "Humanitarian Crisis",
@@ -41,19 +48,52 @@ const categoryNames = {
 // HTML ELEMENTS
 // ==========================================
 
-const infoPanel = document.getElementById("info-panel");
-const closePanelButton = document.getElementById("close-panel");
+const infoPanel =
+    document.getElementById("info-panel");
 
-const crisisCategory = document.getElementById("crisis-category");
-const crisisName = document.getElementById("crisis-name");
-const lastUpdated = document.getElementById("last-updated");
+const closePanelButton =
+    document.getElementById("close-panel");
 
-const crisisOverview = document.getElementById("crisis-overview");
-const crisisActors = document.getElementById("crisis-actors");
-const crisisImpact = document.getElementById("crisis-impact");
 
-const crisisSources = document.getElementById("crisis-sources");
-const crisisAid = document.getElementById("crisis-aid");
+const crisisCategory =
+    document.getElementById("crisis-category");
+
+const crisisName =
+    document.getElementById("crisis-name");
+
+const lastUpdated =
+    document.getElementById("last-updated");
+
+
+const crisisOverview =
+    document.getElementById("crisis-overview");
+
+const crisisCurrentSituation =
+    document.getElementById("crisis-current-situation");
+
+const currentSituationSection =
+    document.getElementById("current-situation-section");
+
+
+const crisisActors =
+    document.getElementById("crisis-actors");
+
+const crisisImpact =
+    document.getElementById("crisis-impact");
+
+
+const crisisTimeline =
+    document.getElementById("crisis-timeline");
+
+const timelineSection =
+    document.getElementById("timeline-section");
+
+
+const crisisSources =
+    document.getElementById("crisis-sources");
+
+const crisisAid =
+    document.getElementById("crisis-aid");
 
 
 // ==========================================
@@ -72,6 +112,7 @@ conflicts.forEach((conflict) => {
     const color =
         categoryColors[conflict.category] || "#dc3545";
 
+
     const marker = L.circleMarker(
         conflict.coordinates,
         {
@@ -83,18 +124,25 @@ conflicts.forEach((conflict) => {
         }
     );
 
+
     marker.bindTooltip(conflict.name);
 
+
     marker.on("click", () => {
+
         openConflictPanel(conflict);
+
     });
 
+
     marker.addTo(map);
+
 
     conflictMarkers.push({
         marker: marker,
         conflict: conflict
     });
+
 });
 
 
@@ -104,102 +152,312 @@ conflicts.forEach((conflict) => {
 
 function openConflictPanel(conflict) {
 
-    crisisCategory.textContent =
-        categoryNames[conflict.category] || conflict.category;
 
-    crisisName.textContent = conflict.name;
+    // --------------------------------------
+    // CATEGORY
+    // --------------------------------------
+
+    crisisCategory.textContent =
+        categoryNames[conflict.category] ||
+        conflict.category;
+
+
+    // --------------------------------------
+    // NAME
+    // --------------------------------------
+
+    crisisName.textContent =
+        conflict.name;
+
+
+    // --------------------------------------
+    // LAST VERIFIED DATE
+    // --------------------------------------
 
     lastUpdated.textContent =
-        "Last updated: " + conflict.lastUpdated;
+        "Last verified: " + conflict.lastUpdated;
+
+
+    // --------------------------------------
+    // OVERVIEW
+    // --------------------------------------
 
     crisisOverview.textContent =
-        conflict.overview;
-
-    crisisImpact.textContent =
-        conflict.humanitarianImpact;
+        conflict.overview ||
+        "Information not yet available.";
 
 
-    // --------------------------
-    // ACTORS
-    // --------------------------
+    // --------------------------------------
+    // CURRENT SITUATION
+    // --------------------------------------
+
+    if (conflict.currentSituation) {
+
+        crisisCurrentSituation.textContent =
+            conflict.currentSituation;
+
+        currentSituationSection.style.display =
+            "block";
+
+    } else {
+
+        currentSituationSection.style.display =
+            "none";
+
+    }
+
+
+    // --------------------------------------
+    // KEY ACTORS
+    // --------------------------------------
 
     crisisActors.innerHTML = "";
 
-    conflict.actors.forEach((actorName) => {
 
-        const actor = document.createElement("span");
+    if (conflict.actors && conflict.actors.length > 0) {
 
-        actor.className = "actor";
-        actor.textContent = actorName;
+        conflict.actors.forEach((actorName) => {
 
-        crisisActors.appendChild(actor);
-    });
+            const actor =
+                document.createElement("span");
+
+            actor.className = "actor";
+
+            actor.textContent =
+                actorName;
+
+            crisisActors.appendChild(actor);
+
+        });
+
+    } else {
+
+        crisisActors.textContent =
+            "Actor information not yet available.";
+
+    }
 
 
-    // --------------------------
+    // --------------------------------------
+    // HUMANITARIAN IMPACT
+    // --------------------------------------
+
+    crisisImpact.textContent =
+        conflict.humanitarianImpact ||
+        "Humanitarian information not yet available.";
+
+
+    // --------------------------------------
+    // TIMELINE
+    // --------------------------------------
+
+    crisisTimeline.innerHTML = "";
+
+
+    if (
+        conflict.timeline &&
+        conflict.timeline.length > 0
+    ) {
+
+        timelineSection.style.display =
+            "block";
+
+
+        conflict.timeline.forEach((item) => {
+
+            const timelineItem =
+                document.createElement("div");
+
+            timelineItem.className =
+                "timeline-item";
+
+
+            const timelineDate =
+                document.createElement("div");
+
+            timelineDate.className =
+                "timeline-date";
+
+            timelineDate.textContent =
+                item.date;
+
+
+            const timelineEvent =
+                document.createElement("p");
+
+            timelineEvent.className =
+                "timeline-event";
+
+            timelineEvent.textContent =
+                item.event;
+
+
+            timelineItem.appendChild(
+                timelineDate
+            );
+
+            timelineItem.appendChild(
+                timelineEvent
+            );
+
+            crisisTimeline.appendChild(
+                timelineItem
+            );
+
+        });
+
+
+    } else {
+
+        timelineSection.style.display =
+            "none";
+
+    }
+
+
+    // --------------------------------------
     // SOURCES
-    // --------------------------
+    // --------------------------------------
 
     crisisSources.innerHTML = "";
 
-    conflict.sources.forEach((source) => {
 
-        const link = document.createElement("a");
+    if (
+        conflict.sources &&
+        conflict.sources.length > 0
+    ) {
 
-        link.textContent = source.name;
+        conflict.sources.forEach((source) => {
 
-        if (source.url && source.url !== "#") {
+            const link =
+                document.createElement("a");
 
-            link.href = source.url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-
-        } else {
-
-            link.href = "#";
-
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-            });
-        }
-
-        crisisSources.appendChild(link);
-    });
+            link.textContent =
+                source.name;
 
 
-    // --------------------------
+            if (
+                source.url &&
+                source.url !== "#"
+            ) {
+
+                link.href =
+                    source.url;
+
+                link.target =
+                    "_blank";
+
+                link.rel =
+                    "noopener noreferrer";
+
+            } else {
+
+                link.href =
+                    "#";
+
+                link.addEventListener(
+                    "click",
+                    (event) => {
+
+                        event.preventDefault();
+
+                    }
+                );
+
+            }
+
+
+            crisisSources.appendChild(
+                link
+            );
+
+        });
+
+
+    } else {
+
+        crisisSources.textContent =
+            "Sources have not yet been added.";
+
+    }
+
+
+    // --------------------------------------
     // HUMANITARIAN AID
-    // --------------------------
+    // --------------------------------------
 
     crisisAid.innerHTML = "";
 
-    conflict.aid.forEach((organization) => {
 
-        const link = document.createElement("a");
+    if (
+        conflict.aid &&
+        conflict.aid.length > 0
+    ) {
 
-        link.textContent = organization.name;
+        conflict.aid.forEach(
+            (organization) => {
 
-        if (organization.url && organization.url !== "#") {
-
-            link.href = organization.url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-
-        } else {
-
-            link.href = "#";
-
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-            });
-        }
-
-        crisisAid.appendChild(link);
-    });
+                const link =
+                    document.createElement("a");
 
 
-    // Open panel
+                link.textContent =
+                    organization.name;
+
+
+                if (
+                    organization.url &&
+                    organization.url !== "#"
+                ) {
+
+                    link.href =
+                        organization.url;
+
+                    link.target =
+                        "_blank";
+
+                    link.rel =
+                        "noopener noreferrer";
+
+                } else {
+
+                    link.href =
+                        "#";
+
+                    link.addEventListener(
+                        "click",
+                        (event) => {
+
+                            event.preventDefault();
+
+                        }
+                    );
+
+                }
+
+
+                crisisAid.appendChild(
+                    link
+                );
+
+            }
+        );
+
+
+    } else {
+
+        crisisAid.textContent =
+            "Humanitarian organizations have not yet been added.";
+
+    }
+
+
+    // --------------------------------------
+    // OPEN PANEL
+    // --------------------------------------
+
     infoPanel.classList.add("open");
+
 }
 
 
@@ -207,11 +465,14 @@ function openConflictPanel(conflict) {
 // CLOSE INFORMATION PANEL
 // ==========================================
 
-closePanelButton.addEventListener("click", () => {
+closePanelButton.addEventListener(
+    "click",
+    () => {
 
-    infoPanel.classList.remove("open");
+        infoPanel.classList.remove("open");
 
-});
+    }
+);
 
 
 // ==========================================
@@ -221,47 +482,93 @@ closePanelButton.addEventListener("click", () => {
 const filterButtons =
     document.querySelectorAll(".filter");
 
+
 filterButtons.forEach((button) => {
 
-    button.addEventListener("click", () => {
-
-        // Remove active state from other buttons
-        filterButtons.forEach((otherButton) => {
-            otherButton.classList.remove("active");
-        });
-
-        button.classList.add("active");
-
-        const selectedFilter =
-            button.dataset.filter;
+    button.addEventListener(
+        "click",
+        () => {
 
 
-        // Show/hide map markers
-        conflictMarkers.forEach((item) => {
+            // Remove active state
+            // from every button
 
-            const shouldShow =
-                selectedFilter === "all" ||
-                item.conflict.category === selectedFilter;
+            filterButtons.forEach(
+                (otherButton) => {
 
-            if (shouldShow) {
+                    otherButton.classList.remove(
+                        "active"
+                    );
 
-                if (!map.hasLayer(item.marker)) {
-                    item.marker.addTo(map);
                 }
+            );
 
-            } else {
 
-                if (map.hasLayer(item.marker)) {
-                    map.removeLayer(item.marker);
+            // Make selected button active
+
+            button.classList.add(
+                "active"
+            );
+
+
+            const selectedFilter =
+                button.dataset.filter;
+
+
+            // Show or hide markers
+
+            conflictMarkers.forEach(
+                (item) => {
+
+                    const shouldShow =
+                        selectedFilter === "all" ||
+                        item.conflict.category ===
+                        selectedFilter;
+
+
+                    if (shouldShow) {
+
+                        if (
+                            !map.hasLayer(
+                                item.marker
+                            )
+                        ) {
+
+                            item.marker.addTo(
+                                map
+                            );
+
+                        }
+
+                    } else {
+
+                        if (
+                            map.hasLayer(
+                                item.marker
+                            )
+                        ) {
+
+                            map.removeLayer(
+                                item.marker
+                            );
+
+                        }
+
+                    }
+
                 }
-            }
+            );
 
-        });
 
-        // Close panel after changing filter
-        infoPanel.classList.remove("open");
+            // Close panel when
+            // changing filters
 
-    });
+            infoPanel.classList.remove(
+                "open"
+            );
+
+        }
+    );
 
 });
 
@@ -270,10 +577,17 @@ filterButtons.forEach((button) => {
 // KEYBOARD ACCESSIBILITY
 // ==========================================
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener(
+    "keydown",
+    (event) => {
 
-    if (event.key === "Escape") {
-        infoPanel.classList.remove("open");
+        if (event.key === "Escape") {
+
+            infoPanel.classList.remove(
+                "open"
+            );
+
+        }
+
     }
-
-});
+);
