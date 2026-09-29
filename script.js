@@ -19,26 +19,24 @@ const map = L.map("map", {
 // DARK BASEMAP
 // ==========================================
 
-// CARTO dark map tiles
 L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
     {
-        attribution:
-            "&copy; OpenStreetMap contributors &copy; CARTO",
+        attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
         subdomains: "abcd",
         maxZoom: 20
     }
 ).addTo(map);
 
 
-// Separate label layer so labels remain visible
-// above future conflict shading.
+// ==========================================
+// LABEL LAYER
+// ==========================================
 
 L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
     {
-        attribution:
-            "&copy; OpenStreetMap contributors &copy; CARTO",
+        attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
         subdomains: "abcd",
         maxZoom: 20,
         pane: "shadowPane"
@@ -113,7 +111,7 @@ const crisisAid =
 
 
 // ==========================================
-// MARKER STORAGE
+// STORE MAP MARKERS
 // ==========================================
 
 const conflictMarkers = [];
@@ -123,10 +121,8 @@ const conflictMarkers = [];
 // CREATE TEMPORARY CONFLICT MARKERS
 // ==========================================
 
-// These dots are temporary.
-//
-// Later we will replace them with geographic
-// conflict intensity areas.
+// These markers will eventually be replaced
+// with geographic intensity overlays.
 
 conflicts.forEach((conflict) => {
 
@@ -137,13 +133,9 @@ conflicts.forEach((conflict) => {
         conflict.coordinates,
         {
             radius: 8,
-
             color: "#ffffff",
-
             weight: 1.5,
-
             fillColor: color,
-
             fillOpacity: 0.9
         }
     );
@@ -157,9 +149,7 @@ conflicts.forEach((conflict) => {
     );
 
     marker.on("click", () => {
-
         openConflictPanel(conflict);
-
     });
 
     marker.addTo(map);
@@ -173,7 +163,7 @@ conflicts.forEach((conflict) => {
 
 
 // ==========================================
-// OPEN INFORMATION PANEL
+// OPEN CONFLICT PANEL
 // ==========================================
 
 function openConflictPanel(conflict) {
@@ -222,7 +212,9 @@ function openConflictPanel(conflict) {
     }
 
 
+    // ======================================
     // KEY ACTORS
+    // ======================================
 
     crisisActors.innerHTML = "";
 
@@ -253,14 +245,18 @@ function openConflictPanel(conflict) {
     }
 
 
+    // ======================================
     // HUMANITARIAN IMPACT
+    // ======================================
 
     crisisImpact.textContent =
         conflict.humanitarianImpact ||
         "Humanitarian information not yet available.";
 
 
+    // ======================================
     // TIMELINE
+    // ======================================
 
     crisisTimeline.innerHTML = "";
 
@@ -323,7 +319,9 @@ function openConflictPanel(conflict) {
     }
 
 
+    // ======================================
     // SOURCES
+    // ======================================
 
     crisisSources.innerHTML = "";
 
@@ -361,17 +359,13 @@ function openConflictPanel(conflict) {
                 link.addEventListener(
                     "click",
                     (event) => {
-
                         event.preventDefault();
-
                     }
                 );
 
             }
 
-            crisisSources.appendChild(
-                link
-            );
+            crisisSources.appendChild(link);
 
         });
 
@@ -383,7 +377,9 @@ function openConflictPanel(conflict) {
     }
 
 
+    // ======================================
     // HUMANITARIAN AID
+    // ======================================
 
     crisisAid.innerHTML = "";
 
@@ -392,50 +388,44 @@ function openConflictPanel(conflict) {
         conflict.aid.length > 0
     ) {
 
-        conflict.aid.forEach(
-            (organization) => {
+        conflict.aid.forEach((organization) => {
 
-                const link =
-                    document.createElement("a");
+            const link =
+                document.createElement("a");
 
-                link.textContent =
-                    organization.name;
+            link.textContent =
+                organization.name;
 
-                if (
-                    organization.url &&
-                    organization.url !== "#"
-                ) {
+            if (
+                organization.url &&
+                organization.url !== "#"
+            ) {
 
-                    link.href =
-                        organization.url;
+                link.href =
+                    organization.url;
 
-                    link.target =
-                        "_blank";
+                link.target =
+                    "_blank";
 
-                    link.rel =
-                        "noopener noreferrer";
+                link.rel =
+                    "noopener noreferrer";
 
-                } else {
+            } else {
 
-                    link.href = "#";
+                link.href = "#";
 
-                    link.addEventListener(
-                        "click",
-                        (event) => {
-
-                            event.preventDefault();
-
-                        }
-                    );
-
-                }
-
-                crisisAid.appendChild(
-                    link
+                link.addEventListener(
+                    "click",
+                    (event) => {
+                        event.preventDefault();
+                    }
                 );
 
             }
-        );
+
+            crisisAid.appendChild(link);
+
+        });
 
     } else {
 
@@ -445,14 +435,17 @@ function openConflictPanel(conflict) {
     }
 
 
+    // ======================================
     // OPEN PANEL
+    // ======================================
 
     infoPanel.classList.add("open");
+
 }
 
 
 // ==========================================
-// CLOSE PANEL
+// CLOSE INFORMATION PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
@@ -488,57 +481,41 @@ filterButtons.forEach((button) => {
                 }
             );
 
-            button.classList.add(
-                "active"
-            );
+            button.classList.add("active");
 
             const selectedFilter =
                 button.dataset.filter;
 
-            conflictMarkers.forEach(
-                (item) => {
 
-                    const shouldShow =
-                        selectedFilter === "all" ||
-                        item.conflict.category ===
-                        selectedFilter;
+            conflictMarkers.forEach((item) => {
 
-                    if (shouldShow) {
+                const shouldShow =
+                    selectedFilter === "all" ||
+                    item.conflict.category ===
+                    selectedFilter;
 
-                        if (
-                            !map.hasLayer(
-                                item.marker
-                            )
-                        ) {
+                if (shouldShow) {
 
-                            item.marker.addTo(
-                                map
-                            );
+                    if (!map.hasLayer(item.marker)) {
 
-                        }
+                        item.marker.addTo(map);
 
-                    } else {
+                    }
 
-                        if (
-                            map.hasLayer(
-                                item.marker
-                            )
-                        ) {
+                } else {
 
-                            map.removeLayer(
-                                item.marker
-                            );
+                    if (map.hasLayer(item.marker)) {
 
-                        }
+                        map.removeLayer(item.marker);
 
                     }
 
                 }
-            );
 
-            infoPanel.classList.remove(
-                "open"
-            );
+            });
+
+
+            infoPanel.classList.remove("open");
 
         }
     );
@@ -547,7 +524,7 @@ filterButtons.forEach((button) => {
 
 
 // ==========================================
-// KEYBOARD ACCESSIBILITY
+// ESCAPE KEY CLOSES PANEL
 // ==========================================
 
 document.addEventListener(
@@ -556,9 +533,7 @@ document.addEventListener(
 
         if (event.key === "Escape") {
 
-            infoPanel.classList.remove(
-                "open"
-            );
+            infoPanel.classList.remove("open");
 
         }
 
