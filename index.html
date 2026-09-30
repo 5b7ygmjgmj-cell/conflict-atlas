@@ -11,7 +11,7 @@
 
     <title>One World, One Life | Conflict Atlas</title>
 
-    <!-- Leaflet map styling -->
+    <!-- Leaflet -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -50,7 +50,7 @@
         </div>
 
 
-        <!-- MAP FILTERS -->
+        <!-- FILTERS -->
 
         <nav>
 
@@ -95,7 +95,7 @@
 
 
     <!-- =====================================
-         SEARCH + DATABASE COUNTER
+         SEARCH + CRISIS COUNTER
     ====================================== -->
 
     <section class="atlas-tools">
@@ -127,7 +127,7 @@
 
 
     <!-- =====================================
-         MAIN WEBSITE
+         MAP + INFORMATION PANEL
     ====================================== -->
 
     <main>
@@ -145,31 +145,39 @@
                     Map Legend
                 </h3>
 
+
                 <div>
                     <span
                         class="legend-color conflict-color"
                     ></span>
+
                     Armed Conflict
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color humanitarian-color"
                     ></span>
+
                     Humanitarian Crisis
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color displacement-color"
                     ></span>
+
                     Displacement Crisis
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color disaster-color"
                     ></span>
+
                     Natural Disaster
                 </div>
 
@@ -210,6 +218,8 @@
             <p id="last-updated"></p>
 
 
+            <!-- OVERVIEW -->
+
             <section>
 
                 <h3>
@@ -223,16 +233,24 @@
             </section>
 
 
-            <section id="current-situation-section">
+            <!-- CURRENT SITUATION -->
+
+            <section
+                id="current-situation-section"
+            >
 
                 <h3>
                     Current Situation
                 </h3>
 
-                <p id="crisis-current-situation"></p>
+                <p
+                    id="crisis-current-situation"
+                ></p>
 
             </section>
 
+
+            <!-- KEY ACTORS -->
 
             <section>
 
@@ -240,10 +258,14 @@
                     Key Actors
                 </h3>
 
-                <div id="crisis-actors"></div>
+                <div
+                    id="crisis-actors"
+                ></div>
 
             </section>
 
+
+            <!-- HUMANITARIAN IMPACT -->
 
             <section>
 
@@ -251,21 +273,31 @@
                     Humanitarian Impact
                 </h3>
 
-                <p id="crisis-impact"></p>
+                <p
+                    id="crisis-impact"
+                ></p>
 
             </section>
 
 
-            <section id="timeline-section">
+            <!-- TIMELINE -->
+
+            <section
+                id="timeline-section"
+            >
 
                 <h3>
                     Timeline
                 </h3>
 
-                <div id="crisis-timeline"></div>
+                <div
+                    id="crisis-timeline"
+                ></div>
 
             </section>
 
+
+            <!-- SOURCES -->
 
             <section>
 
@@ -277,10 +309,14 @@
                     Sources are provided so readers can verify the information presented in this entry.
                 </p>
 
-                <div id="crisis-sources"></div>
+                <div
+                    id="crisis-sources"
+                ></div>
 
             </section>
 
+
+            <!-- HUMANITARIAN AID -->
 
             <section class="aid-section">
 
@@ -293,10 +329,14 @@
                     One World, One Life does not collect donations.
                 </p>
 
-                <div id="crisis-aid"></div>
+                <div
+                    id="crisis-aid"
+                ></div>
 
             </section>
 
+
+            <!-- EDITORIAL NOTE -->
 
             <section class="editorial-note">
 
@@ -340,13 +380,15 @@
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
 
-    <!-- Current 32-entry database -->
+
+    <!-- 32-entry database -->
 
     <script
         src="conflicts.js?v=3"
     ></script>
 
-    <!-- New search-enabled map code -->
+
+    <!-- Search + map functionality -->
 
     <script
         src="script.js?v=3"
