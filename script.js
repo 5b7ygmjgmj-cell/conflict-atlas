@@ -180,6 +180,61 @@ const countryCode =
         "country-code"
     );
 
+const countryPopulation =
+    document.getElementById(
+        "country-population"
+    );
+
+const countryArea =
+    document.getElementById(
+        "country-area"
+    );
+
+const countryLanguages =
+    document.getElementById(
+        "country-languages"
+    );
+
+const countryCurrency =
+    document.getElementById(
+        "country-currency"
+    );
+
+const countryCrisisCount =
+    document.getElementById(
+        "country-crisis-count"
+    );
+
+const countryGovernmentSection =
+    document.getElementById(
+        "country-government-section"
+    );
+
+const countryGovernmentType =
+    document.getElementById(
+        "country-government-type"
+    );
+
+const countryHeadOfState =
+    document.getElementById(
+        "country-head-of-state"
+    );
+
+const countryHeadOfGovernment =
+    document.getElementById(
+        "country-head-of-government"
+    );
+
+const countryUnStatus =
+    document.getElementById(
+        "country-un-status"
+    );
+
+const countryInternationalOrganizations =
+    document.getElementById(
+        "country-international-organizations"
+    );
+
 const countryNote =
     document.getElementById(
         "country-note"
@@ -260,13 +315,11 @@ conflicts.forEach(
             conflict.primaryCategory ||
             conflict.categories[0];
 
-
         const color =
             categoryColors[
                 primaryCategory
             ] ||
             "#dc3545";
-
 
         const marker =
             L.circleMarker(
@@ -280,7 +333,6 @@ conflicts.forEach(
                 }
             );
 
-
         marker.bindTooltip(
             conflict.name,
             {
@@ -288,7 +340,6 @@ conflicts.forEach(
                 offset: [0, -8]
             }
         );
-
 
         marker.on(
             "click",
@@ -301,9 +352,7 @@ conflicts.forEach(
             }
         );
 
-
         marker.addTo(map);
-
 
         conflictMarkers.push({
             marker: marker,
@@ -471,7 +520,6 @@ function findCountryForFeature(
     const properties =
         feature.properties || {};
 
-
     const possibleCodes = [
         properties.ADM0_A3,
         properties.ISO_A3,
@@ -486,7 +534,6 @@ function findCountryForFeature(
                     .toUpperCase()
         );
 
-
     const codeMatch =
         countries.find(
             country =>
@@ -496,7 +543,6 @@ function findCountryForFeature(
                 )
         );
 
-
     if (
         codeMatch
     ) {
@@ -504,7 +550,6 @@ function findCountryForFeature(
         return codeMatch;
 
     }
-
 
     const possibleNames = [
         properties.NAME,
@@ -516,7 +561,6 @@ function findCountryForFeature(
     ]
         .filter(Boolean);
 
-
     for (
         const possibleName
         of possibleNames
@@ -527,12 +571,10 @@ function findCountryForFeature(
                 possibleName
             );
 
-
         const aliasCode =
             countryNameAliases[
                 normalizedName
             ];
-
 
         if (
             aliasCode
@@ -545,7 +587,6 @@ function findCountryForFeature(
                         aliasCode
                 );
 
-
             if (
                 aliasMatch
             ) {
@@ -556,7 +597,6 @@ function findCountryForFeature(
 
         }
 
-
         const nameMatch =
             countries.find(
                 country =>
@@ -565,7 +605,6 @@ function findCountryForFeature(
                     ) ===
                     normalizedName
             );
-
 
         if (
             nameMatch
@@ -576,7 +615,6 @@ function findCountryForFeature(
         }
 
     }
-
 
     return null;
 
@@ -633,15 +671,12 @@ function selectCountryLayer(
 
     }
 
-
     selectedCountryLayer =
         layer;
-
 
     layer.setStyle(
         countrySelectedStyle()
     );
-
 
     if (
         layer.bringToFront
@@ -651,14 +686,12 @@ function selectCountryLayer(
 
     }
 
-
     if (
         zoomToCountry
     ) {
 
         const bounds =
             layer.getBounds();
-
 
         if (
             bounds.isValid()
@@ -680,7 +713,6 @@ function selectCountryLayer(
         }
 
     }
-
 
     openCountryPanel(
         country
@@ -709,14 +741,12 @@ function createFallbackCountryMarker(
             }
         );
 
-
     marker.bindTooltip(
         country.name,
         {
             direction: "top"
         }
     );
-
 
     marker.on(
         "click",
@@ -731,14 +761,12 @@ function createFallbackCountryMarker(
                 }
             );
 
-
             openCountryPanel(
                 country
             );
 
         }
     );
-
 
     fallbackCountryMarkers.push({
         marker: marker,
@@ -768,7 +796,6 @@ fetch(
 
             }
 
-
             return response.json();
 
         }
@@ -779,7 +806,6 @@ fetch(
             const matchedIso3 =
                 new Set();
 
-
             countryGeoJsonLayer =
                 L.geoJSON(
                     geojsonData,
@@ -787,7 +813,6 @@ fetch(
 
                         style:
                             countryStyle,
-
 
                         onEachFeature:
                             function (
@@ -799,11 +824,6 @@ fetch(
                                     findCountryForFeature(
                                         feature
                                     );
-
-
-                                // --------------------------------
-                                // FEATURE WITHOUT PROFILE MATCH
-                                // --------------------------------
 
                                 if (
                                     !country
@@ -817,7 +837,6 @@ fetch(
                                         fillOpacity: 0.16
                                     });
 
-
                                     layer.bindTooltip(
                                         feature.properties.NAME ||
                                         feature.properties.ADMIN ||
@@ -828,26 +847,18 @@ fetch(
                                         }
                                     );
 
-
                                     return;
 
                                 }
-
-
-                                // --------------------------------
-                                // MATCHED COUNTRY
-                                // --------------------------------
 
                                 matchedIso3.add(
                                     country.iso3
                                 );
 
-
                                 countryLayersByIso3.set(
                                     country.iso3,
                                     layer
                                 );
-
 
                                 layer.bindTooltip(
                                     country.name,
@@ -856,7 +867,6 @@ fetch(
                                         sticky: true
                                     }
                                 );
-
 
                                 layer.on({
 
@@ -874,7 +884,6 @@ fetch(
 
                                             }
 
-
                                             if (
                                                 layer.bringToFront
                                             ) {
@@ -885,7 +894,6 @@ fetch(
 
                                         },
 
-
                                     mouseout:
                                         function () {
 
@@ -894,7 +902,6 @@ fetch(
                                             );
 
                                         },
-
 
                                     click:
                                         function () {
@@ -914,12 +921,6 @@ fetch(
                     }
                 );
 
-
-            // ----------------------------------------
-            // CREATE FALLBACKS FOR COUNTRIES WITHOUT
-            // THEIR OWN 110m NATURAL EARTH POLYGON
-            // ----------------------------------------
-
             countries.forEach(
                 country => {
 
@@ -938,12 +939,6 @@ fetch(
                 }
             );
 
-
-            // ----------------------------------------
-            // IF USER SWITCHED TO COUNTRY VIEW WHILE
-            // GEOJSON WAS STILL LOADING, SHOW IT NOW
-            // ----------------------------------------
-
             if (
                 currentView ===
                 "countries"
@@ -952,7 +947,6 @@ fetch(
                 countryGeoJsonLayer.addTo(
                     map
                 );
-
 
                 fallbackCountryMarkers.forEach(
                     item => {
@@ -965,7 +959,6 @@ fetch(
                 );
 
             }
-
 
             console.log(
                 `Conflict Atlas loaded country borders for ${matchedIso3.size} profiles.`
@@ -981,13 +974,6 @@ fetch(
                 error
             );
 
-
-            // ----------------------------------------
-            // FAIL-SAFE:
-            // IF GEOJSON FAILS, COUNTRY PROFILES
-            // STILL WORK USING SMALL MARKERS
-            // ----------------------------------------
-
             countries.forEach(
                 country => {
 
@@ -997,7 +983,6 @@ fetch(
 
                 }
             );
-
 
             if (
                 currentView ===
@@ -1032,7 +1017,6 @@ function openConflictPanel(
         "open"
     );
 
-
     const readableCategories =
         conflict.categories
             .map(
@@ -1044,26 +1028,19 @@ function openConflictPanel(
             )
             .join(" • ");
 
-
     crisisCategory.textContent =
         readableCategories;
 
-
     crisisName.textContent =
         conflict.name;
-
 
     lastUpdated.textContent =
         "Last verified: " +
         conflict.lastUpdated;
 
-
     crisisOverview.textContent =
         conflict.overview ||
         "Information not yet available.";
-
-
-    // CURRENT SITUATION
 
     if (
         conflict.currentSituation
@@ -1085,12 +1062,8 @@ function openConflictPanel(
 
     }
 
-
-    // ACTORS
-
     crisisActors.innerHTML =
         "";
-
 
     if (
         conflict.actors &&
@@ -1105,14 +1078,11 @@ function openConflictPanel(
                         "span"
                     );
 
-
                 actor.className =
                     "actor";
 
-
                 actor.textContent =
                     actorName;
-
 
                 crisisActors.appendChild(
                     actor
@@ -1128,19 +1098,12 @@ function openConflictPanel(
 
     }
 
-
-    // HUMANITARIAN IMPACT
-
     crisisImpact.textContent =
         conflict.humanitarianImpact ||
         "Humanitarian information not yet available.";
 
-
-    // TIMELINE
-
     crisisTimeline.innerHTML =
         "";
-
 
     if (
         conflict.timeline &&
@@ -1150,7 +1113,6 @@ function openConflictPanel(
         timelineSection.style.display =
             "block";
 
-
         conflict.timeline.forEach(
             item => {
 
@@ -1159,48 +1121,38 @@ function openConflictPanel(
                         "div"
                     );
 
-
                 timelineItem.className =
                     "timeline-item";
-
 
                 const timelineDate =
                     document.createElement(
                         "div"
                     );
 
-
                 timelineDate.className =
                     "timeline-date";
 
-
                 timelineDate.textContent =
                     item.date;
-
 
                 const timelineEvent =
                     document.createElement(
                         "p"
                     );
 
-
                 timelineEvent.className =
                     "timeline-event";
 
-
                 timelineEvent.textContent =
                     item.event;
-
 
                 timelineItem.appendChild(
                     timelineDate
                 );
 
-
                 timelineItem.appendChild(
                     timelineEvent
                 );
-
 
                 crisisTimeline.appendChild(
                     timelineItem
@@ -1216,12 +1168,8 @@ function openConflictPanel(
 
     }
 
-
-    // SOURCES
-
     crisisSources.innerHTML =
         "";
-
 
     if (
         conflict.sources &&
@@ -1236,22 +1184,17 @@ function openConflictPanel(
                         "a"
                     );
 
-
                 link.textContent =
                     source.name;
-
 
                 link.href =
                     source.url;
 
-
                 link.target =
                     "_blank";
 
-
                 link.rel =
                     "noopener noreferrer";
-
 
                 crisisSources.appendChild(
                     link
@@ -1267,12 +1210,8 @@ function openConflictPanel(
 
     }
 
-
-    // AID
-
     crisisAid.innerHTML =
         "";
-
 
     if (
         conflict.aid &&
@@ -1287,22 +1226,17 @@ function openConflictPanel(
                         "a"
                     );
 
-
                 link.textContent =
                     organization.name;
-
 
                 link.href =
                     organization.url;
 
-
                 link.target =
                     "_blank";
 
-
                 link.rel =
                     "noopener noreferrer";
-
 
                 crisisAid.appendChild(
                     link
@@ -1318,10 +1252,358 @@ function openConflictPanel(
 
     }
 
-
     infoPanel.classList.add(
         "open"
     );
+
+}
+
+
+// ============================================================
+// COUNTRY PROFILE HELPERS
+// ============================================================
+
+function displayValue(
+    value,
+    fallback = "—"
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return fallback;
+
+    }
+
+    return String(value);
+
+}
+
+
+function formatPopulation(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return "—";
+
+    }
+
+    if (
+        typeof formatCountryPopulation ===
+        "function"
+    ) {
+
+        return formatCountryPopulation(
+            value
+        );
+
+    }
+
+    const number =
+        Number(value);
+
+    if (
+        Number.isFinite(number)
+    ) {
+
+        return number.toLocaleString(
+            "en-US"
+        );
+
+    }
+
+    return String(value);
+
+}
+
+
+function formatArea(
+    value
+) {
+
+    const number =
+        Number(value);
+
+    if (
+        !Number.isFinite(number) ||
+        number <= 0
+    ) {
+
+        return "—";
+
+    }
+
+    return (
+        number.toLocaleString(
+            "en-US"
+        ) +
+        " km²"
+    );
+
+}
+
+
+function formatList(
+    value
+) {
+
+    if (
+        !Array.isArray(value) ||
+        value.length === 0
+    ) {
+
+        return "—";
+
+    }
+
+    return value
+        .map(
+            item => {
+
+                if (
+                    typeof item ===
+                    "string"
+                ) {
+
+                    return item;
+
+                }
+
+                return (
+                    item.name ||
+                    item.label ||
+                    item.title ||
+                    ""
+                );
+
+            }
+        )
+        .filter(Boolean)
+        .join(", ") ||
+        "—";
+
+}
+
+
+function formatPerson(
+    person
+) {
+
+    if (
+        !person ||
+        !person.name
+    ) {
+
+        return "—";
+
+    }
+
+    if (
+        person.title
+    ) {
+
+        return (
+            person.name +
+            " — " +
+            person.title
+        );
+
+    }
+
+    return person.name;
+
+}
+
+
+function formatUnStatus(
+    status
+) {
+
+    if (
+        !status
+    ) {
+
+        return "—";
+
+    }
+
+    if (
+        typeof status ===
+        "string"
+    ) {
+
+        const normalized =
+            status
+                .trim()
+                .toLowerCase();
+
+        if (
+            normalized ===
+            "member"
+        ) {
+
+            return "UN Member State";
+
+        }
+
+        if (
+            normalized ===
+                "observer" ||
+            normalized ===
+                "observer state"
+        ) {
+
+            return "UN Observer State";
+
+        }
+
+        return status;
+
+    }
+
+    return (
+        status.label ||
+        status.name ||
+        status.status ||
+        "—"
+    );
+
+}
+
+
+function getCountryCrisisRelationships(
+    country
+) {
+
+    if (
+        Array.isArray(
+            country.relatedCrises
+        ) &&
+        country.relatedCrises.length > 0
+    ) {
+
+        return country.relatedCrises
+            .map(
+                relationship => {
+
+                    const conflict =
+                        conflicts.find(
+                            item =>
+                                item.id ===
+                                relationship.crisisId
+                        );
+
+                    if (
+                        !conflict
+                    ) {
+
+                        return null;
+
+                    }
+
+                    return {
+                        conflict: conflict,
+                        relationship:
+                            relationship
+                    };
+
+                }
+            )
+            .filter(Boolean);
+
+    }
+
+    if (
+        Array.isArray(
+            country.crisisIds
+        ) &&
+        country.crisisIds.length > 0
+    ) {
+
+        return country.crisisIds
+            .map(
+                crisisId => {
+
+                    const conflict =
+                        conflicts.find(
+                            item =>
+                                item.id ===
+                                crisisId
+                        );
+
+                    if (
+                        !conflict
+                    ) {
+
+                        return null;
+
+                    }
+
+                    return {
+                        conflict: conflict,
+                        relationship: null
+                    };
+
+                }
+            )
+            .filter(Boolean);
+
+    }
+
+    return [];
+
+}
+
+
+function getRelationshipLabel(
+    relationship
+) {
+
+    if (
+        !relationship ||
+        !Array.isArray(
+            relationship.relationships
+        ) ||
+        relationship.relationships.length ===
+            0
+    ) {
+
+        return "";
+
+    }
+
+    return relationship.relationships
+        .map(
+            relationshipId => {
+
+                if (
+                    typeof crisisRelationshipTypes !==
+                        "undefined" &&
+                    crisisRelationshipTypes[
+                        relationshipId
+                    ]
+                ) {
+
+                    return crisisRelationshipTypes[
+                        relationshipId
+                    ].label;
+
+                }
+
+                return relationshipId;
+
+            }
+        )
+        .join(" • ");
 
 }
 
@@ -1338,43 +1620,73 @@ function openCountryPanel(
         "open"
     );
 
+    const atAGlance =
+        country.atAGlance ||
+        {};
 
-    // BASIC INFORMATION
+    const government =
+        country.government ||
+        {};
 
     countryFlagElement.textContent =
         country.flag;
 
-
     countryNameElement.textContent =
         country.name;
 
-
     countryLastUpdated.textContent =
         "Last verified: " +
-        country.lastVerified;
-
+        displayValue(
+            country.lastVerified,
+            "Not yet verified"
+        );
 
     countryCapital.textContent =
-        country.capital;
-
+        displayValue(
+            atAGlance.capital ||
+            country.capital
+        );
 
     countryRegion.textContent =
-        country.region;
-
+        displayValue(
+            atAGlance.region ||
+            country.region
+        );
 
     countrySubregion.textContent =
-        country.subregion;
-
+        displayValue(
+            atAGlance.subregion ||
+            country.subregion
+        );
 
     countryCode.textContent =
         country.iso3;
 
+    countryPopulation.textContent =
+        formatPopulation(
+            atAGlance.population
+        );
+
+    countryArea.textContent =
+        formatArea(
+            atAGlance.areaKm2
+        );
+
+    countryLanguages.textContent =
+        formatList(
+            atAGlance.languages
+        );
+
+    countryCurrency.textContent =
+        displayValue(
+            atAGlance.currency
+        );
 
     countryOverview.textContent =
-        country.overview;
-
-
-    // SPECIAL COUNTRY NOTE
+        displayValue(
+            country.overview,
+            "Country overview not yet available."
+        );
 
     if (
         country.countryNote
@@ -1382,7 +1694,6 @@ function openCountryPanel(
 
         countryNote.textContent =
             country.countryNote;
-
 
         countryNote.style.display =
             "block";
@@ -1392,7 +1703,6 @@ function openCountryPanel(
         countryNote.textContent =
             "";
 
-
         countryNote.style.display =
             "none";
 
@@ -1400,18 +1710,130 @@ function openCountryPanel(
 
 
     // ========================================================
-    // CONNECT COUNTRY TO CRISES
+    // GOVERNMENT & INTERNATIONAL RELATIONS
+    // ========================================================
+
+    countryGovernmentType.textContent =
+        displayValue(
+            government.governmentType
+        );
+
+    countryHeadOfState.textContent =
+        formatPerson(
+            government.headOfState
+        );
+
+    countryHeadOfGovernment.textContent =
+        formatPerson(
+            government.headOfGovernment
+        );
+
+    countryUnStatus.textContent =
+        formatUnStatus(
+            government.unStatus
+        );
+
+    countryInternationalOrganizations.innerHTML =
+        "";
+
+    const internationalOrganizations =
+        Array.isArray(
+            government.internationalOrganizations
+        )
+            ? government.internationalOrganizations
+            : [];
+
+    if (
+        internationalOrganizations.length > 0
+    ) {
+
+        const organizationHeading =
+            document.createElement(
+                "p"
+            );
+
+        organizationHeading.className =
+            "section-description";
+
+        organizationHeading.textContent =
+            "International & regional organizations";
+
+        countryInternationalOrganizations.appendChild(
+            organizationHeading
+        );
+
+        internationalOrganizations.forEach(
+            organization => {
+
+                if (
+                    organization.url
+                ) {
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+                    link.textContent =
+                        organization.name ||
+                        organization.label ||
+                        organization.title ||
+                        "Organization";
+
+                    link.href =
+                        organization.url;
+
+                    link.target =
+                        "_blank";
+
+                    link.rel =
+                        "noopener noreferrer";
+
+                    countryInternationalOrganizations.appendChild(
+                        link
+                    );
+
+                } else {
+
+                    const item =
+                        document.createElement(
+                            "p"
+                        );
+
+                    item.textContent =
+                        organization.name ||
+                        organization.label ||
+                        organization.title ||
+                        String(
+                            organization
+                        );
+
+                    countryInternationalOrganizations.appendChild(
+                        item
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ========================================================
+    // RELATED CRISES
     // ========================================================
 
     countryCrises.innerHTML =
         "";
 
-
     const relatedCrises =
-        findRelatedCrises(
+        getCountryCrisisRelationships(
             country
         );
 
+    countryCrisisCount.textContent =
+        relatedCrises.length;
 
     if (
         relatedCrises.length > 0
@@ -1420,69 +1842,90 @@ function openCountryPanel(
         countryCrisesSection.style.display =
             "block";
 
-
         relatedCrises.forEach(
-            conflict => {
+            item => {
+
+                const conflict =
+                    item.conflict;
+
+                const relationship =
+                    item.relationship;
 
                 const button =
                     document.createElement(
                         "button"
                     );
 
-
                 button.type =
                     "button";
 
-
                 button.className =
                     "country-crisis-item";
-
 
                 const crisisTitle =
                     document.createElement(
                         "span"
                     );
 
-
                 crisisTitle.className =
                     "country-crisis-name";
 
-
                 crisisTitle.textContent =
                     conflict.name;
-
 
                 const crisisType =
                     document.createElement(
                         "span"
                     );
 
-
                 crisisType.className =
                     "country-crisis-type";
 
+                const relationshipLabel =
+                    getRelationshipLabel(
+                        relationship
+                    );
 
                 const primaryCategory =
                     conflict.primaryCategory ||
                     conflict.categories[0];
 
-
                 crisisType.textContent =
+                    relationshipLabel ||
                     categoryNames[
                         primaryCategory
                     ] ||
                     primaryCategory;
 
-
                 button.appendChild(
                     crisisTitle
                 );
-
 
                 button.appendChild(
                     crisisType
                 );
 
+                if (
+                    relationship &&
+                    relationship.explanation
+                ) {
+
+                    const explanation =
+                        document.createElement(
+                            "span"
+                        );
+
+                    explanation.className =
+                        "country-crisis-explanation";
+
+                    explanation.textContent =
+                        relationship.explanation;
+
+                    button.appendChild(
+                        explanation
+                    );
+
+                }
 
                 button.addEventListener(
                     "click",
@@ -1490,14 +1933,12 @@ function openCountryPanel(
 
                         switchToCrisisView();
 
-
                         const selectedMarker =
                             conflictMarkers.find(
-                                item =>
-                                    item.conflict.id ===
+                                markerItem =>
+                                    markerItem.conflict.id ===
                                     conflict.id
                             );
-
 
                         map.flyTo(
                             conflict.coordinates,
@@ -1508,11 +1949,9 @@ function openCountryPanel(
                             }
                         );
 
-
                         openConflictPanel(
                             conflict
                         );
-
 
                         if (
                             selectedMarker
@@ -1527,7 +1966,6 @@ function openCountryPanel(
                     }
                 );
 
-
                 countryCrises.appendChild(
                     button
                 );
@@ -1540,16 +1978,13 @@ function openCountryPanel(
         countryCrisesSection.style.display =
             "block";
 
-
         const noCrisis =
             document.createElement(
                 "p"
             );
 
-
         noCrisis.textContent =
-            "Conflict Atlas currently has no crisis entry directly connected to this country.";
-
+            "Conflict Atlas currently has no verified crisis relationship listed for this country.";
 
         countryCrises.appendChild(
             noCrisis
@@ -1562,13 +1997,19 @@ function openCountryPanel(
     // HUMANITARIAN SNAPSHOT
     // ========================================================
 
+    const humanitarianSummary =
+        (
+            country.humanitarian &&
+            country.humanitarian.summary
+        ) ||
+        country.humanitarianSnapshot;
+
     if (
-        country.humanitarianSnapshot
+        humanitarianSummary
     ) {
 
         countryHumanitarian.textContent =
-            country.humanitarianSnapshot;
-
+            humanitarianSummary;
 
         countryHumanitarianSection.style.display =
             "block";
@@ -1577,7 +2018,6 @@ function openCountryPanel(
 
         countryHumanitarian.textContent =
             "";
-
 
         countryHumanitarianSection.style.display =
             "none";
@@ -1589,13 +2029,19 @@ function openCountryPanel(
     // DISPLACEMENT
     // ========================================================
 
+    const displacementSummary =
+        (
+            country.displacement &&
+            country.displacement.summary
+        ) ||
+        country.displacementSnapshot;
+
     if (
-        country.displacementSnapshot
+        displacementSummary
     ) {
 
         countryDisplacement.textContent =
-            country.displacementSnapshot;
-
+            displacementSummary;
 
         countryDisplacementSection.style.display =
             "block";
@@ -1604,7 +2050,6 @@ function openCountryPanel(
 
         countryDisplacement.textContent =
             "";
-
 
         countryDisplacementSection.style.display =
             "none";
@@ -1619,7 +2064,6 @@ function openCountryPanel(
     countryTimeline.innerHTML =
         "";
 
-
     if (
         country.timeline &&
         country.timeline.length > 0
@@ -1627,7 +2071,6 @@ function openCountryPanel(
 
         countryTimelineSection.style.display =
             "block";
-
 
         country.timeline.forEach(
             item => {
@@ -1637,48 +2080,38 @@ function openCountryPanel(
                         "div"
                     );
 
-
                 timelineItem.className =
                     "timeline-item";
-
 
                 const date =
                     document.createElement(
                         "div"
                     );
 
-
                 date.className =
                     "timeline-date";
 
-
                 date.textContent =
                     item.date;
-
 
                 const event =
                     document.createElement(
                         "p"
                     );
 
-
                 event.className =
                     "timeline-event";
 
-
                 event.textContent =
                     item.event;
-
 
                 timelineItem.appendChild(
                     date
                 );
 
-
                 timelineItem.appendChild(
                     event
                 );
-
 
                 countryTimeline.appendChild(
                     timelineItem
@@ -1702,7 +2135,6 @@ function openCountryPanel(
     countryOrganizations.innerHTML =
         "";
 
-
     if (
         country.organizations &&
         country.organizations.length > 0
@@ -1710,7 +2142,6 @@ function openCountryPanel(
 
         countryOrganizationsSection.style.display =
             "block";
-
 
         country.organizations.forEach(
             organization => {
@@ -1720,22 +2151,17 @@ function openCountryPanel(
                         "a"
                     );
 
-
                 link.textContent =
                     organization.name;
-
 
                 link.href =
                     organization.url;
 
-
                 link.target =
                     "_blank";
 
-
                 link.rel =
                     "noopener noreferrer";
-
 
                 countryOrganizations.appendChild(
                     link
@@ -1759,7 +2185,6 @@ function openCountryPanel(
     countrySources.innerHTML =
         "";
 
-
     if (
         country.sources &&
         country.sources.length > 0
@@ -1773,22 +2198,17 @@ function openCountryPanel(
                         "a"
                     );
 
-
                 link.textContent =
                     source.name;
-
 
                 link.href =
                     source.url;
 
-
                 link.target =
                     "_blank";
 
-
                 link.rel =
                     "noopener noreferrer";
-
 
                 countrySources.appendChild(
                     link
@@ -1804,135 +2224,11 @@ function openCountryPanel(
 
     }
 
-
     countryPanel.classList.add(
         "open"
     );
 
 }
-
-
-// ============================================================
-// FIND CRISES ASSOCIATED WITH A COUNTRY
-// ============================================================
-
-function findRelatedCrises(
-    country
-) {
-
-    const countryName =
-        country.name.toLowerCase();
-
-
-    const aliases = {
-
-        "democratic republic of the congo": [
-            "dr congo",
-            "drc",
-            "congo"
-        ],
-
-        "central african republic": [
-            "central african republic"
-        ],
-
-        "south sudan": [
-            "south sudan"
-        ],
-
-        "state of palestine": [
-            "gaza",
-            "palestine",
-            "palestinian"
-        ],
-
-        "iran": [
-            "iran"
-        ],
-
-        "israel": [
-            "israel",
-            "gaza"
-        ],
-
-        "myanmar": [
-            "myanmar"
-        ],
-
-        "venezuela": [
-            "venezuela"
-        ],
-
-        "vietnam": [
-            "viet nam",
-            "vietnam"
-        ],
-
-        "cabo verde": [
-            "cabo verde",
-            "cape verde"
-        ],
-
-        "côte d'ivoire": [
-            "côte d'ivoire",
-            "ivory coast"
-        ]
-
-    };
-
-
-    const searchNames = [
-        countryName
-    ];
-
-
-    if (
-        aliases[
-            countryName
-        ]
-    ) {
-
-        aliases[
-            countryName
-        ].forEach(
-            alias => {
-
-                searchNames.push(
-                    alias
-                );
-
-            }
-        );
-
-    }
-
-
-    return conflicts.filter(
-        conflict => {
-
-            const searchableText =
-                [
-                    conflict.name || "",
-                    conflict.overview || "",
-                    conflict.currentSituation || ""
-                ]
-                    .join(" ")
-                    .toLowerCase();
-
-
-            return searchNames.some(
-                name =>
-                    searchableText.includes(
-                        name
-                    )
-            );
-
-        }
-    );
-
-}
-
-
 // ============================================================
 // CLOSE PANELS
 // ============================================================
@@ -2539,19 +2835,28 @@ function searchCountries(
                                 searchTerm
                             ) ||
 
-                        country.capital
+                        (
+                            country.capital ||
+                            ""
+                        )
                             .toLowerCase()
                             .includes(
                                 searchTerm
                             ) ||
 
-                        country.region
+                        (
+                            country.region ||
+                            ""
+                        )
                             .toLowerCase()
                             .includes(
                                 searchTerm
                             ) ||
 
-                        country.subregion
+                        (
+                            country.subregion ||
+                            ""
+                        )
                             .toLowerCase()
                             .includes(
                                 searchTerm
@@ -2598,8 +2903,8 @@ function searchCountries(
 
             createSearchResult(
                 country.flag +
-                " " +
-                country.name,
+                    " " +
+                    country.name,
 
                 country.subregion,
 
