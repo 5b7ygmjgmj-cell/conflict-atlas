@@ -99,7 +99,6 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-
     margin-bottom: 14px;
 }
 
@@ -148,7 +147,6 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-
     margin-bottom: 14px;
 }
 
@@ -176,7 +174,6 @@ body {
     line-height: 1;
 
     white-space: nowrap;
-
     cursor: pointer;
 
     transition:
@@ -206,7 +203,6 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-
     width: 100%;
 }
 
@@ -276,8 +272,6 @@ body {
 
     z-index: 5000;
 
-    overflow: hidden;
-
     max-height: 350px;
     overflow-y: auto;
 
@@ -326,7 +320,7 @@ body {
 
 
 /* ============================================================
-   MAP AREA
+   MAP
    ============================================================ */
 
 .atlas-main {
@@ -464,21 +458,24 @@ body {
 
 /* ============================================================
    INFORMATION PANELS
+   SMALLER FLOATING PANEL
    ============================================================ */
 
 .info-panel {
     position: fixed;
 
-    top: 20px;
-    right: 20px;
+    top: 50%;
+    right: 28px;
     left: auto;
+
+    transform: translateY(-50%);
 
     z-index: 10000;
 
     display: none;
 
-    width: min(520px, calc(100vw - 40px));
-    max-height: calc(100vh - 40px);
+    width: min(430px, calc(100vw - 56px));
+    max-height: 78vh;
 
     overflow: hidden;
 
@@ -488,8 +485,7 @@ body {
     background: rgba(13, 20, 28, 0.97);
     color: #ffffff;
 
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -502,12 +498,12 @@ body {
 
 .panel-scroll {
     width: 100%;
-    max-height: calc(100vh - 40px);
+    max-height: 78vh;
 
     overflow-x: hidden;
     overflow-y: auto;
 
-    padding: 30px 30px 36px;
+    padding: 26px 26px 30px;
 }
 
 
@@ -559,42 +555,43 @@ body {
 
     color: #ffffff;
 
-    font-size: 30px;
+    font-size: 28px;
     line-height: 1.15;
     letter-spacing: -0.4px;
 }
 
 .info-panel h3 {
-    margin: 0 0 13px;
+    margin: 0 0 12px;
 
     color: #ffffff;
 
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.25;
 }
 
 .info-panel p {
     color: #d1d8df;
 
-    line-height: 1.55;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .last-verified {
-    margin: 0 0 25px;
+    margin: 0 0 22px;
 
     color: #a9b4bf !important;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .panel-section {
-    padding: 21px 0;
+    padding: 18px 0;
 
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .panel-section:first-of-type {
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 
@@ -607,7 +604,7 @@ body {
 
     color: #aab6c2;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 750;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -620,15 +617,16 @@ body {
 
 .info-panel ul {
     margin: 8px 0;
-    padding-left: 21px;
+    padding-left: 20px;
 }
 
 .info-panel li {
-    margin: 7px 0;
+    margin: 6px 0;
 
     color: #d1d8df;
 
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 1.45;
 }
 
 .info-panel a {
@@ -648,7 +646,7 @@ body {
 .country-title {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 13px;
 
     margin-right: 45px;
     margin-bottom: 8px;
@@ -661,14 +659,14 @@ body {
 .country-flag {
     flex-shrink: 0;
 
-    font-size: 39px;
+    font-size: 36px;
     line-height: 1;
 }
 
 .country-profile-label {
     color: #c3ccd5;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 750;
     letter-spacing: 1.4px;
     text-transform: uppercase;
@@ -683,13 +681,13 @@ body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    gap: 11px;
+    gap: 9px;
 }
 
 .country-fact {
     min-width: 0;
 
-    padding: 12px 13px;
+    padding: 10px 11px;
 
     border: 1px solid rgba(255, 255, 255, 0.11);
     border-radius: 9px;
@@ -700,11 +698,11 @@ body {
 .fact-label {
     display: block;
 
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 
     color: #aeb8c2;
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.7px;
     text-transform: uppercase;
@@ -717,9 +715,9 @@ body {
 
     color: #ffffff;
 
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 650;
-    line-height: 1.35;
+    line-height: 1.3;
 }
 
 
@@ -730,8 +728,8 @@ body {
 .country-note {
     display: none;
 
-    margin: 16px 0 4px;
-    padding: 13px 15px;
+    margin: 15px 0 4px;
+    padding: 12px 14px;
 
     border-left: 3px solid #9fb3c8;
     border-radius: 5px;
@@ -753,8 +751,8 @@ body {
 
     width: 100%;
 
-    margin: 9px 0;
-    padding: 13px 14px;
+    margin: 8px 0;
+    padding: 12px 13px;
 
     border: 1px solid rgba(255, 255, 255, 0.11);
     border-radius: 8px;
@@ -787,8 +785,8 @@ body {
 #country-sources a {
     display: block;
 
-    margin: 7px 0;
-    padding: 10px 12px;
+    margin: 6px 0;
+    padding: 9px 11px;
 
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 7px;
@@ -847,7 +845,6 @@ body {
 
 .panel-scroll::-webkit-scrollbar-thumb {
     border-radius: 20px;
-
     background: rgba(255, 255, 255, 0.22);
 }
 
@@ -870,15 +867,14 @@ body {
     }
 
     .info-panel {
-        top: 15px;
-        right: 15px;
+        right: 18px;
 
-        width: min(500px, calc(100vw - 30px));
-        max-height: calc(100vh - 30px);
+        width: min(410px, calc(100vw - 36px));
+        max-height: 80vh;
     }
 
     .panel-scroll {
-        max-height: calc(100vh - 30px);
+        max-height: 80vh;
     }
 
 }
@@ -891,10 +887,7 @@ body {
 @media (max-width: 650px) {
 
     .header-content {
-        padding:
-            20px
-            15px
-            14px;
+        padding: 20px 15px 14px;
     }
 
     .brand h1 {
@@ -902,10 +895,7 @@ body {
     }
 
     .controls {
-        padding:
-            12px
-            15px
-            14px;
+        padding: 12px 15px 14px;
     }
 
     .view-selector {
@@ -953,31 +943,30 @@ body {
     }
 
     .info-panel {
-        top: 8px;
-        right: 8px;
-        left: 8px;
+        top: 50%;
+        right: 10px;
+        left: 10px;
 
         width: auto;
-        max-height: calc(100vh - 16px);
+        max-height: 82vh;
+
+        transform: translateY(-50%);
 
         border-radius: 13px;
     }
 
     .panel-scroll {
-        max-height: calc(100vh - 16px);
+        max-height: 82vh;
 
-        padding:
-            25px
-            19px
-            30px;
+        padding: 23px 18px 27px;
     }
 
     .info-panel h2 {
-        font-size: 26px;
+        font-size: 25px;
     }
 
     .info-panel h3 {
-        font-size: 18px;
+        font-size: 17px;
     }
 
     .country-facts {
@@ -985,14 +974,11 @@ body {
     }
 
     .country-flag {
-        font-size: 34px;
+        font-size: 33px;
     }
 
     .site-footer {
-        padding:
-            20px
-            15px
-            26px;
+        padding: 20px 15px 26px;
     }
 
 }
@@ -1010,15 +996,14 @@ body {
     }
 
     .info-panel {
-        top: 5px;
-        right: 5px;
-        left: 5px;
+        right: 6px;
+        left: 6px;
 
-        max-height: calc(100vh - 10px);
+        max-height: 84vh;
     }
 
     .panel-scroll {
-        max-height: calc(100vh - 10px);
+        max-height: 84vh;
     }
 
 }
