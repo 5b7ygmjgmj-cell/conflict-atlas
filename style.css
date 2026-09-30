@@ -12,6 +12,7 @@
     --background: #0b1118;
     --panel: #121b25;
     --panel-light: #182431;
+    --panel-hover: #1d2b39;
     --border: #293746;
 
     --text: #f4f7fa;
@@ -21,6 +22,8 @@
     --humanitarian: #f28c28;
     --displacement: #e6c229;
     --disaster: #3282d8;
+
+    --country: #4d9de0;
 }
 
 html,
@@ -66,12 +69,12 @@ header {
 }
 
 .brand h2 {
+    margin-top: 3px;
+
     font-size: 15px;
     font-weight: 600;
 
     color: #c7d1db;
-
-    margin-top: 3px;
 
     letter-spacing: 0.8px;
 }
@@ -86,7 +89,7 @@ header {
 
 
 /* ==========================================
-   FILTER NAVIGATION
+   CRISIS FILTERS
    ========================================== */
 
 nav {
@@ -129,11 +132,86 @@ nav {
 
 
 /* ==========================================
-   SEARCH + CRISIS COUNTER
+   VIEW SELECTOR
+   ========================================== */
+
+.view-selector-bar {
+    width: 100%;
+
+    background: #0d141c;
+
+    border-bottom: 1px solid var(--border);
+
+    padding: 10px 25px;
+}
+
+.view-selector {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.view-selector-label {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    margin-right: 5px;
+}
+
+.view-button {
+    background: transparent;
+
+    color: var(--muted);
+
+    border: 1px solid var(--border);
+
+    border-radius: 6px;
+
+    padding: 7px 14px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.view-button:hover {
+    color: white;
+
+    border-color: #687787;
+}
+
+.view-button.active {
+    background: #e9eef3;
+
+    color: #111820;
+
+    border-color: #e9eef3;
+}
+
+
+/* ==========================================
+   SEARCH + COUNTER
    ========================================== */
 
 .atlas-tools {
     position: relative;
+
     z-index: 900;
 
     width: 100%;
@@ -153,7 +231,9 @@ nav {
 }
 
 
-/* SEARCH CONTAINER */
+/* ==========================================
+   SEARCH
+   ========================================== */
 
 .search-container {
     position: relative;
@@ -162,9 +242,6 @@ nav {
 
     max-width: 420px;
 }
-
-
-/* SEARCH INPUT */
 
 #crisis-search {
     width: 100%;
@@ -206,17 +283,15 @@ nav {
         0 0 0 2px rgba(116, 135, 154, 0.12);
 }
 
-
-/* REMOVE DEFAULT SEARCH X */
-
 #crisis-search::-webkit-search-cancel-button {
     opacity: 0.65;
+
     cursor: pointer;
 }
 
 
 /* ==========================================
-   SEARCH RESULTS DROPDOWN
+   SEARCH RESULTS
    ========================================== */
 
 .search-results {
@@ -230,7 +305,7 @@ nav {
 
     width: 100%;
 
-    max-height: 320px;
+    max-height: 340px;
 
     overflow-y: auto;
 
@@ -245,9 +320,6 @@ nav {
 
     z-index: 2000;
 }
-
-
-/* INDIVIDUAL SEARCH RESULT */
 
 .search-result-item {
     width: 100%;
@@ -279,8 +351,11 @@ nav {
     border-bottom: none;
 }
 
-.search-result-item:hover {
+.search-result-item:hover,
+.search-result-item:focus {
     background: var(--panel-light);
+
+    outline: none;
 }
 
 .search-result-name {
@@ -299,9 +374,6 @@ nav {
     letter-spacing: 0.7px;
 }
 
-
-/* NO SEARCH RESULT */
-
 .search-no-result {
     padding: 14px;
 
@@ -312,7 +384,7 @@ nav {
 
 
 /* ==========================================
-   CRISIS COUNTER
+   DATABASE COUNTER
    ========================================== */
 
 .crisis-counter {
@@ -333,7 +405,7 @@ nav {
 
 
 /* ==========================================
-   MAIN WEBSITE
+   MAIN
    ========================================== */
 
 main {
@@ -367,7 +439,7 @@ main {
 
 
 /* ==========================================
-   MAP LEGEND
+   LEGENDS
    ========================================== */
 
 .legend {
@@ -379,7 +451,7 @@ main {
 
     z-index: 500;
 
-    background: rgba(18, 27, 37, 0.94);
+    background: rgba(18, 27, 37, 0.95);
 
     border: 1px solid var(--border);
 
@@ -413,6 +485,16 @@ main {
     margin-top: 7px;
 }
 
+.legend p {
+    color: #d5dce3;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    max-width: 180px;
+}
+
 .legend-color {
     width: 11px;
 
@@ -421,6 +503,8 @@ main {
     border-radius: 50%;
 
     display: inline-block;
+
+    flex-shrink: 0;
 }
 
 .conflict-color {
@@ -440,8 +524,15 @@ main {
 }
 
 
+/* COUNTRY LEGEND STARTS HIDDEN */
+
+.country-legend {
+    display: none;
+}
+
+
 /* ==========================================
-   INFORMATION PANEL
+   INFORMATION PANELS
    ========================================== */
 
 .info-panel {
@@ -522,7 +613,7 @@ main {
 
 
 /* ==========================================
-   CATEGORY + LAST UPDATED
+   LABELS + LAST UPDATED
    ========================================== */
 
 .category-label {
@@ -539,7 +630,8 @@ main {
     margin-bottom: 7px;
 }
 
-#last-updated {
+#last-updated,
+#country-last-updated {
     color: var(--muted);
 
     font-size: 12px;
@@ -566,6 +658,8 @@ main {
     font-size: 28px;
 
     cursor: pointer;
+
+    z-index: 5;
 }
 
 .close-button:hover {
@@ -574,7 +668,7 @@ main {
 
 
 /* ==========================================
-   ACTORS
+   CRISIS ACTORS
    ========================================== */
 
 #crisis-actors {
@@ -601,7 +695,7 @@ main {
 
 
 /* ==========================================
-   TIMELINE
+   TIMELINES
    ========================================== */
 
 .timeline-item {
@@ -634,11 +728,13 @@ main {
 
 
 /* ==========================================
-   SOURCES + HUMANITARIAN AID
+   SOURCES + AID LINKS
    ========================================== */
 
 #crisis-sources,
-#crisis-aid {
+#crisis-aid,
+#country-sources,
+#country-organizations {
     display: flex;
 
     flex-direction: column;
@@ -647,7 +743,9 @@ main {
 }
 
 #crisis-sources a,
-#crisis-aid a {
+#crisis-aid a,
+#country-sources a,
+#country-organizations a {
     display: block;
 
     padding: 10px 12px;
@@ -670,10 +768,12 @@ main {
 }
 
 #crisis-sources a:hover,
-#crisis-aid a:hover {
+#crisis-aid a:hover,
+#country-sources a:hover,
+#country-organizations a:hover {
     border-color: #74879a;
 
-    background: #1d2b39;
+    background: var(--panel-hover);
 }
 
 .aid-section {
@@ -705,7 +805,194 @@ main {
 
 
 /* ==========================================
-   LEAFLET CONTROLS
+   COUNTRY PROFILE
+   ========================================== */
+
+.country-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding-right: 25px;
+
+    margin-bottom: 5px;
+}
+
+.country-title h2 {
+    padding-right: 0;
+
+    margin-bottom: 0;
+}
+
+.country-flag {
+    font-size: 31px;
+
+    line-height: 1;
+}
+
+
+/* COUNTRY FACT GRID */
+
+.country-facts {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-top: 4px;
+}
+
+.country-fact {
+    background: var(--panel-light);
+
+    border: 1px solid var(--border);
+
+    border-radius: 7px;
+
+    padding: 10px;
+}
+
+.fact-label {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    margin-bottom: 5px;
+}
+
+.fact-value {
+    display: block;
+
+    color: #edf2f7;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* COUNTRY SPECIAL NOTE */
+
+.country-note {
+    display: none;
+
+    margin-top: 12px;
+
+    padding: 10px 12px;
+
+    background: rgba(77, 157, 224, 0.08);
+
+    border-left: 3px solid var(--country);
+
+    border-radius: 4px;
+
+    color: #ced9e3 !important;
+
+    font-size: 12px !important;
+}
+
+
+/* COUNTRY CRISIS LINKS */
+
+#country-crises {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.country-crisis-item {
+    width: 100%;
+
+    background: var(--panel-light);
+
+    color: var(--text);
+
+    border: 1px solid var(--border);
+
+    border-radius: 7px;
+
+    padding: 10px 12px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.country-crisis-item:hover {
+    background: var(--panel-hover);
+
+    border-color: #74879a;
+}
+
+.country-crisis-name {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.country-crisis-type {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* ==========================================
+   COUNTRY MAP MARKERS
+   ========================================== */
+
+.country-marker {
+    background: #162b3c;
+
+    border: 1px solid #6ba7d6;
+
+    color: white;
+
+    width: 28px;
+
+    height: 28px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 16px;
+
+    box-shadow:
+        0 3px 9px rgba(0, 0, 0, 0.35);
+}
+
+
+/* ==========================================
+   LEAFLET
    ========================================== */
 
 .leaflet-control-zoom a {
@@ -727,6 +1014,21 @@ main {
     margin: 12px 15px;
 }
 
+.leaflet-tooltip {
+    background: var(--panel);
+
+    color: white;
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.leaflet-tooltip-top::before {
+    border-top-color: var(--panel);
+}
+
 
 /* ==========================================
    FOOTER
@@ -744,6 +1046,28 @@ footer {
     font-size: 12px;
 
     line-height: 1.5;
+}
+
+
+/* ==========================================
+   SCROLLBARS
+   ========================================== */
+
+.info-panel::-webkit-scrollbar,
+.search-results::-webkit-scrollbar {
+    width: 7px;
+}
+
+.info-panel::-webkit-scrollbar-track,
+.search-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.info-panel::-webkit-scrollbar-thumb,
+.search-results::-webkit-scrollbar-thumb {
+    background: #354657;
+
+    border-radius: 10px;
 }
 
 
@@ -768,7 +1092,26 @@ footer {
     }
 
 
-    /* SEARCH AREA */
+    /* VIEW SELECTOR */
+
+    .view-selector-bar {
+        padding: 10px 15px;
+    }
+
+    .view-selector {
+        width: 100%;
+    }
+
+    .view-selector-label {
+        margin-right: auto;
+    }
+
+    .view-button {
+        padding: 7px 12px;
+    }
+
+
+    /* SEARCH */
 
     .atlas-tools {
         padding: 11px 15px;
@@ -780,11 +1123,9 @@ footer {
         gap: 9px;
     }
 
-
     .search-container {
         max-width: none;
     }
-
 
     .crisis-counter {
         text-align: center;
@@ -815,7 +1156,7 @@ footer {
     }
 
 
-    /* INFORMATION PANEL */
+    /* PANELS */
 
     .info-panel {
         position: absolute;
@@ -833,9 +1174,52 @@ footer {
         transform: translateY(30px);
     }
 
-
     .info-panel.open {
         transform: translateY(0);
+    }
+
+
+    /* COUNTRY PROFILE */
+
+    .country-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .country-flag {
+        font-size: 27px;
+    }
+
+}
+
+
+/* ==========================================
+   VERY SMALL SCREENS
+   ========================================== */
+
+@media (max-width: 430px) {
+
+    .view-selector {
+        flex-wrap: wrap;
+    }
+
+    .view-selector-label {
+        width: 100%;
+
+        margin-bottom: 2px;
+    }
+
+    .view-button {
+        flex: 1;
+    }
+
+    nav {
+        gap: 6px;
+    }
+
+    .filter {
+        font-size: 12px;
+
+        padding: 7px 10px;
     }
 
 }
