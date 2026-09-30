@@ -18,11 +18,15 @@
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="style.css?v=4"
     >
 </head>
 
 <body>
+
+    <!-- ======================================
+         HEADER
+         ====================================== -->
 
     <header>
 
@@ -42,7 +46,10 @@
 
         </div>
 
-        <nav>
+
+        <!-- CRISIS FILTERS -->
+
+        <nav id="crisis-filters">
 
             <button
                 class="filter active"
@@ -85,7 +92,40 @@
 
 
     <!-- ======================================
-         SEARCH + CRISIS COUNTER
+         VIEW SELECTOR
+         ====================================== -->
+
+    <section class="view-selector-bar">
+
+        <div class="view-selector">
+
+            <span class="view-selector-label">
+                Explore
+            </span>
+
+            <button
+                id="crisis-view-button"
+                class="view-button active"
+                data-view="crises"
+            >
+                Crises
+            </button>
+
+            <button
+                id="country-view-button"
+                class="view-button"
+                data-view="countries"
+            >
+                Countries
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================
+         SEARCH + DATABASE COUNTER
          ====================================== -->
 
     <section class="atlas-tools">
@@ -107,28 +147,42 @@
 
         </div>
 
+
         <p class="crisis-counter">
-            <span id="crisis-count">0</span>
-            crises currently documented
+
+            <span id="crisis-count">
+                0
+            </span>
+
+            <span id="counter-label">
+                crises currently documented
+            </span>
+
         </p>
 
     </section>
 
 
     <!-- ======================================
-         MAP + INFORMATION PANEL
+         MAP + INFORMATION PANELS
          ====================================== -->
 
     <main>
+
+
+        <!-- MAP -->
 
         <section class="map-section">
 
             <div id="map"></div>
 
 
-            <!-- MAP LEGEND -->
+            <!-- CRISIS LEGEND -->
 
-            <div class="legend">
+            <div
+                id="crisis-legend"
+                class="legend"
+            >
 
                 <h3>
                     Map Legend
@@ -168,6 +222,24 @@
 
             </div>
 
+
+            <!-- COUNTRY VIEW LEGEND -->
+
+            <div
+                id="country-legend"
+                class="legend country-legend"
+            >
+
+                <h3>
+                    Country View
+                </h3>
+
+                <p>
+                    Select a country to open its profile.
+                </p>
+
+            </div>
+
         </section>
 
 
@@ -183,13 +255,11 @@
             <button
                 id="close-panel"
                 class="close-button"
-                aria-label="Close information panel"
+                aria-label="Close crisis information panel"
             >
                 ×
             </button>
 
-
-            <!-- CATEGORY -->
 
             <p
                 id="crisis-category"
@@ -197,14 +267,10 @@
             ></p>
 
 
-            <!-- CRISIS NAME -->
-
             <h2 id="crisis-name">
                 Select a location
             </h2>
 
-
-            <!-- LAST VERIFIED -->
 
             <p id="last-updated"></p>
 
@@ -218,7 +284,8 @@
                 </h3>
 
                 <p id="crisis-overview">
-                    Select a highlighted location on the map to learn more.
+                    Select a highlighted location on the map
+                    to learn more.
                 </p>
 
             </section>
@@ -333,6 +400,250 @@
 
         </aside>
 
+
+        <!-- ==================================
+             COUNTRY INFORMATION PANEL
+             ================================== -->
+
+        <aside
+            id="country-panel"
+            class="info-panel country-panel"
+        >
+
+            <button
+                id="close-country-panel"
+                class="close-button"
+                aria-label="Close country profile"
+            >
+                ×
+            </button>
+
+
+            <!-- COUNTRY TYPE -->
+
+            <p class="category-label">
+                Country Profile
+            </p>
+
+
+            <!-- FLAG + NAME -->
+
+            <div class="country-title">
+
+                <span
+                    id="country-flag"
+                    class="country-flag"
+                >
+                    🌍
+                </span>
+
+                <h2 id="country-name">
+                    Select a country
+                </h2>
+
+            </div>
+
+
+            <!-- LAST VERIFIED -->
+
+            <p id="country-last-updated"></p>
+
+
+            <!-- COUNTRY OVERVIEW -->
+
+            <section>
+
+                <h3>
+                    Country Overview
+                </h3>
+
+                <div class="country-facts">
+
+                    <div class="country-fact">
+
+                        <span class="fact-label">
+                            Capital
+                        </span>
+
+                        <span
+                            id="country-capital"
+                            class="fact-value"
+                        ></span>
+
+                    </div>
+
+
+                    <div class="country-fact">
+
+                        <span class="fact-label">
+                            Region
+                        </span>
+
+                        <span
+                            id="country-region"
+                            class="fact-value"
+                        ></span>
+
+                    </div>
+
+
+                    <div class="country-fact">
+
+                        <span class="fact-label">
+                            Subregion
+                        </span>
+
+                        <span
+                            id="country-subregion"
+                            class="fact-value"
+                        ></span>
+
+                    </div>
+
+
+                    <div class="country-fact">
+
+                        <span class="fact-label">
+                            Country Code
+                        </span>
+
+                        <span
+                            id="country-code"
+                            class="fact-value"
+                        ></span>
+
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="country-note"
+                    class="country-note"
+                ></p>
+
+            </section>
+
+
+            <!-- ABOUT -->
+
+            <section>
+
+                <h3>
+                    About
+                </h3>
+
+                <p id="country-overview">
+                    Select a country on the map to view
+                    its profile.
+                </p>
+
+            </section>
+
+
+            <!-- CONFLICT ATLAS CRISES -->
+
+            <section id="country-crises-section">
+
+                <h3>
+                    Conflict Atlas Crises
+                </h3>
+
+                <div id="country-crises"></div>
+
+            </section>
+
+
+            <!-- HUMANITARIAN SNAPSHOT -->
+
+            <section id="country-humanitarian-section">
+
+                <h3>
+                    Humanitarian Snapshot
+                </h3>
+
+                <p id="country-humanitarian"></p>
+
+            </section>
+
+
+            <!-- DISPLACEMENT -->
+
+            <section id="country-displacement-section">
+
+                <h3>
+                    Displacement
+                </h3>
+
+                <p id="country-displacement"></p>
+
+            </section>
+
+
+            <!-- COUNTRY TIMELINE -->
+
+            <section id="country-timeline-section">
+
+                <h3>
+                    Recent History
+                </h3>
+
+                <div id="country-timeline"></div>
+
+            </section>
+
+
+            <!-- HUMANITARIAN ORGANIZATIONS -->
+
+            <section id="country-organizations-section">
+
+                <h3>
+                    Humanitarian Organizations
+                </h3>
+
+                <div id="country-organizations"></div>
+
+            </section>
+
+
+            <!-- COUNTRY SOURCES -->
+
+            <section>
+
+                <h3>
+                    Sources
+                </h3>
+
+                <p class="section-description">
+                    Sources are provided so readers can verify
+                    information shown in this country profile.
+                </p>
+
+                <div id="country-sources"></div>
+
+            </section>
+
+
+            <!-- COUNTRY PROFILE NOTE -->
+
+            <section class="editorial-note">
+
+                <h3>
+                    About Country Profiles
+                </h3>
+
+                <p>
+                    Country Profiles provide geographic and
+                    humanitarian context. The presence or absence
+                    of a Conflict Atlas crisis entry does not
+                    constitute an assessment of a country,
+                    government, political organization, or population.
+                </p>
+
+            </section>
+
+        </aside>
+
     </main>
 
 
@@ -354,30 +665,31 @@
 
     <!-- ======================================
          JAVASCRIPT
-         IMPORTANT:
-         Databases load BEFORE script.js
          ====================================== -->
 
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
 
-    <!-- 32 CRISIS DATABASE -->
+
+    <!-- CRISIS DATABASE -->
 
     <script
         src="conflicts.js?v=3"
     ></script>
 
-    <!-- 195 COUNTRY DATABASE -->
+
+    <!-- COUNTRY DATABASE -->
 
     <script
         src="countries.js?v=1"
     ></script>
 
+
     <!-- CONFLICT ATLAS APPLICATION -->
 
     <script
-        src="script.js?v=3"
+        src="script.js?v=4"
     ></script>
 
 </body>
