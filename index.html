@@ -50,7 +50,9 @@
         </div>
 
 
-        <!-- MAP FILTERS -->
+        <!-- =================================
+             MAP FILTERS
+        ================================== -->
 
         <nav>
 
@@ -100,12 +102,18 @@
 
     <main>
 
+        <!-- =================================
+             MAP
+        ================================== -->
+
         <section class="map-section">
 
             <div id="map"></div>
 
 
-            <!-- MAP LEGEND -->
+            <!-- =============================
+                 MAP LEGEND
+            ============================== -->
 
             <div class="legend">
 
@@ -113,31 +121,39 @@
                     Map Legend
                 </h3>
 
+
                 <div>
                     <span
                         class="legend-color conflict-color"
                     ></span>
+
                     Armed Conflict
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color humanitarian-color"
                     ></span>
+
                     Humanitarian Crisis
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color displacement-color"
                     ></span>
+
                     Displacement Crisis
                 </div>
+
 
                 <div>
                     <span
                         class="legend-color disaster-color"
                     ></span>
+
                     Natural Disaster
                 </div>
 
@@ -155,6 +171,8 @@
             class="info-panel"
         >
 
+            <!-- CLOSE BUTTON -->
+
             <button
                 id="close-panel"
                 class="close-button"
@@ -164,21 +182,29 @@
             </button>
 
 
+            <!-- CATEGORY -->
+
             <p
                 id="crisis-category"
                 class="category-label"
             ></p>
 
 
+            <!-- CRISIS NAME -->
+
             <h2 id="crisis-name">
                 Select a location
             </h2>
 
 
+            <!-- LAST VERIFIED -->
+
             <p id="last-updated"></p>
 
 
-            <!-- OVERVIEW -->
+            <!-- =============================
+                 OVERVIEW
+            ============================== -->
 
             <section>
 
@@ -193,7 +219,9 @@
             </section>
 
 
-            <!-- CURRENT SITUATION -->
+            <!-- =============================
+                 CURRENT SITUATION
+            ============================== -->
 
             <section
                 id="current-situation-section"
@@ -210,7 +238,9 @@
             </section>
 
 
-            <!-- KEY ACTORS -->
+            <!-- =============================
+                 KEY ACTORS
+            ============================== -->
 
             <section>
 
@@ -225,7 +255,9 @@
             </section>
 
 
-            <!-- HUMANITARIAN IMPACT -->
+            <!-- =============================
+                 HUMANITARIAN IMPACT
+            ============================== -->
 
             <section>
 
@@ -240,7 +272,9 @@
             </section>
 
 
-            <!-- TIMELINE -->
+            <!-- =============================
+                 TIMELINE
+            ============================== -->
 
             <section
                 id="timeline-section"
@@ -257,7 +291,9 @@
             </section>
 
 
-            <!-- SOURCES -->
+            <!-- =============================
+                 SOURCES
+            ============================== -->
 
             <section>
 
@@ -276,7 +312,9 @@
             </section>
 
 
-            <!-- HUMANITARIAN AID -->
+            <!-- =============================
+                 HUMANITARIAN AID
+            ============================== -->
 
             <section class="aid-section">
 
@@ -296,7 +334,9 @@
             </section>
 
 
-            <!-- EDITORIAL NOTE -->
+            <!-- =============================
+                 EDITORIAL NOTE
+            ============================== -->
 
             <section class="editorial-note">
 
@@ -336,14 +376,28 @@
          JAVASCRIPT
     ====================================== -->
 
+
+    <!-- Leaflet mapping library -->
+
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
 
-    <!-- Keep v=2 so our new 20-entry database loads -->
+
+    <!--
+        32-entry Conflict Atlas database
+        v=3 forces the newest database to load
+    -->
+
     <script
-        src="conflicts.js?v=2"
+        src="conflicts.js?v=3"
     ></script>
+
+
+    <!--
+        Map functionality
+        script.js has not changed, so it remains v=2
+    -->
 
     <script
         src="script.js?v=2"
