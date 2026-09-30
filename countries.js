@@ -271,12 +271,6 @@ const countryData = [
 
 // ============================================================
 // CRISIS RELATIONSHIP TYPES
-//
-// These are the ONLY relationship categories used by
-// Conflict Atlas country profiles.
-//
-// A country may have more than one relationship type to the
-// same crisis.
 // ============================================================
 
 const crisisRelationshipTypes = {
@@ -351,61 +345,37 @@ function createCountryId(name) {
     return name
         .toLowerCase()
         .normalize("NFD")
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
-        .replace(
-            /[^a-z0-9]+/g,
-            "-"
-        )
-        .replace(
-            /^-|-$/g,
-            ""
-        );
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
 }
 
 
 // ============================================================
 // DEFAULT SOURCE LIBRARY
-//
-// These are general reference sources.
-//
-// Individual humanitarian statistics, leadership information,
-// crisis relationships and other changing information should
-// have their own specific source entries when populated.
 // ============================================================
 
 const defaultCountrySources = [
 
     {
         id: "un-member-states",
-        name:
-            "United Nations — Member States",
-        url:
-            "https://www.un.org/about-us/member-states",
-        type:
-            "international-organization"
+        name: "United Nations — Member States",
+        url: "https://www.un.org/about-us/member-states",
+        type: "international-organization"
     },
 
     {
         id: "un-m49",
-        name:
-            "United Nations Statistics Division — M49",
-        url:
-            "https://unstats.un.org/unsd/methodology/m49/",
-        type:
-            "international-organization"
+        name: "United Nations Statistics Division — M49",
+        url: "https://unstats.un.org/unsd/methodology/m49/",
+        type: "international-organization"
     },
 
     {
         id: "world-bank-country-data",
-        name:
-            "World Bank — Country Data",
-        url:
-            "https://data.worldbank.org/country",
-        type:
-            "international-organization"
+        name: "World Bank — Country Data",
+        url: "https://data.worldbank.org/country",
+        type: "international-organization"
     }
 
 ];
@@ -429,142 +399,63 @@ const countries = countryData.map(
             longitude
         ] = country;
 
-
         return {
 
-            // ==================================================
-            // CORE IDENTIFIERS
-            // ==================================================
+            id: createCountryId(name),
 
-            id:
-                createCountryId(name),
+            profileNumber: index + 1,
 
-            profileNumber:
-                index + 1,
+            name: name,
 
-            name:
-                name,
+            flag: countryFlag(iso2),
 
-            flag:
-                countryFlag(iso2),
+            iso2: iso2,
 
-            iso2:
-                iso2,
-
-            iso3:
-                iso3,
+            iso3: iso3,
 
             coordinates: [
                 latitude,
                 longitude
             ],
 
-
-            // ==================================================
-            // AT A GLANCE
-            // ==================================================
-
             atAGlance: {
-
-                capital:
-                    capital,
-
-                region:
-                    region,
-
-                subregion:
-                    subregion,
-
-                population:
-                    null,
-
-                populationYear:
-                    null,
-
-                areaKm2:
-                    null,
-
-                languages:
-                    [],
-
-                currency:
-                    null
-
+                capital: capital,
+                region: region,
+                subregion: subregion,
+                population: null,
+                populationYear: null,
+                areaKm2: null,
+                languages: [],
+                currency: null
             },
 
-
-            // ==================================================
-            // LEGACY / CURRENT SCRIPT COMPATIBILITY
-            //
-            // These fields remain at the top level so the
-            // current Conflict Atlas script continues working
-            // while the country panel is upgraded.
-            // ==================================================
-
-            capital:
-                capital,
-
-            region:
-                region,
-
-            subregion:
-                subregion,
-
-
-            // ==================================================
-            // ABOUT
-            // ==================================================
+            // Current-script compatibility
+            capital: capital,
+            region: region,
+            subregion: subregion,
 
             overview:
                 `${name} is a country in ${subregion}, ${region}. ` +
                 `Its capital is ${capital}.`,
 
-            countryNote:
-                null,
-
-
-            // ==================================================
-            // GOVERNMENT & INTERNATIONAL RELATIONS
-            //
-            // Leadership fields remain empty until verified
-            // because officeholders can change.
-            // ==================================================
+            countryNote: null,
 
             government: {
 
-                governmentType:
-                    null,
+                governmentType: null,
 
                 headOfState: {
-
-                    name:
-                        null,
-
-                    title:
-                        null,
-
-                    asOf:
-                        null,
-
-                    sourceIds:
-                        []
-
+                    name: null,
+                    title: null,
+                    asOf: null,
+                    sourceIds: []
                 },
 
                 headOfGovernment: {
-
-                    name:
-                        null,
-
-                    title:
-                        null,
-
-                    asOf:
-                        null,
-
-                    sourceIds:
-                        []
-
+                    name: null,
+                    title: null,
+                    asOf: null,
+                    sourceIds: []
                 },
 
                 unStatus:
@@ -575,180 +466,39 @@ const countries = countryData.map(
                         ? "United Nations non-member observer state"
                         : "United Nations member state",
 
-                internationalOrganizations:
-                    []
+                internationalOrganizations: []
 
             },
 
+            relatedCrises: [],
 
-            // ==================================================
-            // RELATED CRISES
-            //
-            // Example:
-            //
-            // {
-            //     crisisId: "ukraine",
-            //     relationships: [
-            //         "party-to-conflict"
-            //     ],
-            //     explanation:
-            //         "Verified explanation.",
-            //     asOf:
-            //         "September 30, 2026",
-            //     sourceIds: [
-            //         "source-id"
-            //     ]
-            // }
-            //
-            // No relationship should be added merely because a
-            // country name appears somewhere in crisis text.
-            // ==================================================
-
-            relatedCrises:
-                [],
-
-
-            // ==================================================
-            // LEGACY CRISIS ARRAY
-            //
-            // Retained temporarily for compatibility with the
-            // current country-panel JavaScript.
-            // ==================================================
-
-            crisisIds:
-                [],
-
-
-            // ==================================================
-            // HUMANITARIAN SNAPSHOT
-            //
-            // Example:
-            //
-            // {
-            //     summary: "...",
-            //     metrics: [
-            //         {
-            //             label: "People in need",
-            //             value: "...",
-            //             asOf: "...",
-            //             sourceIds: ["..."]
-            //         }
-            //     ],
-            //     asOf: "...",
-            //     sourceIds: ["..."]
-            // }
-            // ==================================================
+            // Legacy compatibility
+            crisisIds: [],
 
             humanitarian: {
-
-                summary:
-                    null,
-
-                metrics:
-                    [],
-
-                asOf:
-                    null,
-
-                sourceIds:
-                    []
-
+                summary: null,
+                metrics: [],
+                asOf: null,
+                sourceIds: []
             },
 
-
-            // Current-script compatibility
-
-            humanitarianSnapshot:
-                null,
-
-
-            // ==================================================
-            // DISPLACEMENT
-            //
-            // Example:
-            //
-            // {
-            //     summary: "...",
-            //     refugeesHosted: null,
-            //     refugeesFromCountry: null,
-            //     internallyDisplaced: null,
-            //     asylumSeekers: null,
-            //     asOf: "...",
-            //     sourceIds: ["..."]
-            // }
-            // ==================================================
+            humanitarianSnapshot: null,
 
             displacement: {
-
-                summary:
-                    null,
-
-                refugeesHosted:
-                    null,
-
-                refugeesFromCountry:
-                    null,
-
-                internallyDisplaced:
-                    null,
-
-                asylumSeekers:
-                    null,
-
-                asOf:
-                    null,
-
-                sourceIds:
-                    []
-
+                summary: null,
+                refugeesHosted: null,
+                refugeesFromCountry: null,
+                internallyDisplaced: null,
+                asylumSeekers: null,
+                asOf: null,
+                sourceIds: []
             },
 
+            displacementSnapshot: null,
 
-            // Current-script compatibility
+            timeline: [],
 
-            displacementSnapshot:
-                null,
-
-
-            // ==================================================
-            // RECENT HISTORY
-            //
-            // Example:
-            //
-            // {
-            //     date: "2026",
-            //     title: "...",
-            //     description: "...",
-            //     sourceIds: ["..."]
-            // }
-            // ==================================================
-
-            timeline:
-                [],
-
-
-            // ==================================================
-            // HUMANITARIAN ORGANIZATIONS
-            //
-            // Example:
-            //
-            // {
-            //     name: "UNHCR",
-            //     role: "...",
-            //     url: "..."
-            // }
-            // ==================================================
-
-            organizations:
-                [],
-
-
-            // ==================================================
-            // SOURCES
-            //
-            // Country-specific sources can be added to this
-            // array and referenced elsewhere by sourceIds.
-            // ==================================================
+            organizations: [],
 
             sources:
                 defaultCountrySources.map(
@@ -756,11 +506,6 @@ const countries = countryData.map(
                         ...source
                     })
                 ),
-
-
-            // ==================================================
-            // VERIFICATION
-            // ==================================================
 
             lastVerified:
                 "September 30, 2026"
@@ -818,20 +563,6 @@ function getCountryById(id) {
 
 // ============================================================
 // SAFE COUNTRY UPDATE HELPER
-//
-// This lets us populate the database later without rewriting
-// the 195-country master list.
-//
-// Example:
-//
-// updateCountryProfile("USA", {
-//     atAGlance: {
-//         population: 123
-//     }
-// });
-//
-// Nested objects are merged instead of deleting the rest of
-// the profile.
 // ============================================================
 
 function updateCountryProfile(
@@ -851,7 +582,6 @@ function updateCountryProfile(
         return;
     }
 
-
     Object.keys(updates).forEach(
         key => {
 
@@ -860,7 +590,6 @@ function updateCountryProfile(
 
             const currentValue =
                 country[key];
-
 
             if (
                 incomingValue &&
@@ -891,9 +620,6 @@ function updateCountryProfile(
 
 // ============================================================
 // SOURCE HELPER
-//
-// Adds a country-specific source only if its ID is not already
-// present.
 // ============================================================
 
 function addCountrySource(
@@ -908,13 +634,11 @@ function addCountrySource(
         return;
     }
 
-
     const alreadyExists =
         country.sources.some(
             existing =>
                 existing.id === source.id
         );
-
 
     if (!alreadyExists) {
 
@@ -929,22 +653,6 @@ function addCountrySource(
 
 // ============================================================
 // CRISIS RELATIONSHIP HELPER
-//
-// This is the preferred way to connect countries to crises.
-//
-// Example:
-//
-// addCountryCrisisRelationship(
-//     "ABC",
-//     "example-crisis",
-//     ["directly-affected"],
-//     "Short verified explanation.",
-//     "September 30, 2026",
-//     ["source-id"]
-// );
-//
-// Relationships are NOT populated yet. They will be added
-// only after the specific connection has been verified.
 // ============================================================
 
 function addCountryCrisisRelationship(
@@ -959,7 +667,6 @@ function addCountryCrisisRelationship(
     const country =
         getCountryByIso3(iso3);
 
-
     if (!country) {
 
         console.warn(
@@ -968,7 +675,6 @@ function addCountryCrisisRelationship(
 
         return;
     }
-
 
     if (
         !crisisId ||
@@ -983,7 +689,6 @@ function addCountryCrisisRelationship(
         return;
     }
 
-
     const validRelationships =
         relationships.filter(
             relationship =>
@@ -991,7 +696,6 @@ function addCountryCrisisRelationship(
                     relationship
                 ]
         );
-
 
     if (
         validRelationships.length !==
@@ -1005,14 +709,12 @@ function addCountryCrisisRelationship(
         return;
     }
 
-
     const existingRelationship =
         country.relatedCrises.find(
             item =>
                 item.crisisId ===
                 crisisId
         );
-
 
     if (existingRelationship) {
 
@@ -1046,8 +748,7 @@ function addCountryCrisisRelationship(
 
         country.relatedCrises.push({
 
-            crisisId:
-                crisisId,
+            crisisId: crisisId,
 
             relationships:
                 validRelationships,
@@ -1065,9 +766,7 @@ function addCountryCrisisRelationship(
 
     }
 
-
     // Maintain old crisisIds for compatibility.
-
     if (
         !country.crisisIds.includes(
             crisisId
@@ -1085,14 +784,9 @@ function addCountryCrisisRelationship(
 
 // ============================================================
 // SPECIAL PROFILE NOTES
-//
-// These prevent unusual constitutional arrangements from
-// being oversimplified in the interface.
 // ============================================================
 
-
 // Bolivia
-
 updateCountryProfile(
     "BOL",
     {
@@ -1103,7 +797,6 @@ updateCountryProfile(
 
 
 // Burundi
-
 updateCountryProfile(
     "BDI",
     {
@@ -1114,7 +807,6 @@ updateCountryProfile(
 
 
 // Côte d'Ivoire
-
 updateCountryProfile(
     "CIV",
     {
@@ -1125,7 +817,6 @@ updateCountryProfile(
 
 
 // Equatorial Guinea
-
 updateCountryProfile(
     "GNQ",
     {
@@ -1136,7 +827,6 @@ updateCountryProfile(
 
 
 // Eswatini
-
 updateCountryProfile(
     "SWZ",
     {
@@ -1147,7 +837,6 @@ updateCountryProfile(
 
 
 // Indonesia
-
 updateCountryProfile(
     "IDN",
     {
@@ -1158,7 +847,6 @@ updateCountryProfile(
 
 
 // Israel
-
 updateCountryProfile(
     "ISR",
     {
@@ -1169,7 +857,6 @@ updateCountryProfile(
 
 
 // Malaysia
-
 updateCountryProfile(
     "MYS",
     {
@@ -1180,7 +867,6 @@ updateCountryProfile(
 
 
 // Nauru
-
 updateCountryProfile(
     "NRU",
     {
@@ -1191,7 +877,6 @@ updateCountryProfile(
 
 
 // Netherlands
-
 updateCountryProfile(
     "NLD",
     {
@@ -1202,7 +887,6 @@ updateCountryProfile(
 
 
 // South Africa
-
 updateCountryProfile(
     "ZAF",
     {
@@ -1213,7 +897,6 @@ updateCountryProfile(
 
 
 // Sri Lanka
-
 updateCountryProfile(
     "LKA",
     {
@@ -1224,7 +907,6 @@ updateCountryProfile(
 
 
 // State of Palestine
-
 updateCountryProfile(
     "PSE",
     {
@@ -1235,7 +917,6 @@ updateCountryProfile(
 
 
 // Switzerland
-
 updateCountryProfile(
     "CHE",
     {
@@ -1246,13 +927,797 @@ updateCountryProfile(
 
 
 // Tanzania
-
 updateCountryProfile(
     "TZA",
     {
         countryNote:
             "Dodoma is Tanzania's capital. Dar es Salaam remains the country's largest city and a major commercial center."
     }
+);
+
+
+// ============================================================
+// VERIFIED CRISIS RELATIONSHIPS
+// PART 2 CONTINUES DIRECTLY FROM HERE
+// ============================================================
+// ============================================================
+// VERIFIED CRISIS RELATIONSHIPS
+// ============================================================
+//
+// These relationships connect the 32 Conflict Atlas entries
+// to country profiles.
+//
+// IMPORTANT:
+// A relationship is added only when the country is directly
+// affected or has a significant documented connection.
+//
+// ============================================================
+
+const COUNTRY_CRISIS_VERIFIED =
+    "September 30, 2026";
+
+
+// ============================================================
+// 1. WAR IN UKRAINE
+// ============================================================
+
+addCountryCrisisRelationship(
+    "UKR",
+    "ukraine",
+    [
+        "directly-affected",
+        "party-to-conflict"
+    ],
+    "Ukraine is directly affected by and is a party to the ongoing armed conflict.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "RUS",
+    "ukraine",
+    [
+        "party-to-conflict"
+    ],
+    "Russia is a direct party to the armed conflict against Ukraine.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 2. WAR IN SUDAN
+// ============================================================
+
+addCountryCrisisRelationship(
+    "SDN",
+    "sudan",
+    [
+        "directly-affected"
+    ],
+    "Sudan is the location of the armed conflict between the Sudanese Armed Forces and the Rapid Support Forces.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "TCD",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Chad hosts large numbers of people who have fled the war in neighboring Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "EGY",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Egypt has received large numbers of people fleeing the war in Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "ETH",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Ethiopia is one of the countries affected by cross-border displacement from the war in Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "LBY",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Libya is one of the countries affected by displacement from the war in Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "SSD",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "South Sudan has received refugees and returning South Sudanese fleeing the war in Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "CAF",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "The Central African Republic has received people fleeing the war in neighboring Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "UGA",
+    "sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Uganda is among the countries affected by displacement associated with the war in Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 3. ISRAEL–GAZA CONFLICT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "ISR",
+    "gaza-israel",
+    [
+        "directly-affected",
+        "party-to-conflict"
+    ],
+    "Israel is directly affected by and is a party to the Israel–Gaza conflict.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "PSE",
+    "gaza-israel",
+    [
+        "directly-affected"
+    ],
+    "The Gaza Strip, part of the Palestinian territories, is a principal location of the conflict and severe humanitarian crisis.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 4. EASTERN DR CONGO CONFLICT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "COD",
+    "drc",
+    [
+        "directly-affected"
+    ],
+    "The armed conflict and associated humanitarian emergency are concentrated in eastern Democratic Republic of the Congo.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 5. MYANMAR CIVIL CONFLICT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "MMR",
+    "myanmar",
+    [
+        "directly-affected"
+    ],
+    "Myanmar is directly affected by nationwide armed conflict involving the military, ethnic armed organizations and resistance forces.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 6. YEMEN HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "YEM",
+    "yemen",
+    [
+        "directly-affected"
+    ],
+    "Yemen is directly affected by the prolonged humanitarian emergency associated with conflict, displacement, economic deterioration and food insecurity.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 7. AFGHANISTAN HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "AFG",
+    "afghanistan",
+    [
+        "directly-affected"
+    ],
+    "Afghanistan is directly affected by widespread humanitarian needs, displacement, economic hardship and large-scale return movements.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 8. SYRIA HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "SYR",
+    "syria",
+    [
+        "directly-affected"
+    ],
+    "Syria remains directly affected by extensive humanitarian and displacement needs following years of armed conflict.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "TUR",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Türkiye continues to host a large population of refugees from Syria.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "LBN",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Lebanon continues to host a large population of refugees from Syria.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "JOR",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Jordan continues to host a substantial population of refugees from Syria.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "IRQ",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Iraq continues to host refugees from Syria.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "EGY",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Egypt continues to host refugees from Syria.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 9. SOMALIA HUMANITARIAN AND DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "SOM",
+    "somalia",
+    [
+        "directly-affected"
+    ],
+    "Somalia is directly affected by conflict, insecurity, climate shocks and large-scale internal displacement.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 10. SOUTH SUDAN HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "SSD",
+    "south-sudan",
+    [
+        "directly-affected"
+    ],
+    "South Sudan is directly affected by displacement, insecurity, food insecurity and other humanitarian pressures.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "UGA",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Uganda hosts a large population of refugees from South Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "ETH",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Ethiopia hosts refugees from South Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "KEN",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Kenya hosts refugees from South Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "COD",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "The Democratic Republic of the Congo hosts refugees from South Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "SDN",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Sudan has historically hosted a substantial population of refugees from South Sudan.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 11. HAITI HUMANITARIAN AND DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "HTI",
+    "haiti",
+    [
+        "directly-affected"
+    ],
+    "Haiti is directly affected by armed-group violence, insecurity, displacement, food insecurity and disruption of essential services.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 12. CENTRAL SAHEL DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "BFA",
+    "central-sahel",
+    [
+        "directly-affected"
+    ],
+    "Burkina Faso is one of the principal countries affected by the Central Sahel displacement and protection crisis.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "MLI",
+    "central-sahel",
+    [
+        "directly-affected"
+    ],
+    "Mali is one of the principal countries affected by the Central Sahel displacement and protection crisis.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "NER",
+    "central-sahel",
+    [
+        "directly-affected"
+    ],
+    "Niger is one of the principal countries affected by the Central Sahel displacement and protection crisis.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 13. ETHIOPIA DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "ETH",
+    "ethiopia",
+    [
+        "directly-affected"
+    ],
+    "Ethiopia is directly affected by internal displacement associated with conflict, localized insecurity and climate-related shocks.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 14. NORTHERN MOZAMBIQUE DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "MOZ",
+    "mozambique-displacement",
+    [
+        "directly-affected"
+    ],
+    "Northern Mozambique is directly affected by displacement associated with insurgent violence and insecurity.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 15. CENTRAL AFRICAN REPUBLIC DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "CAF",
+    "car",
+    [
+        "directly-affected"
+    ],
+    "The Central African Republic is directly affected by a protracted humanitarian and displacement crisis.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "CMR",
+    "car",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Cameroon hosts refugees from the Central African Republic.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "TCD",
+    "car",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Chad hosts refugees from the Central African Republic.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "COD",
+    "car",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "The Democratic Republic of the Congo hosts refugees from the Central African Republic.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "COG",
+    "car",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "The Republic of the Congo hosts refugees from the Central African Republic.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 16. PHILIPPINES MONSOON FLOODS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "PHL",
+    "philippines-floods-2026",
+    [
+        "directly-affected"
+    ],
+    "The Philippines was directly affected by the 2026 monsoon flooding recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 17. NEPAL FLASH FLOODS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "NPL",
+    "nepal-floods-2026",
+    [
+        "directly-affected"
+    ],
+    "Nepal was directly affected by the August 2026 flash floods recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 18. COLOMBIA EARTHQUAKE
+// ============================================================
+
+addCountryCrisisRelationship(
+    "COL",
+    "colombia-earthquake-2026",
+    [
+        "directly-affected"
+    ],
+    "Colombia was directly affected by the August 2026 earthquake recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 19. MADAGASCAR CYCLONES
+// ============================================================
+
+addCountryCrisisRelationship(
+    "MDG",
+    "madagascar-cyclones-2026",
+    [
+        "directly-affected"
+    ],
+    "Madagascar was directly affected by the 2026 cyclones recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 20. MOZAMBIQUE FLOODS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "MOZ",
+    "mozambique-floods-2026",
+    [
+        "directly-affected"
+    ],
+    "Mozambique was directly affected by severe flooding during 2026.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 21. LEBANON CONFLICT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "LBN",
+    "lebanon-2026",
+    [
+        "directly-affected"
+    ],
+    "Lebanon is directly affected by the 2026 escalation of hostilities and associated displacement and humanitarian needs.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "ISR",
+    "lebanon-2026",
+    [
+        "party-to-conflict"
+    ],
+    "Israel is a direct party to the hostilities represented by the Lebanon conflict entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "SYR",
+    "lebanon-2026",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Syria has received large numbers of people crossing from Lebanon during the 2026 escalation, including Lebanese refugees and returning Syrians.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 22. IRAN CONFLICT AND DISPLACEMENT EMERGENCY
+// ============================================================
+
+addCountryCrisisRelationship(
+    "IRN",
+    "iran-2026",
+    [
+        "directly-affected",
+        "party-to-conflict"
+    ],
+    "Iran is directly affected by and is a party to the regional military escalation represented by this Conflict Atlas entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 23. COLOMBIA INTERNAL ARMED CONFLICTS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "COL",
+    "colombia-conflict",
+    [
+        "directly-affected"
+    ],
+    "Colombia is directly affected by continuing internal armed conflicts involving state forces and non-state armed organizations.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 24. CHAD HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "TCD",
+    "chad-humanitarian",
+    [
+        "directly-affected"
+    ],
+    "Chad is directly affected by a humanitarian and displacement emergency involving refugee arrivals, internal displacement and pressure on essential services.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 25. CAMEROON HUMANITARIAN CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "CMR",
+    "cameroon-humanitarian",
+    [
+        "directly-affected"
+    ],
+    "Cameroon is directly affected by overlapping insecurity, displacement and food-insecurity pressures.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 26. KENYA FOOD INSECURITY CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "KEN",
+    "kenya-humanitarian",
+    [
+        "directly-affected"
+    ],
+    "Kenya is directly affected by the food-insecurity and nutrition crisis represented by this Conflict Atlas entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 27. VENEZUELA REGIONAL DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "VEN",
+    "venezuela-displacement",
+    [
+        "directly-affected"
+    ],
+    "Venezuela is the country of origin for the large regional displacement situation represented by this Conflict Atlas entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 28. NIGERIA DISPLACEMENT CRISIS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "NGA",
+    "nigeria-displacement",
+    [
+        "directly-affected"
+    ],
+    "Nigeria is directly affected by large-scale displacement associated with armed conflict, insecurity, communal violence and disasters.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 29. ROHINGYA REFUGEE CRISIS IN BANGLADESH
+// ============================================================
+
+addCountryCrisisRelationship(
+    "BGD",
+    "rohingya-bangladesh",
+    [
+        "directly-affected",
+        "humanitarian-refugee-impact"
+    ],
+    "Bangladesh hosts the large Rohingya refugee population represented by this Conflict Atlas crisis entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+addCountryCrisisRelationship(
+    "MMR",
+    "rohingya-bangladesh",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Myanmar is the country of origin of the Rohingya refugee population represented by this crisis entry.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 30. VENEZUELA EARTHQUAKE
+// ============================================================
+
+addCountryCrisisRelationship(
+    "VEN",
+    "venezuela-earthquake-2026",
+    [
+        "directly-affected"
+    ],
+    "Venezuela was directly affected by the June 2026 earthquake emergency recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 31. VIET NAM FLOODS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "VNM",
+    "vietnam-floods-2026",
+    [
+        "directly-affected"
+    ],
+    "Viet Nam was directly affected by the September 2026 flooding recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
+);
+
+
+// ============================================================
+// 32. LIBYA FLASH FLOODS
+// ============================================================
+
+addCountryCrisisRelationship(
+    "LBY",
+    "libya-floods-2026",
+    [
+        "directly-affected"
+    ],
+    "Libya was directly affected by the September 2026 flash-flood emergency recorded in Conflict Atlas.",
+    COUNTRY_CRISIS_VERIFIED
 );
 
 
@@ -1336,6 +1801,82 @@ countries.forEach(
         );
 
     }
+);
+
+
+// ============================================================
+// CRISIS ID VALIDATION
+//
+// Checks that every country relationship points to a real
+// crisis in conflicts.js.
+// ============================================================
+
+if (
+    typeof conflicts !== "undefined" &&
+    Array.isArray(conflicts)
+) {
+
+    const validCrisisIds =
+        new Set(
+            conflicts.map(
+                crisis =>
+                    crisis.id
+            )
+        );
+
+    countries.forEach(
+        country => {
+
+            country.relatedCrises.forEach(
+                relationship => {
+
+                    if (
+                        !validCrisisIds.has(
+                            relationship.crisisId
+                        )
+                    ) {
+
+                        console.warn(
+                            `Unknown crisis ID "${relationship.crisisId}" in ${country.name}.`
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// RELATIONSHIP SUMMARY
+// ============================================================
+
+const countriesWithRelatedCrises =
+    countries.filter(
+        country =>
+            country.relatedCrises.length > 0
+    );
+
+
+const totalCountryCrisisRelationships =
+    countries.reduce(
+        (total, country) =>
+            total +
+            country.relatedCrises.length,
+        0
+    );
+
+
+console.log(
+    `Conflict Atlas connected ${countriesWithRelatedCrises.length} countries to current crisis entries.`
+);
+
+console.log(
+    `Conflict Atlas loaded ${totalCountryCrisisRelationships} country-to-crisis relationships.`
 );
 
 
