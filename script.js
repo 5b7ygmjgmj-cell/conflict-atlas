@@ -1,6 +1,6 @@
 // ============================================================
 // ONE WORLD, ONE LIFE — CONFLICT ATLAS
-// CRISIS VIEW + COUNTRY VIEW
+// CRISIS VIEW + COUNTRY VIEW WITH INTERACTIVE COUNTRY BORDERS
 // ============================================================
 
 
@@ -67,20 +67,17 @@ const crisisCount =
 const counterLabel =
     document.getElementById("counter-label");
 
-
 const crisisViewButton =
     document.getElementById("crisis-view-button");
 
 const countryViewButton =
     document.getElementById("country-view-button");
 
-
 const crisisFilters =
     document.getElementById("crisis-filters");
 
 const filterButtons =
     document.querySelectorAll(".filter");
-
 
 const crisisLegend =
     document.getElementById("crisis-legend");
@@ -276,13 +273,9 @@ conflicts.forEach(
                 conflict.coordinates,
                 {
                     radius: 9,
-
                     color: "#ffffff",
-
                     weight: 1.5,
-
                     fillColor: color,
-
                     fillOpacity: 0.9
                 }
             );
@@ -292,7 +285,6 @@ conflicts.forEach(
             conflict.name,
             {
                 direction: "top",
-
                 offset: [0, -8]
             }
         );
@@ -323,68 +315,709 @@ conflicts.forEach(
 
 
 // ============================================================
-// COUNTRY MARKERS
+// COUNTRY BORDER SYSTEM
 // ============================================================
 
-const countryMarkers = [];
+let countryGeoJsonLayer = null;
+
+let selectedCountryLayer = null;
+
+const countryLayersByIso3 =
+    new Map();
+
+const fallbackCountryMarkers = [];
 
 
-countries.forEach(
-    (country) => {
+// ============================================================
+// COUNTRY BORDER STYLES
+// ============================================================
 
-        const icon =
-            L.divIcon({
-                className: "",
+function countryStyle() {
 
-                html:
-                    `<div class="country-marker">
-                        ${country.flag}
-                    </div>`,
+    return {
+        color: "#8fa3b8",
+        weight: 0.8,
+        opacity: 0.9,
+        fillColor: "#233447",
+        fillOpacity: 0.28
+    };
 
-                iconSize: [28, 28],
-
-                iconAnchor: [14, 14],
-
-                tooltipAnchor: [0, -16]
-            });
+}
 
 
-        const marker =
-            L.marker(
-                country.coordinates,
+function countryHoverStyle() {
+
+    return {
+        color: "#ffffff",
+        weight: 1.6,
+        opacity: 1,
+        fillColor: "#496b8f",
+        fillOpacity: 0.5
+    };
+
+}
+
+
+function countrySelectedStyle() {
+
+    return {
+        color: "#ffffff",
+        weight: 2.2,
+        opacity: 1,
+        fillColor: "#5f86ad",
+        fillOpacity: 0.65
+    };
+
+}
+
+
+// ============================================================
+// NORMALIZE COUNTRY NAMES
+// ============================================================
+
+function normalizeCountryName(
+    name
+) {
+
+    return (name || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .replace(
+            /[^a-z0-9]/g,
+            ""
+        );
+
+}
+
+
+// ============================================================
+// NATURAL EARTH NAME ALIASES
+// ============================================================
+
+const countryNameAliases = {
+
+    unitedstatesofamerica: "USA",
+    unitedstates: "USA",
+
+    russianfederation: "RUS",
+    russia: "RUS",
+
+    demrepcongo: "COD",
+    democraticrepublicofthecongo: "COD",
+    congodemrep: "COD",
+
+    republicofthecongo: "COG",
+    congo: "COG",
+
+    ivorycoast: "CIV",
+    cotedivoire: "CIV",
+
+    southkorea: "KOR",
+    republicofkorea: "KOR",
+
+    northkorea: "PRK",
+    democraticpeoplesrepublicofkorea: "PRK",
+
+    laos: "LAO",
+    laopeoplesdemocraticrepublic: "LAO",
+
+    vietnam: "VNM",
+
+    czechia: "CZE",
+    czechrepublic: "CZE",
+
+    eswatini: "SWZ",
+    swaziland: "SWZ",
+
+    tanzania: "TZA",
+    unitedrepublicoftanzania: "TZA",
+
+    moldova: "MDA",
+    republicofmoldova: "MDA",
+
+    brunei: "BRN",
+    bruneidarussalam: "BRN",
+
+    capeverde: "CPV",
+    caboverde: "CPV",
+
+    easttimor: "TLS",
+    timorleste: "TLS",
+
+    palestine: "PSE",
+    stateofpalestine: "PSE",
+
+    thebahamas: "BHS",
+    bahamas: "BHS",
+
+    gambia: "GMB",
+    thegambia: "GMB"
+
+};
+
+
+// ============================================================
+// MATCH GEOJSON FEATURE TO COUNTRY PROFILE
+// ============================================================
+
+function findCountryForFeature(
+    feature
+) {
+
+    const properties =
+        feature.properties || {};
+
+
+    const possibleCodes = [
+        properties.ADM0_A3,
+        properties.ISO_A3,
+        properties.ISO_A3_EH,
+        properties.SOV_A3,
+        properties.GU_A3
+    ]
+        .filter(Boolean)
+        .map(
+            code =>
+                String(code)
+                    .toUpperCase()
+        );
+
+
+    const codeMatch =
+        countries.find(
+            country =>
+                possibleCodes.includes(
+                    country.iso3
+                        .toUpperCase()
+                )
+        );
+
+
+    if (
+        codeMatch
+    ) {
+
+        return codeMatch;
+
+    }
+
+
+    const possibleNames = [
+        properties.NAME,
+        properties.NAME_LONG,
+        properties.ADMIN,
+        properties.SOVEREIGNT,
+        properties.BRK_NAME,
+        properties.FORMAL_EN
+    ]
+        .filter(Boolean);
+
+
+    for (
+        const possibleName
+        of possibleNames
+    ) {
+
+        const normalizedName =
+            normalizeCountryName(
+                possibleName
+            );
+
+
+        const aliasCode =
+            countryNameAliases[
+                normalizedName
+            ];
+
+
+        if (
+            aliasCode
+        ) {
+
+            const aliasMatch =
+                countries.find(
+                    country =>
+                        country.iso3 ===
+                        aliasCode
+                );
+
+
+            if (
+                aliasMatch
+            ) {
+
+                return aliasMatch;
+
+            }
+
+        }
+
+
+        const nameMatch =
+            countries.find(
+                country =>
+                    normalizeCountryName(
+                        country.name
+                    ) ===
+                    normalizedName
+            );
+
+
+        if (
+            nameMatch
+        ) {
+
+            return nameMatch;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+// ============================================================
+// RESTORE COUNTRY STYLE AFTER HOVER
+// ============================================================
+
+function restoreCountryLayerStyle(
+    layer
+) {
+
+    if (
+        selectedCountryLayer ===
+        layer
+    ) {
+
+        layer.setStyle(
+            countrySelectedStyle()
+        );
+
+    } else {
+
+        layer.setStyle(
+            countryStyle()
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// SELECT COUNTRY POLYGON
+// ============================================================
+
+function selectCountryLayer(
+    country,
+    layer,
+    zoomToCountry = true
+) {
+
+    if (
+        selectedCountryLayer &&
+        selectedCountryLayer !==
+        layer
+    ) {
+
+        selectedCountryLayer.setStyle(
+            countryStyle()
+        );
+
+    }
+
+
+    selectedCountryLayer =
+        layer;
+
+
+    layer.setStyle(
+        countrySelectedStyle()
+    );
+
+
+    if (
+        layer.bringToFront
+    ) {
+
+        layer.bringToFront();
+
+    }
+
+
+    if (
+        zoomToCountry
+    ) {
+
+        const bounds =
+            layer.getBounds();
+
+
+        if (
+            bounds.isValid()
+        ) {
+
+            map.flyToBounds(
+                bounds,
                 {
-                    icon: icon
+                    padding: [
+                        35,
+                        35
+                    ],
+                    maxZoom: 6,
+                    animate: true,
+                    duration: 1.1
+                }
+            );
+
+        }
+
+    }
+
+
+    openCountryPanel(
+        country
+    );
+
+}
+
+
+// ============================================================
+// FALLBACK MARKERS FOR VERY SMALL COUNTRIES
+// ============================================================
+
+function createFallbackCountryMarker(
+    country
+) {
+
+    const marker =
+        L.circleMarker(
+            country.coordinates,
+            {
+                radius: 5,
+                color: "#ffffff",
+                weight: 1.2,
+                fillColor: "#5f86ad",
+                fillOpacity: 0.9
+            }
+        );
+
+
+    marker.bindTooltip(
+        country.name,
+        {
+            direction: "top"
+        }
+    );
+
+
+    marker.on(
+        "click",
+        function () {
+
+            map.flyTo(
+                country.coordinates,
+                6,
+                {
+                    animate: true,
+                    duration: 1.1
                 }
             );
 
 
-        marker.bindTooltip(
-            country.name,
-            {
-                direction: "top"
-            }
-        );
+            openCountryPanel(
+                country
+            );
+
+        }
+    );
 
 
-        marker.on(
-            "click",
-            function () {
+    fallbackCountryMarkers.push({
+        marker: marker,
+        country: country
+    });
 
-                openCountryPanel(
-                    country
+}
+
+
+// ============================================================
+// LOAD COUNTRY GEOJSON
+// ============================================================
+
+fetch(
+    "countries.geojson?v=1"
+)
+    .then(
+        response => {
+
+            if (
+                !response.ok
+            ) {
+
+                throw new Error(
+                    "Could not load countries.geojson."
                 );
 
             }
-        );
 
 
-        countryMarkers.push({
-            marker: marker,
-            country: country
-        });
+            return response.json();
 
-    }
-);
+        }
+    )
+    .then(
+        geojsonData => {
+
+            const matchedIso3 =
+                new Set();
+
+
+            countryGeoJsonLayer =
+                L.geoJSON(
+                    geojsonData,
+                    {
+
+                        style:
+                            countryStyle,
+
+
+                        onEachFeature:
+                            function (
+                                feature,
+                                layer
+                            ) {
+
+                                const country =
+                                    findCountryForFeature(
+                                        feature
+                                    );
+
+
+                                // --------------------------------
+                                // FEATURE WITHOUT PROFILE MATCH
+                                // --------------------------------
+
+                                if (
+                                    !country
+                                ) {
+
+                                    layer.setStyle({
+                                        color: "#596979",
+                                        weight: 0.6,
+                                        opacity: 0.7,
+                                        fillColor: "#1b2836",
+                                        fillOpacity: 0.16
+                                    });
+
+
+                                    layer.bindTooltip(
+                                        feature.properties.NAME ||
+                                        feature.properties.ADMIN ||
+                                        "Geographic area",
+                                        {
+                                            direction: "top",
+                                            sticky: true
+                                        }
+                                    );
+
+
+                                    return;
+
+                                }
+
+
+                                // --------------------------------
+                                // MATCHED COUNTRY
+                                // --------------------------------
+
+                                matchedIso3.add(
+                                    country.iso3
+                                );
+
+
+                                countryLayersByIso3.set(
+                                    country.iso3,
+                                    layer
+                                );
+
+
+                                layer.bindTooltip(
+                                    country.name,
+                                    {
+                                        direction: "top",
+                                        sticky: true
+                                    }
+                                );
+
+
+                                layer.on({
+
+                                    mouseover:
+                                        function () {
+
+                                            if (
+                                                selectedCountryLayer !==
+                                                layer
+                                            ) {
+
+                                                layer.setStyle(
+                                                    countryHoverStyle()
+                                                );
+
+                                            }
+
+
+                                            if (
+                                                layer.bringToFront
+                                            ) {
+
+                                                layer.bringToFront();
+
+                                            }
+
+                                        },
+
+
+                                    mouseout:
+                                        function () {
+
+                                            restoreCountryLayerStyle(
+                                                layer
+                                            );
+
+                                        },
+
+
+                                    click:
+                                        function () {
+
+                                            selectCountryLayer(
+                                                country,
+                                                layer,
+                                                true
+                                            );
+
+                                        }
+
+                                });
+
+                            }
+
+                    }
+                );
+
+
+            // ----------------------------------------
+            // CREATE FALLBACKS FOR COUNTRIES WITHOUT
+            // THEIR OWN 110m NATURAL EARTH POLYGON
+            // ----------------------------------------
+
+            countries.forEach(
+                country => {
+
+                    if (
+                        !matchedIso3.has(
+                            country.iso3
+                        )
+                    ) {
+
+                        createFallbackCountryMarker(
+                            country
+                        );
+
+                    }
+
+                }
+            );
+
+
+            // ----------------------------------------
+            // IF USER SWITCHED TO COUNTRY VIEW WHILE
+            // GEOJSON WAS STILL LOADING, SHOW IT NOW
+            // ----------------------------------------
+
+            if (
+                currentView ===
+                "countries"
+            ) {
+
+                countryGeoJsonLayer.addTo(
+                    map
+                );
+
+
+                fallbackCountryMarkers.forEach(
+                    item => {
+
+                        item.marker.addTo(
+                            map
+                        );
+
+                    }
+                );
+
+            }
+
+
+            console.log(
+                `Conflict Atlas loaded country borders for ${matchedIso3.size} profiles.`
+            );
+
+        }
+    )
+    .catch(
+        error => {
+
+            console.error(
+                "Country borders failed to load:",
+                error
+            );
+
+
+            // ----------------------------------------
+            // FAIL-SAFE:
+            // IF GEOJSON FAILS, COUNTRY PROFILES
+            // STILL WORK USING SMALL MARKERS
+            // ----------------------------------------
+
+            countries.forEach(
+                country => {
+
+                    createFallbackCountryMarker(
+                        country
+                    );
+
+                }
+            );
+
+
+            if (
+                currentView ===
+                "countries"
+            ) {
+
+                fallbackCountryMarkers.forEach(
+                    item => {
+
+                        item.marker.addTo(
+                            map
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+    );
 
 
 // ============================================================
@@ -455,7 +1088,8 @@ function openConflictPanel(
 
     // ACTORS
 
-    crisisActors.innerHTML = "";
+    crisisActors.innerHTML =
+        "";
 
 
     if (
@@ -504,7 +1138,8 @@ function openConflictPanel(
 
     // TIMELINE
 
-    crisisTimeline.innerHTML = "";
+    crisisTimeline.innerHTML =
+        "";
 
 
     if (
@@ -584,7 +1219,8 @@ function openConflictPanel(
 
     // SOURCES
 
-    crisisSources.innerHTML = "";
+    crisisSources.innerHTML =
+        "";
 
 
     if (
@@ -634,7 +1270,8 @@ function openConflictPanel(
 
     // AID
 
-    crisisAid.innerHTML = "";
+    crisisAid.innerHTML =
+        "";
 
 
     if (
@@ -762,11 +1399,12 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // CONNECT COUNTRY TO CRISES
-    // ========================================
+    // ========================================================
 
-    countryCrises.innerHTML = "";
+    countryCrises.innerHTML =
+        "";
 
 
     const relatedCrises =
@@ -920,9 +1558,9 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // HUMANITARIAN SNAPSHOT
-    // ========================================
+    // ========================================================
 
     if (
         country.humanitarianSnapshot
@@ -947,9 +1585,9 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // DISPLACEMENT
-    // ========================================
+    // ========================================================
 
     if (
         country.displacementSnapshot
@@ -974,11 +1612,12 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // COUNTRY TIMELINE
-    // ========================================
+    // ========================================================
 
-    countryTimeline.innerHTML = "";
+    countryTimeline.innerHTML =
+        "";
 
 
     if (
@@ -1056,9 +1695,9 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // HUMANITARIAN ORGANIZATIONS
-    // ========================================
+    // ========================================================
 
     countryOrganizations.innerHTML =
         "";
@@ -1113,9 +1752,9 @@ function openCountryPanel(
     }
 
 
-    // ========================================
+    // ========================================================
     // SOURCES
-    // ========================================
+    // ========================================================
 
     countrySources.innerHTML =
         "";
@@ -1186,6 +1825,7 @@ function findRelatedCrises(
 
 
     const aliases = {
+
         "democratic republic of the congo": [
             "dr congo",
             "drc",
@@ -1237,6 +1877,7 @@ function findRelatedCrises(
             "côte d'ivoire",
             "ivory coast"
         ]
+
     };
 
 
@@ -1246,7 +1887,9 @@ function findRelatedCrises(
 
 
     if (
-        aliases[countryName]
+        aliases[
+            countryName
+        ]
     ) {
 
         aliases[
@@ -1423,7 +2066,8 @@ filterButtons.forEach(
 
 function switchToCrisisView() {
 
-    currentView = "crises";
+    currentView =
+        "crises";
 
 
     crisisViewButton.classList.add(
@@ -1453,7 +2097,25 @@ function switchToCrisisView() {
     );
 
 
-    countryMarkers.forEach(
+    // REMOVE COUNTRY POLYGONS
+
+    if (
+        countryGeoJsonLayer &&
+        map.hasLayer(
+            countryGeoJsonLayer
+        )
+    ) {
+
+        map.removeLayer(
+            countryGeoJsonLayer
+        );
+
+    }
+
+
+    // REMOVE SMALL-COUNTRY FALLBACK MARKERS
+
+    fallbackCountryMarkers.forEach(
         item => {
 
             if (
@@ -1493,7 +2155,8 @@ function switchToCrisisView() {
 
 
             const shouldShow =
-                selectedFilter === "all" ||
+                selectedFilter ===
+                    "all" ||
                 categories.includes(
                     selectedFilter
                 );
@@ -1545,7 +2208,8 @@ function switchToCrisisView() {
 
 function switchToCountryView() {
 
-    currentView = "countries";
+    currentView =
+        "countries";
 
 
     countryViewButton.classList.add(
@@ -1575,6 +2239,8 @@ function switchToCountryView() {
     );
 
 
+    // REMOVE CRISIS MARKERS
+
     conflictMarkers.forEach(
         item => {
 
@@ -1594,7 +2260,25 @@ function switchToCountryView() {
     );
 
 
-    countryMarkers.forEach(
+    // ADD COUNTRY POLYGONS
+
+    if (
+        countryGeoJsonLayer &&
+        !map.hasLayer(
+            countryGeoJsonLayer
+        )
+    ) {
+
+        countryGeoJsonLayer.addTo(
+            map
+        );
+
+    }
+
+
+    // ADD FALLBACK MARKERS FOR SMALL COUNTRIES
+
+    fallbackCountryMarkers.forEach(
         item => {
 
             if (
@@ -1679,7 +2363,8 @@ crisisSearch.addEventListener(
 
 
         if (
-            searchTerm === ""
+            searchTerm ===
+            ""
         ) {
 
             searchResults.style.display =
@@ -1785,7 +2470,8 @@ function searchCrises(
 
 
     if (
-        matches.length === 0
+        matches.length ===
+        0
     ) {
 
         showNoSearchResult(
@@ -1893,7 +2579,8 @@ function searchCountries(
 
 
     if (
-        matches.length === 0
+        matches.length ===
+        0
     ) {
 
         showNoSearchResult(
@@ -2149,36 +2836,56 @@ function selectCountrySearchResult(
     country
 ) {
 
-    const selectedMarker =
-        countryMarkers.find(
-            item =>
-                item.country.iso3 ===
-                country.iso3
+    const countryLayer =
+        countryLayersByIso3.get(
+            country.iso3
         );
 
 
-    map.flyTo(
-        country.coordinates,
-        5,
-        {
-            animate: true,
-            duration: 1.2
-        }
-    );
-
-
-    openCountryPanel(
-        country
-    );
-
-
     if (
-        selectedMarker
+        countryLayer
     ) {
 
-        selectedMarker
-            .marker
-            .openTooltip();
+        selectCountryLayer(
+            country,
+            countryLayer,
+            true
+        );
+
+    } else {
+
+        map.flyTo(
+            country.coordinates,
+            6,
+            {
+                animate: true,
+                duration: 1.2
+            }
+        );
+
+
+        openCountryPanel(
+            country
+        );
+
+
+        const fallbackMarker =
+            fallbackCountryMarkers.find(
+                item =>
+                    item.country.iso3 ===
+                    country.iso3
+            );
+
+
+        if (
+            fallbackMarker
+        ) {
+
+            fallbackMarker
+                .marker
+                .openTooltip();
+
+        }
 
     }
 
