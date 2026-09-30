@@ -11,25 +11,18 @@
 
     <title>One World, One Life | Conflict Atlas</title>
 
-    <!-- Leaflet -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-    <!-- Website styling -->
     <link
         rel="stylesheet"
         href="style.css"
     >
 </head>
 
-
 <body>
-
-    <!-- =====================================
-         HEADER
-    ====================================== -->
 
     <header>
 
@@ -48,9 +41,6 @@
             </p>
 
         </div>
-
-
-        <!-- FILTERS -->
 
         <nav>
 
@@ -94,9 +84,9 @@
     </header>
 
 
-    <!-- =====================================
+    <!-- ======================================
          SEARCH + CRISIS COUNTER
-    ====================================== -->
+         ====================================== -->
 
     <section class="atlas-tools">
 
@@ -117,7 +107,6 @@
 
         </div>
 
-
         <p class="crisis-counter">
             <span id="crisis-count">0</span>
             crises currently documented
@@ -126,9 +115,9 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- ======================================
          MAP + INFORMATION PANEL
-    ====================================== -->
+         ====================================== -->
 
     <main>
 
@@ -145,7 +134,6 @@
                     Map Legend
                 </h3>
 
-
                 <div>
                     <span
                         class="legend-color conflict-color"
@@ -153,7 +141,6 @@
 
                     Armed Conflict
                 </div>
-
 
                 <div>
                     <span
@@ -163,7 +150,6 @@
                     Humanitarian Crisis
                 </div>
 
-
                 <div>
                     <span
                         class="legend-color displacement-color"
@@ -171,7 +157,6 @@
 
                     Displacement Crisis
                 </div>
-
 
                 <div>
                     <span
@@ -186,9 +171,9 @@
         </section>
 
 
-        <!-- =================================
-             INFORMATION PANEL
-        ================================== -->
+        <!-- ==================================
+             CRISIS INFORMATION PANEL
+             ================================== -->
 
         <aside
             id="info-panel"
@@ -204,16 +189,22 @@
             </button>
 
 
+            <!-- CATEGORY -->
+
             <p
                 id="crisis-category"
                 class="category-label"
             ></p>
 
 
+            <!-- CRISIS NAME -->
+
             <h2 id="crisis-name">
                 Select a location
             </h2>
 
+
+            <!-- LAST VERIFIED -->
 
             <p id="last-updated"></p>
 
@@ -235,17 +226,13 @@
 
             <!-- CURRENT SITUATION -->
 
-            <section
-                id="current-situation-section"
-            >
+            <section id="current-situation-section">
 
                 <h3>
                     Current Situation
                 </h3>
 
-                <p
-                    id="crisis-current-situation"
-                ></p>
+                <p id="crisis-current-situation"></p>
 
             </section>
 
@@ -258,9 +245,7 @@
                     Key Actors
                 </h3>
 
-                <div
-                    id="crisis-actors"
-                ></div>
+                <div id="crisis-actors"></div>
 
             </section>
 
@@ -273,26 +258,20 @@
                     Humanitarian Impact
                 </h3>
 
-                <p
-                    id="crisis-impact"
-                ></p>
+                <p id="crisis-impact"></p>
 
             </section>
 
 
             <!-- TIMELINE -->
 
-            <section
-                id="timeline-section"
-            >
+            <section id="timeline-section">
 
                 <h3>
                     Timeline
                 </h3>
 
-                <div
-                    id="crisis-timeline"
-                ></div>
+                <div id="crisis-timeline"></div>
 
             </section>
 
@@ -306,12 +285,11 @@
                 </h3>
 
                 <p class="section-description">
-                    Sources are provided so readers can verify the information presented in this entry.
+                    Sources are provided so readers can verify
+                    the information presented in this entry.
                 </p>
 
-                <div
-                    id="crisis-sources"
-                ></div>
+                <div id="crisis-sources"></div>
 
             </section>
 
@@ -325,13 +303,12 @@
                 </h3>
 
                 <p>
-                    Organizations listed here provide humanitarian assistance related to this crisis.
+                    Organizations listed here provide humanitarian
+                    assistance related to this crisis.
                     One World, One Life does not collect donations.
                 </p>
 
-                <div
-                    id="crisis-aid"
-                ></div>
+                <div id="crisis-aid"></div>
 
             </section>
 
@@ -345,9 +322,11 @@
                 </h3>
 
                 <p>
-                    Conflict Atlas aims to present factual information using cited sources.
-                    Listing an actor, government, organization, or armed group does not
-                    represent support for that entity. Information may change as events develop.
+                    Conflict Atlas aims to present factual information
+                    using cited sources. Listing an actor, government,
+                    organization, or armed group does not represent
+                    support for that entity. Information may change
+                    as events develop.
                 </p>
 
             </section>
@@ -357,43 +336,49 @@
     </main>
 
 
-    <!-- =====================================
+    <!-- ======================================
          FOOTER
-    ====================================== -->
+         ====================================== -->
 
     <footer>
 
         <p>
             One World, One Life is an independent informational project.
-            Conflict Atlas presents information using cited sources and does not
-            represent support for any government, political organization, or armed group.
+            Conflict Atlas presents information using cited sources and
+            does not represent support for any government, political
+            organization, or armed group.
         </p>
 
     </footer>
 
 
-    <!-- =====================================
+    <!-- ======================================
          JAVASCRIPT
-    ====================================== -->
+         IMPORTANT:
+         Databases load BEFORE script.js
+         ====================================== -->
 
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
 
-
-    <!-- 32-entry database -->
+    <!-- 32 CRISIS DATABASE -->
 
     <script
         src="conflicts.js?v=3"
     ></script>
 
+    <!-- 195 COUNTRY DATABASE -->
 
-    <!-- Search + map functionality -->
+    <script
+        src="countries.js?v=1"
+    ></script>
+
+    <!-- CONFLICT ATLAS APPLICATION -->
 
     <script
         src="script.js?v=3"
     ></script>
-
 
 </body>
 
