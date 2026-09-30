@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,104 +10,85 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>One World, One Life | Conflict Atlas</title>
+    <title>
+        One World, One Life | Conflict Atlas
+    </title>
+
+
+    <!-- =====================================================
+         LEAFLET CSS
+         ===================================================== -->
 
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIINfQ3yn5pYyWfQWq6QbMZQ5nC2Y7fLhM="
+        crossorigin=""
     >
+
+
+    <!-- =====================================================
+         SITE CSS
+         ===================================================== -->
 
     <link
         rel="stylesheet"
         href="style.css?v=4"
     >
+
 </head>
+
 
 <body>
 
-    <!-- ======================================
+
+    <!-- =====================================================
          HEADER
-         ====================================== -->
+         ===================================================== -->
 
-    <header>
+    <header class="site-header">
 
-        <div class="brand">
+        <div class="header-content">
 
-            <h1>
-                One World, One Life
-            </h1>
+            <div class="brand">
 
-            <h2>
-                Conflict Atlas
-            </h2>
+                <h1>
+                    One World, One Life
+                </h1>
 
-            <p>
-                Understand global crises. Find verified ways to help.
-            </p>
+                <p class="product-name">
+                    Conflict Atlas
+                </p>
+
+                <p class="tagline">
+                    Understand global crises. Find verified ways to help.
+                </p>
+
+            </div>
 
         </div>
-
-
-        <!-- CRISIS FILTERS -->
-
-        <nav id="crisis-filters">
-
-            <button
-                class="filter active"
-                data-filter="all"
-            >
-                All
-            </button>
-
-            <button
-                class="filter"
-                data-filter="conflict"
-            >
-                Armed Conflict
-            </button>
-
-            <button
-                class="filter"
-                data-filter="humanitarian"
-            >
-                Humanitarian Crisis
-            </button>
-
-            <button
-                class="filter"
-                data-filter="displacement"
-            >
-                Displacement
-            </button>
-
-            <button
-                class="filter"
-                data-filter="disaster"
-            >
-                Natural Disaster
-            </button>
-
-        </nav>
 
     </header>
 
 
-    <!-- ======================================
-         VIEW SELECTOR
-         ====================================== -->
 
-    <section class="view-selector-bar">
+    <!-- =====================================================
+         CONTROLS
+         ===================================================== -->
+
+    <section class="controls">
+
+
+        <!-- =================================================
+             VIEW SELECTOR
+             ================================================= -->
 
         <div class="view-selector">
-
-            <span class="view-selector-label">
-                Explore
-            </span>
 
             <button
                 id="crisis-view-button"
                 class="view-button active"
-                data-view="crises"
+                type="button"
             >
                 Crises
             </button>
@@ -114,199 +96,286 @@
             <button
                 id="country-view-button"
                 class="view-button"
-                data-view="countries"
+                type="button"
             >
                 Countries
             </button>
 
         </div>
 
-    </section>
 
 
-    <!-- ======================================
-         SEARCH + DATABASE COUNTER
-         ====================================== -->
+        <!-- =================================================
+             CRISIS FILTERS
+             ================================================= -->
 
-    <section class="atlas-tools">
+        <div
+            id="crisis-filters"
+            class="filter-group"
+        >
 
-        <div class="search-container">
-
-            <input
-                type="search"
-                id="crisis-search"
-                placeholder="Search for a crisis..."
-                autocomplete="off"
-                aria-label="Search Conflict Atlas"
+            <button
+                class="filter-button active"
+                data-filter="all"
+                type="button"
             >
+                All
+            </button>
 
-            <div
-                id="search-results"
-                class="search-results"
-            ></div>
+            <button
+                class="filter-button"
+                data-filter="conflict"
+                type="button"
+            >
+                Armed Conflict
+            </button>
+
+            <button
+                class="filter-button"
+                data-filter="humanitarian"
+                type="button"
+            >
+                Humanitarian Crisis
+            </button>
+
+            <button
+                class="filter-button"
+                data-filter="displacement"
+                type="button"
+            >
+                Displacement Crisis
+            </button>
+
+            <button
+                class="filter-button"
+                data-filter="disaster"
+                type="button"
+            >
+                Natural Disaster
+            </button>
 
         </div>
 
 
-        <p class="crisis-counter">
 
-            <span id="crisis-count">
-                0
-            </span>
+        <!-- =================================================
+             SEARCH
+             ================================================= -->
 
-            <span id="counter-label">
-                crises currently documented
-            </span>
+        <div class="search-area">
 
-        </p>
+            <div class="search-container">
+
+                <input
+                    id="atlas-search"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Search crises..."
+                    aria-label="Search Conflict Atlas"
+                >
+
+                <div
+                    id="search-results"
+                    class="search-results"
+                ></div>
+
+            </div>
+
+
+            <div class="atlas-counter">
+
+                <span id="atlas-count">
+                    0
+                </span>
+
+                <span id="atlas-count-label">
+                    crises
+                </span>
+
+            </div>
+
+        </div>
 
     </section>
 
 
-    <!-- ======================================
-         MAP + INFORMATION PANELS
-         ====================================== -->
 
-    <main>
+    <!-- =====================================================
+         MAP AREA
+         ===================================================== -->
 
+    <main class="atlas-main">
 
-        <!-- MAP -->
-
-        <section class="map-section">
-
-            <div id="map"></div>
-
-
-            <!-- CRISIS LEGEND -->
-
-            <div
-                id="crisis-legend"
-                class="legend"
-            >
-
-                <h3>
-                    Map Legend
-                </h3>
-
-                <div>
-                    <span
-                        class="legend-color conflict-color"
-                    ></span>
-
-                    Armed Conflict
-                </div>
-
-                <div>
-                    <span
-                        class="legend-color humanitarian-color"
-                    ></span>
-
-                    Humanitarian Crisis
-                </div>
-
-                <div>
-                    <span
-                        class="legend-color displacement-color"
-                    ></span>
-
-                    Displacement Crisis
-                </div>
-
-                <div>
-                    <span
-                        class="legend-color disaster-color"
-                    ></span>
-
-                    Natural Disaster
-                </div>
-
-            </div>
+        <div
+            id="map"
+            aria-label="Conflict Atlas interactive map"
+        ></div>
 
 
-            <!-- COUNTRY VIEW LEGEND -->
 
-            <div
-                id="country-legend"
-                class="legend country-legend"
-            >
+        <!-- =================================================
+             CRISIS LEGEND
+             ================================================= -->
 
-                <h3>
-                    Country View
-                </h3>
-
-                <p>
-                    Select a country to open its profile.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==================================
-             CRISIS INFORMATION PANEL
-             ================================== -->
-
-        <aside
-            id="info-panel"
-            class="info-panel"
+        <div
+            id="crisis-legend"
+            class="map-legend"
         >
 
-            <button
-                id="close-panel"
-                class="close-button"
-                aria-label="Close crisis information panel"
-            >
-                ×
-            </button>
+            <div class="legend-title">
+                Crisis Type
+            </div>
+
+            <div class="legend-item">
+
+                <span
+                    class="legend-dot legend-conflict"
+                ></span>
+
+                Armed Conflict
+
+            </div>
+
+            <div class="legend-item">
+
+                <span
+                    class="legend-dot legend-humanitarian"
+                ></span>
+
+                Humanitarian Crisis
+
+            </div>
+
+            <div class="legend-item">
+
+                <span
+                    class="legend-dot legend-displacement"
+                ></span>
+
+                Displacement Crisis
+
+            </div>
+
+            <div class="legend-item">
+
+                <span
+                    class="legend-dot legend-disaster"
+                ></span>
+
+                Natural Disaster
+
+            </div>
+
+        </div>
 
 
-            <p
+
+        <!-- =================================================
+             COUNTRY LEGEND
+             ================================================= -->
+
+        <div
+            id="country-legend"
+            class="map-legend country-legend"
+        >
+
+            <div class="legend-title">
+                Country Profiles
+            </div>
+
+            <div class="legend-item">
+
+                Select a country to open its profile.
+
+            </div>
+
+            <div class="legend-item">
+
+                Borders are shown for geographic reference.
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         CRISIS INFORMATION PANEL
+         ===================================================== -->
+
+    <aside
+        id="info-panel"
+        class="info-panel"
+        aria-hidden="true"
+    >
+
+        <button
+            id="close-panel"
+            class="close-panel"
+            type="button"
+            aria-label="Close crisis profile"
+        >
+            ×
+        </button>
+
+
+        <div class="panel-scroll">
+
+
+            <div
                 id="crisis-category"
-                class="category-label"
-            ></p>
+                class="crisis-category"
+            ></div>
 
 
-            <h2 id="crisis-name">
-                Select a location
-            </h2>
+            <h2 id="crisis-name"></h2>
 
 
-            <p id="last-updated"></p>
+            <p class="last-verified">
+
+                Last verified:
+
+                <span id="crisis-updated">
+                    —
+                </span>
+
+            </p>
+
 
 
             <!-- OVERVIEW -->
 
-            <section>
+            <section class="panel-section">
 
                 <h3>
                     Overview
                 </h3>
 
-                <p id="crisis-overview">
-                    Select a highlighted location on the map
-                    to learn more.
-                </p>
+                <p id="crisis-overview"></p>
 
             </section>
 
 
+
             <!-- CURRENT SITUATION -->
 
-            <section id="current-situation-section">
+            <section class="panel-section">
 
                 <h3>
                     Current Situation
                 </h3>
 
-                <p id="crisis-current-situation"></p>
+                <p id="crisis-situation"></p>
 
             </section>
 
 
+
             <!-- KEY ACTORS -->
 
-            <section>
+            <section class="panel-section">
 
                 <h3>
                     Key Actors
@@ -317,22 +386,24 @@
             </section>
 
 
+
             <!-- HUMANITARIAN IMPACT -->
 
-            <section>
+            <section class="panel-section">
 
                 <h3>
                     Humanitarian Impact
                 </h3>
 
-                <p id="crisis-impact"></p>
+                <div id="crisis-impact"></div>
 
             </section>
 
 
+
             <!-- TIMELINE -->
 
-            <section id="timeline-section">
+            <section class="panel-section">
 
                 <h3>
                     Timeline
@@ -343,113 +414,118 @@
             </section>
 
 
+
             <!-- SOURCES -->
 
-            <section>
+            <section class="panel-section">
 
                 <h3>
                     Sources
                 </h3>
-
-                <p class="section-description">
-                    Sources are provided so readers can verify
-                    the information presented in this entry.
-                </p>
 
                 <div id="crisis-sources"></div>
 
             </section>
 
 
+
             <!-- HUMANITARIAN AID -->
 
-            <section class="aid-section">
+            <section class="panel-section">
 
                 <h3>
                     Humanitarian Aid
                 </h3>
-
-                <p>
-                    Organizations listed here provide humanitarian
-                    assistance related to this crisis.
-                    One World, One Life does not collect donations.
-                </p>
 
                 <div id="crisis-aid"></div>
 
             </section>
 
 
+
             <!-- EDITORIAL NOTE -->
 
-            <section class="editorial-note">
+            <section class="panel-section editorial-section">
 
                 <h3>
-                    About This Entry
+                    Editorial Note
                 </h3>
 
-                <p>
-                    Conflict Atlas aims to present factual information
-                    using cited sources. Listing an actor, government,
-                    organization, or armed group does not represent
-                    support for that entity. Information may change
-                    as events develop.
-                </p>
+                <p id="crisis-editorial"></p>
 
             </section>
 
-        </aside>
+
+        </div>
+
+    </aside>
 
 
-        <!-- ==================================
-             COUNTRY INFORMATION PANEL
-             ================================== -->
 
-        <aside
-            id="country-panel"
-            class="info-panel country-panel"
+    <!-- =====================================================
+         COUNTRY PROFILE PANEL
+         ===================================================== -->
+
+    <aside
+        id="country-panel"
+        class="info-panel country-panel"
+        aria-hidden="true"
+    >
+
+        <button
+            id="close-country-panel"
+            class="close-panel"
+            type="button"
+            aria-label="Close country profile"
         >
-
-            <button
-                id="close-country-panel"
-                class="close-button"
-                aria-label="Close country profile"
-            >
-                ×
-            </button>
+            ×
+        </button>
 
 
-            <p class="category-label">
-                Country Profile
-            </p>
+        <div class="panel-scroll">
 
 
-            <!-- COUNTRY FLAG + NAME -->
+            <!-- =================================================
+                 COUNTRY TITLE
+                 ================================================= -->
 
             <div class="country-title">
 
-                <span
+                <div
                     id="country-flag"
                     class="country-flag"
-                >
-                    🌍
-                </span>
+                ></div>
 
-                <h2 id="country-name">
-                    Select a country
-                </h2>
+                <div>
+
+                    <div class="country-profile-label">
+                        Country Profile
+                    </div>
+
+                    <h2 id="country-name"></h2>
+
+                </div>
 
             </div>
 
 
-            <p id="country-last-updated"></p>
+            <p class="last-verified">
+
+                Last verified:
+
+                <span id="country-updated">
+                    —
+                </span>
+
+            </p>
 
 
-            <!-- ==================================
+
+            <!-- =================================================
                  AT A GLANCE
-                 ================================== -->
+                 ================================================= -->
 
-            <section>
+            <section class="panel-section">
 
                 <h3>
                     At a Glance
@@ -458,8 +534,6 @@
 
                 <div class="country-facts">
 
-
-                    <!-- POPULATION -->
 
                     <div class="country-fact">
 
@@ -477,7 +551,6 @@
                     </div>
 
 
-                    <!-- CAPITAL -->
 
                     <div class="country-fact">
 
@@ -495,7 +568,6 @@
                     </div>
 
 
-                    <!-- REGION -->
 
                     <div class="country-fact">
 
@@ -513,7 +585,6 @@
                     </div>
 
 
-                    <!-- SUBREGION -->
 
                     <div class="country-fact">
 
@@ -531,7 +602,6 @@
                     </div>
 
 
-                    <!-- ISO -->
 
                     <div class="country-fact">
 
@@ -549,7 +619,6 @@
                     </div>
 
 
-                    <!-- AREA -->
 
                     <div class="country-fact">
 
@@ -567,7 +636,6 @@
                     </div>
 
 
-                    <!-- LANGUAGES -->
 
                     <div class="country-fact">
 
@@ -585,7 +653,6 @@
                     </div>
 
 
-                    <!-- CURRENCY -->
 
                     <div class="country-fact">
 
@@ -603,12 +670,11 @@
                     </div>
 
 
-                    <!-- RELATED CRISES COUNT -->
 
                     <div class="country-fact">
 
                         <span class="fact-label">
-                            Related Crises
+                            Current Crises
                         </span>
 
                         <span
@@ -620,40 +686,48 @@
 
                     </div>
 
+
                 </div>
-
-
-                <p
-                    id="country-note"
-                    class="country-note"
-                ></p>
 
             </section>
 
 
-            <!-- ==================================
-                 ABOUT
-                 ================================== -->
 
-            <section>
+            <!-- =================================================
+                 SPECIAL COUNTRY NOTE
+                 ================================================= -->
+
+            <div
+                id="country-note"
+                class="country-note"
+            ></div>
+
+
+
+            <!-- =================================================
+                 ABOUT
+                 ================================================= -->
+
+            <section class="panel-section">
 
                 <h3>
                     About
                 </h3>
 
-                <p id="country-overview">
-                    Select a country on the map to view
-                    its profile.
-                </p>
+                <p id="country-overview"></p>
 
             </section>
 
 
-            <!-- ==================================
-                 GOVERNMENT & INTERNATIONAL RELATIONS
-                 ================================== -->
 
-            <section id="country-government-section">
+            <!-- =================================================
+                 GOVERNMENT & INTERNATIONAL RELATIONS
+                 ================================================= -->
+
+            <section
+                id="country-government-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Government &amp; International Relations
@@ -662,8 +736,6 @@
 
                 <div class="country-facts">
 
-
-                    <!-- GOVERNMENT TYPE -->
 
                     <div class="country-fact">
 
@@ -681,7 +753,6 @@
                     </div>
 
 
-                    <!-- HEAD OF STATE -->
 
                     <div class="country-fact">
 
@@ -699,7 +770,6 @@
                     </div>
 
 
-                    <!-- HEAD OF GOVERNMENT -->
 
                     <div class="country-fact">
 
@@ -717,7 +787,6 @@
                     </div>
 
 
-                    <!-- UN STATUS -->
 
                     <div class="country-fact">
 
@@ -734,6 +803,7 @@
 
                     </div>
 
+
                 </div>
 
 
@@ -744,11 +814,15 @@
             </section>
 
 
-            <!-- ==================================
-                 RELATED CRISES
-                 ================================== -->
 
-            <section id="country-crises-section">
+            <!-- =================================================
+                 RELATED CRISES
+                 ================================================= -->
+
+            <section
+                id="country-crises-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Related Crises
@@ -759,41 +833,53 @@
             </section>
 
 
-            <!-- ==================================
-                 HUMANITARIAN SNAPSHOT
-                 ================================== -->
 
-            <section id="country-humanitarian-section">
+            <!-- =================================================
+                 HUMANITARIAN SNAPSHOT
+                 ================================================= -->
+
+            <section
+                id="country-humanitarian-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Humanitarian Snapshot
                 </h3>
 
-                <p id="country-humanitarian"></p>
+                <div id="country-humanitarian"></div>
 
             </section>
 
 
-            <!-- ==================================
-                 DISPLACEMENT
-                 ================================== -->
 
-            <section id="country-displacement-section">
+            <!-- =================================================
+                 DISPLACEMENT
+                 ================================================= -->
+
+            <section
+                id="country-displacement-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Displacement
                 </h3>
 
-                <p id="country-displacement"></p>
+                <div id="country-displacement"></div>
 
             </section>
 
 
-            <!-- ==================================
-                 RECENT HISTORY
-                 ================================== -->
 
-            <section id="country-timeline-section">
+            <!-- =================================================
+                 RECENT HISTORY
+                 ================================================= -->
+
+            <section
+                id="country-timeline-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Recent History
@@ -804,11 +890,15 @@
             </section>
 
 
-            <!-- ==================================
-                 HUMANITARIAN ORGANIZATIONS
-                 ================================== -->
 
-            <section id="country-organizations-section">
+            <!-- =================================================
+                 HUMANITARIAN ORGANIZATIONS
+                 ================================================= -->
+
+            <section
+                id="country-organizations-section"
+                class="panel-section"
+            >
 
                 <h3>
                     Humanitarian Organizations
@@ -819,74 +909,58 @@
             </section>
 
 
-            <!-- ==================================
-                 SOURCES
-                 ================================== -->
 
-            <section>
+            <!-- =================================================
+                 SOURCES
+                 ================================================= -->
+
+            <section class="panel-section">
 
                 <h3>
                     Sources
                 </h3>
-
-                <p class="section-description">
-                    Sources are provided so readers can verify
-                    information shown in this country profile.
-                </p>
 
                 <div id="country-sources"></div>
 
             </section>
 
 
-            <!-- ==================================
-                 COUNTRY PROFILE NOTE
-                 ================================== -->
+        </div>
 
-            <section class="editorial-note">
-
-                <h3>
-                    About Country Profiles
-                </h3>
-
-                <p>
-                    Country Profiles provide geographic, political,
-                    humanitarian, and crisis-related context.
-                    The presence or absence of a Conflict Atlas
-                    crisis entry does not constitute an assessment
-                    of a country, government, political organization,
-                    or population.
-                </p>
-
-            </section>
-
-        </aside>
-
-    </main>
+    </aside>
 
 
-    <!-- ======================================
+
+    <!-- =====================================================
          FOOTER
-         ====================================== -->
+         ===================================================== -->
 
-    <footer>
+    <footer class="site-footer">
 
         <p>
-            One World, One Life is an independent informational project.
-            Conflict Atlas presents information using cited sources and
-            does not represent support for any government, political
-            organization, or armed group.
+            One World, One Life — Conflict Atlas
+        </p>
+
+        <p>
+            Geographic boundaries are shown for reference and
+            do not imply a political position or endorsement.
         </p>
 
     </footer>
 
 
-    <!-- ======================================
+
+    <!-- =====================================================
          JAVASCRIPT
-         ====================================== -->
+         ===================================================== -->
+
+
+    <!-- LEAFLET -->
 
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""
     ></script>
 
 
@@ -907,15 +981,16 @@
     <!-- COUNTRY FACTS -->
 
     <script
-        src="country-facts.js?v=1"
+        src="country-facts.js?v=2"
     ></script>
 
 
-    <!-- CONFLICT ATLAS APPLICATION -->
+    <!-- MAIN CONFLICT ATLAS LOGIC -->
 
     <script
         src="script.js?v=7"
     ></script>
+
 
 </body>
 
