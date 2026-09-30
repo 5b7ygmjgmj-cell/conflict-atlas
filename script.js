@@ -1,6 +1,6 @@
 // ==========================================
-// CONFLICT ATLAS — MAP
-// MULTI-CATEGORY VERSION
+// ONE WORLD, ONE LIFE — CONFLICT ATLAS
+// MAP + FILTERS + SEARCH + CRISIS COUNTER
 // ==========================================
 
 
@@ -15,10 +15,6 @@ const map = L.map("map", {
 }).setView([20, 10], 2);
 
 
-// ==========================================
-// OPENSTREETMAP
-// ==========================================
-
 L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
@@ -29,7 +25,7 @@ L.tileLayer(
 
 
 // ==========================================
-// CATEGORY SETTINGS
+// CATEGORY COLORS
 // ==========================================
 
 const categoryColors = {
@@ -49,7 +45,7 @@ const categoryNames = {
 
 
 // ==========================================
-// PAGE ELEMENTS
+// INFORMATION PANEL ELEMENTS
 // ==========================================
 
 const infoPanel =
@@ -71,14 +67,10 @@ const crisisOverview =
     document.getElementById("crisis-overview");
 
 const crisisCurrentSituation =
-    document.getElementById(
-        "crisis-current-situation"
-    );
+    document.getElementById("crisis-current-situation");
 
 const currentSituationSection =
-    document.getElementById(
-        "current-situation-section"
-    );
+    document.getElementById("current-situation-section");
 
 const crisisActors =
     document.getElementById("crisis-actors");
@@ -100,21 +92,41 @@ const crisisAid =
 
 
 // ==========================================
-// MARKER STORAGE
+// SEARCH ELEMENTS
+// ==========================================
+
+const crisisSearch =
+    document.getElementById("crisis-search");
+
+const searchResults =
+    document.getElementById("search-results");
+
+const crisisCount =
+    document.getElementById("crisis-count");
+
+
+// ==========================================
+// AUTOMATIC CRISIS COUNTER
+// ==========================================
+
+if (crisisCount) {
+    crisisCount.textContent = conflicts.length;
+}
+
+
+// ==========================================
+// CREATE MAP MARKERS
 // ==========================================
 
 const conflictMarkers = [];
 
-
-// ==========================================
-// CREATE MARKERS
-// ==========================================
 
 conflicts.forEach((conflict) => {
 
     const primaryCategory =
         conflict.primaryCategory ||
         conflict.categories[0];
+
 
     const color =
         categoryColors[primaryCategory] ||
@@ -145,11 +157,7 @@ conflicts.forEach((conflict) => {
     marker.on(
         "click",
         function () {
-
-            openConflictPanel(
-                conflict
-            );
-
+            openConflictPanel(conflict);
         }
     );
 
@@ -171,11 +179,6 @@ conflicts.forEach((conflict) => {
 
 function openConflictPanel(conflict) {
 
-
-    // ======================================
-    // CATEGORIES
-    // ======================================
-
     const readableCategories =
         conflict.categories
             .map(
@@ -190,17 +193,9 @@ function openConflictPanel(conflict) {
         readableCategories;
 
 
-    // ======================================
-    // NAME
-    // ======================================
-
     crisisName.textContent =
         conflict.name;
 
-
-    // ======================================
-    // LAST VERIFIED
-    // ======================================
 
     lastUpdated.textContent =
         "Last verified: " +
@@ -230,8 +225,7 @@ function openConflictPanel(conflict) {
 
     } else {
 
-        crisisCurrentSituation.textContent =
-            "";
+        crisisCurrentSituation.textContent = "";
 
         currentSituationSection.style.display =
             "none";
@@ -255,19 +249,14 @@ function openConflictPanel(conflict) {
             (actorName) => {
 
                 const actor =
-                    document.createElement(
-                        "span"
-                    );
+                    document.createElement("span");
 
-                actor.className =
-                    "actor";
+                actor.className = "actor";
 
                 actor.textContent =
                     actorName;
 
-                crisisActors.appendChild(
-                    actor
-                );
+                crisisActors.appendChild(actor);
 
             }
         );
@@ -309,18 +298,14 @@ function openConflictPanel(conflict) {
             (item) => {
 
                 const timelineItem =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 timelineItem.className =
                     "timeline-item";
 
 
                 const timelineDate =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 timelineDate.className =
                     "timeline-date";
@@ -330,9 +315,7 @@ function openConflictPanel(conflict) {
 
 
                 const timelineEvent =
-                    document.createElement(
-                        "p"
-                    );
+                    document.createElement("p");
 
                 timelineEvent.className =
                     "timeline-event";
@@ -380,9 +363,7 @@ function openConflictPanel(conflict) {
             (source) => {
 
                 const link =
-                    document.createElement(
-                        "a"
-                    );
+                    document.createElement("a");
 
                 link.textContent =
                     source.name;
@@ -427,9 +408,7 @@ function openConflictPanel(conflict) {
             (organization) => {
 
                 const link =
-                    document.createElement(
-                        "a"
-                    );
+                    document.createElement("a");
 
                 link.textContent =
                     organization.name;
@@ -462,24 +441,20 @@ function openConflictPanel(conflict) {
     // OPEN PANEL
     // ======================================
 
-    infoPanel.classList.add(
-        "open"
-    );
+    infoPanel.classList.add("open");
 
 }
 
 
 // ==========================================
-// CLOSE PANEL
+// CLOSE INFORMATION PANEL
 // ==========================================
 
 closePanelButton.addEventListener(
     "click",
     function () {
 
-        infoPanel.classList.remove(
-            "open"
-        );
+        infoPanel.classList.remove("open");
 
     }
 );
@@ -490,9 +465,7 @@ closePanelButton.addEventListener(
 // ==========================================
 
 const filterButtons =
-    document.querySelectorAll(
-        ".filter"
-    );
+    document.querySelectorAll(".filter");
 
 
 filterButtons.forEach(
@@ -501,11 +474,6 @@ filterButtons.forEach(
         button.addEventListener(
             "click",
             function () {
-
-
-                // --------------------------
-                // ACTIVE BUTTON
-                // --------------------------
 
                 filterButtons.forEach(
                     (otherButton) => {
@@ -526,10 +494,6 @@ filterButtons.forEach(
                 const selectedFilter =
                     button.dataset.filter;
 
-
-                // --------------------------
-                // FILTER MARKERS
-                // --------------------------
 
                 conflictMarkers.forEach(
                     (item) => {
@@ -580,12 +544,12 @@ filterButtons.forEach(
                 );
 
 
-                // Close panel after
-                // changing filter
-
                 infoPanel.classList.remove(
                     "open"
                 );
+
+
+                clearSearch();
 
             }
         );
@@ -595,7 +559,359 @@ filterButtons.forEach(
 
 
 // ==========================================
-// ESCAPE CLOSES PANEL
+// SEARCH SYSTEM
+// ==========================================
+
+if (crisisSearch) {
+
+    crisisSearch.addEventListener(
+        "input",
+        function () {
+
+            const searchTerm =
+                crisisSearch.value
+                    .trim()
+                    .toLowerCase();
+
+
+            searchResults.innerHTML = "";
+
+
+            // No text entered
+            if (searchTerm === "") {
+
+                searchResults.style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            // Find matching crises
+            const matches =
+                conflicts.filter(
+                    (conflict) => {
+
+                        const nameMatch =
+                            conflict.name
+                                .toLowerCase()
+                                .includes(
+                                    searchTerm
+                                );
+
+
+                        const categoryMatch =
+                            conflict.categories
+                                .some(
+                                    (category) => {
+
+                                        const readableName =
+                                            categoryNames[
+                                                category
+                                            ] || category;
+
+                                        return readableName
+                                            .toLowerCase()
+                                            .includes(
+                                                searchTerm
+                                            );
+
+                                    }
+                                );
+
+
+                        const actorMatch =
+                            (
+                                conflict.actors ||
+                                []
+                            )
+                                .some(
+                                    (actor) =>
+                                        actor
+                                            .toLowerCase()
+                                            .includes(
+                                                searchTerm
+                                            )
+                                );
+
+
+                        return (
+                            nameMatch ||
+                            categoryMatch ||
+                            actorMatch
+                        );
+
+                    }
+                )
+                .slice(0, 8);
+
+
+            // No matches
+            if (matches.length === 0) {
+
+                const noResult =
+                    document.createElement(
+                        "div"
+                    );
+
+                noResult.className =
+                    "search-no-result";
+
+                noResult.textContent =
+                    "No matching crisis found.";
+
+                searchResults.appendChild(
+                    noResult
+                );
+
+                searchResults.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            // Create search results
+            matches.forEach(
+                (conflict) => {
+
+                    const result =
+                        document.createElement(
+                            "button"
+                        );
+
+                    result.type =
+                        "button";
+
+                    result.className =
+                        "search-result-item";
+
+
+                    const resultName =
+                        document.createElement(
+                            "span"
+                        );
+
+                    resultName.className =
+                        "search-result-name";
+
+                    resultName.textContent =
+                        conflict.name;
+
+
+                    const resultCategory =
+                        document.createElement(
+                            "span"
+                        );
+
+                    resultCategory.className =
+                        "search-result-category";
+
+
+                    const primaryCategory =
+                        conflict.primaryCategory ||
+                        conflict.categories[0];
+
+
+                    resultCategory.textContent =
+                        categoryNames[
+                            primaryCategory
+                        ] ||
+                        primaryCategory;
+
+
+                    result.appendChild(
+                        resultName
+                    );
+
+                    result.appendChild(
+                        resultCategory
+                    );
+
+
+                    result.addEventListener(
+                        "click",
+                        function () {
+
+                            selectSearchResult(
+                                conflict
+                            );
+
+                        }
+                    );
+
+
+                    searchResults.appendChild(
+                        result
+                    );
+
+                }
+            );
+
+
+            searchResults.style.display =
+                "block";
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// SELECT SEARCH RESULT
+// ==========================================
+
+function selectSearchResult(conflict) {
+
+    // Reset filters to "All"
+    filterButtons.forEach(
+        (button) => {
+
+            button.classList.remove(
+                "active"
+            );
+
+            if (
+                button.dataset.filter ===
+                "all"
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+
+    // Restore every marker
+    conflictMarkers.forEach(
+        (item) => {
+
+            if (
+                !map.hasLayer(
+                    item.marker
+                )
+            ) {
+
+                item.marker.addTo(
+                    map
+                );
+
+            }
+
+        }
+    );
+
+
+    // Find selected marker
+    const selectedMarker =
+        conflictMarkers.find(
+            (item) =>
+                item.conflict.id ===
+                conflict.id
+        );
+
+
+    // Zoom to selected crisis
+    map.flyTo(
+        conflict.coordinates,
+        5,
+        {
+            animate: true,
+            duration: 1.2
+        }
+    );
+
+
+    // Open information panel
+    openConflictPanel(
+        conflict
+    );
+
+
+    // Open tooltip briefly
+    if (selectedMarker) {
+
+        selectedMarker.marker.openTooltip();
+
+    }
+
+
+    // Put selected name in search box
+    crisisSearch.value =
+        conflict.name;
+
+
+    // Hide search results
+    searchResults.innerHTML = "";
+
+    searchResults.style.display =
+        "none";
+
+}
+
+
+// ==========================================
+// CLEAR SEARCH
+// ==========================================
+
+function clearSearch() {
+
+    if (crisisSearch) {
+
+        crisisSearch.value = "";
+
+    }
+
+
+    if (searchResults) {
+
+        searchResults.innerHTML = "";
+
+        searchResults.style.display =
+            "none";
+
+    }
+
+}
+
+
+// ==========================================
+// CLICK OUTSIDE SEARCH
+// ==========================================
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            crisisSearch &&
+            searchResults &&
+            !crisisSearch.contains(
+                event.target
+            ) &&
+            !searchResults.contains(
+                event.target
+            )
+        ) {
+
+            searchResults.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// ESCAPE KEY
 // ==========================================
 
 document.addEventListener(
@@ -607,6 +923,8 @@ document.addEventListener(
             infoPanel.classList.remove(
                 "open"
             );
+
+            clearSearch();
 
         }
 
