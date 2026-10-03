@@ -1,27 +1,31 @@
 // ============================================================
 // ONE WORLD, ONE LIFE — COUNTRY FACTS
 // Conflict Atlas
-// ============================================================
 //
-// PURPOSE
-// Adds stable and semi-stable factual information to the
-// 195 country profiles created in countries.js.
+// VERSION 2.0
 //
-// THIS FILE HANDLES:
-// - Population
-// - Area
-// - Languages
-// - Currency
-// - Country overview
-// - UN membership baseline
-// - Fact sources
+// Adds factual information to all 195 country profiles.
 //
-// THIS FILE DOES NOT HANDLE:
-// - Current political leaders
-// - Crisis relationships
-// - Humanitarian statistics
-// - Displacement statistics
+// DATA SOURCES
 //
+// Population:
+// World Bank — SP.POP.TOTL
+//
+// Government structure and leadership:
+// Wikidata structured data
+//
+// Government properties:
+// P122 = basic form of government
+// P35  = head of state
+// P6   = head of government
+// P1906 = office held by head of state
+// P1313 = office held by head of government
+// P298 = ISO 3166-1 alpha-3
+//
+// Leadership is loaded dynamically because officeholders
+// can change.
+//
+// Crisis relationships remain in countries.js.
 // ============================================================
 
 
@@ -29,25 +33,36 @@
 // SETTINGS
 // ============================================================
 
-const COUNTRY_FACTS_VERSION = "2.0";
+const COUNTRY_FACTS_VERSION =
+    "2.0";
 
 const WORLD_BANK_API =
     "https://api.worldbank.org/v2";
 
+const WIKIDATA_SPARQL_API =
+    "https://query.wikidata.org/sparql";
+
 
 // ============================================================
-// FACT STATUS
+// STATUS
 // ============================================================
 
 const countryFactsStatus = {
 
-    populationLoaded: false,
+    populationLoaded:
+        false,
 
-    stableFactsLoaded: false,
+    currencyLoaded:
+        false,
 
-    loading: false,
+    governmentLoaded:
+        false,
 
-    errors: []
+    loading:
+        false,
+
+    errors:
+        []
 
 };
 
@@ -80,7 +95,8 @@ function formatCountryPopulation(value) {
 
 const worldBankCountryCodeOverrides = {
 
-    PSE: "PSE"
+    PSE:
+        "PSE"
 
 };
 
@@ -111,10 +127,17 @@ function getWorldBankCountryCode(country) {
 // FETCH JSON SAFELY
 // ============================================================
 
-async function fetchCountryFactsJson(url) {
+async function fetchCountryFactsJson(
+    url,
+    options = {}
+) {
 
     const response =
-        await fetch(url);
+        await fetch(
+            url,
+            options
+        );
+
 
     if (!response.ok) {
 
@@ -124,6 +147,7 @@ async function fetchCountryFactsJson(url) {
 
     }
 
+
     return response.json();
 
 }
@@ -132,17 +156,16 @@ async function fetchCountryFactsJson(url) {
 // ============================================================
 // WORLD BANK POPULATION
 // ============================================================
-//
-// SP.POP.TOTL = Population, total
-//
-// mrnev=1 requests the most recent non-empty observation.
-//
-// ============================================================
 
-async function loadCountryPopulation(country) {
+async function loadCountryPopulation(
+    country
+) {
 
     const worldBankCode =
-        getWorldBankCountryCode(country);
+        getWorldBankCountryCode(
+            country
+        );
+
 
     if (!worldBankCode) {
 
@@ -150,16 +173,21 @@ async function loadCountryPopulation(country) {
 
     }
 
+
     const url =
         `${WORLD_BANK_API}/country/` +
         `${encodeURIComponent(worldBankCode)}/` +
         `indicator/SP.POP.TOTL` +
         `?format=json&mrnev=1`;
 
+
     try {
 
         const data =
-            await fetchCountryFactsJson(url);
+            await fetchCountryFactsJson(
+                url
+            );
+
 
         if (
             !Array.isArray(data) ||
@@ -171,8 +199,10 @@ async function loadCountryPopulation(country) {
 
         }
 
+
         const observation =
             data[1][0];
+
 
         if (
             observation.value === null ||
@@ -183,16 +213,18 @@ async function loadCountryPopulation(country) {
 
         }
 
+
         country.atAGlance.population =
-            Number(observation.value);
+            Number(
+                observation.value
+            );
+
 
         country.atAGlance.populationYear =
-            Number(observation.date);
+            Number(
+                observation.date
+            );
 
-
-        // ----------------------------------------
-        // PROVENANCE
-        // ----------------------------------------
 
         if (!country.factVerification) {
 
@@ -200,20 +232,27 @@ async function loadCountryPopulation(country) {
 
         }
 
+
         country.factVerification.population = {
 
             source:
                 "World Bank — Population, total (SP.POP.TOTL)",
 
             year:
-                Number(observation.date),
+                Number(
+                    observation.date
+                ),
 
             retrieved:
                 new Date()
                     .toISOString()
-                    .slice(0, 10)
+                    .slice(
+                        0,
+                        10
+                    )
 
         };
+
 
     } catch (error) {
 
@@ -236,12 +275,14 @@ async function loadCountryPopulation(country) {
 
 
 // ============================================================
-// LOAD POPULATION FOR ALL COUNTRY PROFILES
+// LOAD ALL POPULATIONS
 // ============================================================
 
 async function loadAllCountryPopulations() {
 
-    const batchSize = 12;
+    const batchSize =
+        12;
+
 
     for (
         let index = 0;
@@ -254,6 +295,7 @@ async function loadAllCountryPopulations() {
                 index,
                 index + batchSize
             );
+
 
         await Promise.all(
 
@@ -268,8 +310,10 @@ async function loadAllCountryPopulations() {
 
     }
 
+
     countryFactsStatus.populationLoaded =
         true;
+
 
     const loadedCount =
         countries.filter(
@@ -278,1413 +322,668 @@ async function loadAllCountryPopulations() {
                 null
         ).length;
 
+
     console.log(
-        `Conflict Atlas loaded population data for ${loadedCount} of ${countries.length} country profiles.`
+        `Conflict Atlas loaded population data for ${loadedCount} of ${countries.length} countries.`
     );
 
 }
 
 
 // ============================================================
-// STABLE COUNTRY FACT DATABASE
-// ============================================================
-//
-// Format:
-//
-// ISO3: {
-//     area: square kilometres,
-//     languages: ["Language"],
-//     currency: "Currency name (CODE)"
-// }
-//
-// Area is stored as a number so script.js can format it.
-//
-// Languages are displayed as a readable list.
-//
-// Currency includes the ISO 4217 code when applicable.
-//
+// WORLD BANK COUNTRY METADATA
 // ============================================================
 
-const stableCountryFacts = {
-
-    // ========================================================
-    // AFRICA
-    // ========================================================
-
-    DZA: {
-        area: 2381741,
-        languages: ["Arabic", "Tamazight"],
-        currency: "Algerian dinar (DZD)"
-    },
-
-    AGO: {
-        area: 1246700,
-        languages: ["Portuguese"],
-        currency: "Angolan kwanza (AOA)"
-    },
-
-    BEN: {
-        area: 112622,
-        languages: ["French"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    BWA: {
-        area: 582000,
-        languages: ["English", "Setswana"],
-        currency: "Botswana pula (BWP)"
-    },
-
-    BFA: {
-        area: 272967,
-        languages: ["French"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    BDI: {
-        area: 27834,
-        languages: [
-            "Kirundi",
-            "French",
-            "English"
-        ],
-        currency: "Burundian franc (BIF)"
-    },
-
-    CPV: {
-        area: 4033,
-        languages: ["Portuguese"],
-        currency: "Cape Verdean escudo (CVE)"
-    },
-
-    CMR: {
-        area: 475442,
-        languages: ["English", "French"],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    CAF: {
-        area: 622984,
-        languages: ["French", "Sango"],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    TCD: {
-        area: 1284000,
-        languages: ["Arabic", "French"],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    COM: {
-        area: 1862,
-        languages: [
-            "Comorian",
-            "Arabic",
-            "French"
-        ],
-        currency: "Comorian franc (KMF)"
-    },
-
-    COG: {
-        area: 342000,
-        languages: ["French"],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    COD: {
-        area: 2344858,
-        languages: ["French"],
-        currency: "Congolese franc (CDF)"
-    },
-
-    CIV: {
-        area: 322463,
-        languages: ["French"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    DJI: {
-        area: 23200,
-        languages: ["Arabic", "French"],
-        currency: "Djiboutian franc (DJF)"
-    },
-
-    EGY: {
-        area: 1002450,
-        languages: ["Arabic"],
-        currency: "Egyptian pound (EGP)"
-    },
-
-    GNQ: {
-        area: 28051,
-        languages: [
-            "Spanish",
-            "French",
-            "Portuguese"
-        ],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    ERI: {
-        area: 117600,
-        languages: [
-            "Tigrinya",
-            "Arabic",
-            "English"
-        ],
-        currency: "Eritrean nakfa (ERN)"
-    },
-
-    SWZ: {
-        area: 17364,
-        languages: ["Swazi", "English"],
-        currency: "Swazi lilangeni (SZL)"
-    },
-
-    ETH: {
-        area: 1104300,
-        languages: ["Amharic"],
-        currency: "Ethiopian birr (ETB)"
-    },
-
-    GAB: {
-        area: 267668,
-        languages: ["French"],
-        currency: "Central African CFA franc (XAF)"
-    },
-
-    GMB: {
-        area: 11295,
-        languages: ["English"],
-        currency: "Gambian dalasi (GMD)"
-    },
-
-    GHA: {
-        area: 238533,
-        languages: ["English"],
-        currency: "Ghanaian cedi (GHS)"
-    },
-
-    GIN: {
-        area: 245857,
-        languages: ["French"],
-        currency: "Guinean franc (GNF)"
-    },
-
-    GNB: {
-        area: 36125,
-        languages: ["Portuguese"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    KEN: {
-        area: 580367,
-        languages: ["English", "Swahili"],
-        currency: "Kenyan shilling (KES)"
-    },
-
-    LSO: {
-        area: 30355,
-        languages: ["Sesotho", "English"],
-        currency: "Lesotho loti (LSL)"
-    },
-
-    LBR: {
-        area: 111369,
-        languages: ["English"],
-        currency: "Liberian dollar (LRD)"
-    },
-
-    LBY: {
-        area: 1759540,
-        languages: ["Arabic"],
-        currency: "Libyan dinar (LYD)"
-    },
-
-    MDG: {
-        area: 587041,
-        languages: ["Malagasy", "French"],
-        currency: "Malagasy ariary (MGA)"
-    },
-
-    MWI: {
-        area: 118484,
-        languages: ["English", "Chichewa"],
-        currency: "Malawian kwacha (MWK)"
-    },
-
-    MLI: {
-        area: 1240192,
-        languages: [
-            "Bambara",
-            "Bobo",
-            "Bozo",
-            "Dogon",
-            "Fula",
-            "Hassaniya Arabic",
-            "Kassonke",
-            "Maninke",
-            "Minyanka",
-            "Senufo",
-            "Songhay",
-            "Soninke",
-            "Tamasheq"
-        ],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    MRT: {
-        area: 1030700,
-        languages: ["Arabic"],
-        currency: "Mauritanian ouguiya (MRU)"
-    },
-
-    MUS: {
-        area: 2040,
-        languages: ["English", "French"],
-        currency: "Mauritian rupee (MUR)"
-    },
-
-    MAR: {
-        area: 446550,
-        languages: ["Arabic", "Tamazight"],
-        currency: "Moroccan dirham (MAD)"
-    },
-
-    MOZ: {
-        area: 801590,
-        languages: ["Portuguese"],
-        currency: "Mozambican metical (MZN)"
-    },
-
-    NAM: {
-        area: 825615,
-        languages: ["English"],
-        currency: "Namibian dollar (NAD)"
-    },
-
-    NER: {
-        area: 1267000,
-        languages: ["Hausa"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    NGA: {
-        area: 923768,
-        languages: ["English"],
-        currency: "Nigerian naira (NGN)"
-    },
-
-    RWA: {
-        area: 26338,
-        languages: [
-            "Kinyarwanda",
-            "English",
-            "French",
-            "Swahili"
-        ],
-        currency: "Rwandan franc (RWF)"
-    },
-
-    STP: {
-        area: 964,
-        languages: ["Portuguese"],
-        currency: "São Tomé and Príncipe dobra (STN)"
-    },
-
-    SEN: {
-        area: 196722,
-        languages: ["French"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    SYC: {
-        area: 452,
-        languages: [
-            "Seychellois Creole",
-            "English",
-            "French"
-        ],
-        currency: "Seychellois rupee (SCR)"
-    },
-
-    SLE: {
-        area: 71740,
-        languages: ["English"],
-        currency: "Sierra Leonean leone (SLE)"
-    },
-
-    SOM: {
-        area: 637657,
-        languages: ["Somali", "Arabic"],
-        currency: "Somali shilling (SOS)"
-    },
-
-    ZAF: {
-        area: 1221037,
-        languages: [
-            "Afrikaans",
-            "English",
-            "Ndebele",
-            "Northern Sotho",
-            "Sesotho",
-            "Swazi",
-            "Tsonga",
-            "Tswana",
-            "Venda",
-            "Xhosa",
-            "Zulu",
-            "South African Sign Language"
-        ],
-        currency: "South African rand (ZAR)"
-    },
-
-    SSD: {
-        area: 619745,
-        languages: ["English"],
-        currency: "South Sudanese pound (SSP)"
-    },
-
-    SDN: {
-        area: 1886068,
-        languages: ["Arabic", "English"],
-        currency: "Sudanese pound (SDG)"
-    },
-
-    TZA: {
-        area: 947303,
-        languages: ["Swahili", "English"],
-        currency: "Tanzanian shilling (TZS)"
-    },
-
-    TGO: {
-        area: 56785,
-        languages: ["French"],
-        currency: "West African CFA franc (XOF)"
-    },
-
-    TUN: {
-        area: 163610,
-        languages: ["Arabic"],
-        currency: "Tunisian dinar (TND)"
-    },
-
-    UGA: {
-        area: 241550,
-        languages: ["English", "Swahili"],
-        currency: "Ugandan shilling (UGX)"
-    },
-
-    ZMB: {
-        area: 752612,
-        languages: ["English"],
-        currency: "Zambian kwacha (ZMW)"
-    },
-
-    ZWE: {
-        area: 390757,
-        languages: [
-            "Chewa",
-            "Chibarwe",
-            "English",
-            "Kalanga",
-            "Koisan",
-            "Nambya",
-            "Ndau",
-            "Ndebele",
-            "Shangani",
-            "Shona",
-            "Sign language",
-            "Sotho",
-            "Tonga",
-            "Tswana",
-            "Venda",
-            "Xhosa"
-        ],
-        currency: "Zimbabwe Gold (ZWG)"
-    },
-
-
-    // ========================================================
-    // ASIA
-    // ========================================================
-
-    AFG: {
-        area: 652230,
-        languages: ["Dari", "Pashto"],
-        currency: "Afghan afghani (AFN)"
-    },
-
-    ARM: {
-        area: 29743,
-        languages: ["Armenian"],
-        currency: "Armenian dram (AMD)"
-    },
-
-    AZE: {
-        area: 86600,
-        languages: ["Azerbaijani"],
-        currency: "Azerbaijani manat (AZN)"
-    },
-
-    BHR: {
-        area: 765,
-        languages: ["Arabic"],
-        currency: "Bahraini dinar (BHD)"
-    },
-
-    BGD: {
-        area: 147570,
-        languages: ["Bengali"],
-        currency: "Bangladeshi taka (BDT)"
-    },
-
-    BTN: {
-        area: 38394,
-        languages: ["Dzongkha"],
-        currency: "Bhutanese ngultrum (BTN)"
-    },
-
-    BRN: {
-        area: 5765,
-        languages: ["Malay"],
-        currency: "Brunei dollar (BND)"
-    },
-
-    KHM: {
-        area: 181035,
-        languages: ["Khmer"],
-        currency: "Cambodian riel (KHR)"
-    },
-
-    CHN: {
-        area: 9706961,
-        languages: ["Standard Chinese"],
-        currency: "Renminbi (CNY)"
-    },
-
-    CYP: {
-        area: 9251,
-        languages: ["Greek", "Turkish"],
-        currency: "Euro (EUR)"
-    },
-
-    GEO: {
-        area: 69700,
-        languages: ["Georgian"],
-        currency: "Georgian lari (GEL)"
-    },
-
-    IND: {
-        area: 3287590,
-        languages: ["Hindi", "English"],
-        currency: "Indian rupee (INR)"
-    },
-
-    IDN: {
-        area: 1904569,
-        languages: ["Indonesian"],
-        currency: "Indonesian rupiah (IDR)"
-    },
-
-    IRN: {
-        area: 1648195,
-        languages: ["Persian"],
-        currency: "Iranian rial (IRR)"
-    },
-
-    IRQ: {
-        area: 438317,
-        languages: ["Arabic", "Kurdish"],
-        currency: "Iraqi dinar (IQD)"
-    },
-
-    ISR: {
-        area: 20770,
-        languages: ["Hebrew"],
-        currency: "Israeli new shekel (ILS)"
-    },
-
-    JPN: {
-        area: 377930,
-        languages: ["Japanese"],
-        currency: "Japanese yen (JPY)"
-    },
-
-    JOR: {
-        area: 89342,
-        languages: ["Arabic"],
-        currency: "Jordanian dinar (JOD)"
-    },
-
-    KAZ: {
-        area: 2724900,
-        languages: ["Kazakh", "Russian"],
-        currency: "Kazakhstani tenge (KZT)"
-    },
-
-    KWT: {
-        area: 17818,
-        languages: ["Arabic"],
-        currency: "Kuwaiti dinar (KWD)"
-    },
-
-    KGZ: {
-        area: 199951,
-        languages: ["Kyrgyz", "Russian"],
-        currency: "Kyrgyzstani som (KGS)"
-    },
-
-    LAO: {
-        area: 236800,
-        languages: ["Lao"],
-        currency: "Lao kip (LAK)"
-    },
-
-    LBN: {
-        area: 10452,
-        languages: ["Arabic"],
-        currency: "Lebanese pound (LBP)"
-    },
-
-    MYS: {
-        area: 330803,
-        languages: ["Malay"],
-        currency: "Malaysian ringgit (MYR)"
-    },
-
-    MDV: {
-        area: 300,
-        languages: ["Dhivehi"],
-        currency: "Maldivian rufiyaa (MVR)"
-    },
-
-    MNG: {
-        area: 1564110,
-        languages: ["Mongolian"],
-        currency: "Mongolian tögrög (MNT)"
-    },
-
-    MMR: {
-        area: 676578,
-        languages: ["Burmese"],
-        currency: "Myanmar kyat (MMK)"
-    },
-
-    NPL: {
-        area: 147181,
-        languages: ["Nepali"],
-        currency: "Nepalese rupee (NPR)"
-    },
-
-    PRK: {
-        area: 120538,
-        languages: ["Korean"],
-        currency: "North Korean won (KPW)"
-    },
-
-    OMN: {
-        area: 309500,
-        languages: ["Arabic"],
-        currency: "Omani rial (OMR)"
-    },
-
-    PAK: {
-        area: 881912,
-        languages: ["Urdu", "English"],
-        currency: "Pakistani rupee (PKR)"
-    },
-
-    PSE: {
-        area: 6220,
-        languages: ["Arabic"],
-        currency: "No single official national currency"
-    },
-
-    PHL: {
-        area: 342353,
-        languages: ["Filipino", "English"],
-        currency: "Philippine peso (PHP)"
-    },
-
-    QAT: {
-        area: 11586,
-        languages: ["Arabic"],
-        currency: "Qatari riyal (QAR)"
-    },
-
-    SAU: {
-        area: 2149690,
-        languages: ["Arabic"],
-        currency: "Saudi riyal (SAR)"
-    },
-
-    SGP: {
-        area: 710,
-        languages: [
-            "English",
-            "Malay",
-            "Mandarin Chinese",
-            "Tamil"
-        ],
-        currency: "Singapore dollar (SGD)"
-    },
-
-    KOR: {
-        area: 100210,
-        languages: ["Korean"],
-        currency: "South Korean won (KRW)"
-    },
-
-    LKA: {
-        area: 65610,
-        languages: ["Sinhala", "Tamil"],
-        currency: "Sri Lankan rupee (LKR)"
-    },
-
-    SYR: {
-        area: 185180,
-        languages: ["Arabic"],
-        currency: "Syrian pound (SYP)"
-    },
-
-    TJK: {
-        area: 143100,
-        languages: ["Tajik"],
-        currency: "Tajikistani somoni (TJS)"
-    },
-
-    THA: {
-        area: 513120,
-        languages: ["Thai"],
-        currency: "Thai baht (THB)"
-    },
-
-    TLS: {
-        area: 14874,
-        languages: ["Tetum", "Portuguese"],
-        currency: "United States dollar (USD)"
-    },
-
-    TUR: {
-        area: 783562,
-        languages: ["Turkish"],
-        currency: "Turkish lira (TRY)"
-    },
-
-    TKM: {
-        area: 488100,
-        languages: ["Turkmen"],
-        currency: "Turkmenistan manat (TMT)"
-    },
-
-    ARE: {
-        area: 83600,
-        languages: ["Arabic"],
-        currency: "United Arab Emirates dirham (AED)"
-    },
-
-    UZB: {
-        area: 447400,
-        languages: ["Uzbek"],
-        currency: "Uzbekistani sum (UZS)"
-    },
-
-    VNM: {
-        area: 331212,
-        languages: ["Vietnamese"],
-        currency: "Vietnamese đồng (VND)"
-    },
-
-    YEM: {
-        area: 527968,
-        languages: ["Arabic"],
-        currency: "Yemeni rial (YER)"
-    },
-
-
-    // ========================================================
-    // EUROPE
-    // ========================================================
-
-    ALB: {
-        area: 28748,
-        languages: ["Albanian"],
-        currency: "Albanian lek (ALL)"
-    },
-
-    AND: {
-        area: 468,
-        languages: ["Catalan"],
-        currency: "Euro (EUR)"
-    },
-
-    AUT: {
-        area: 83871,
-        languages: ["German"],
-        currency: "Euro (EUR)"
-    },
-
-    BLR: {
-        area: 207600,
-        languages: ["Belarusian", "Russian"],
-        currency: "Belarusian ruble (BYN)"
-    },
-
-    BEL: {
-        area: 30528,
-        languages: ["Dutch", "French", "German"],
-        currency: "Euro (EUR)"
-    },
-
-    BIH: {
-        area: 51209,
-        languages: [
-            "Bosnian",
-            "Croatian",
-            "Serbian"
-        ],
-        currency: "Bosnia and Herzegovina convertible mark (BAM)"
-    },
-
-    BGR: {
-        area: 110879,
-        languages: ["Bulgarian"],
-        currency: "Euro (EUR)"
-    },
-
-    HRV: {
-        area: 56594,
-        languages: ["Croatian"],
-        currency: "Euro (EUR)"
-    },
-
-    CZE: {
-        area: 78865,
-        languages: ["Czech"],
-        currency: "Czech koruna (CZK)"
-    },
-
-    DNK: {
-        area: 43094,
-        languages: ["Danish"],
-        currency: "Danish krone (DKK)"
-    },
-
-    EST: {
-        area: 45227,
-        languages: ["Estonian"],
-        currency: "Euro (EUR)"
-    },
-
-    FIN: {
-        area: 338424,
-        languages: ["Finnish", "Swedish"],
-        currency: "Euro (EUR)"
-    },
-
-    FRA: {
-        area: 551695,
-        languages: ["French"],
-        currency: "Euro (EUR)"
-    },
-
-    DEU: {
-        area: 357114,
-        languages: ["German"],
-        currency: "Euro (EUR)"
-    },
-
-    GRC: {
-        area: 131990,
-        languages: ["Greek"],
-        currency: "Euro (EUR)"
-    },
-
-    HUN: {
-        area: 93028,
-        languages: ["Hungarian"],
-        currency: "Hungarian forint (HUF)"
-    },
-
-    ISL: {
-        area: 103000,
-        languages: ["Icelandic"],
-        currency: "Icelandic króna (ISK)"
-    },
-
-    IRL: {
-        area: 70273,
-        languages: ["Irish", "English"],
-        currency: "Euro (EUR)"
-    },
-
-    ITA: {
-        area: 301336,
-        languages: ["Italian"],
-        currency: "Euro (EUR)"
-    },
-
-    LVA: {
-        area: 64559,
-        languages: ["Latvian"],
-        currency: "Euro (EUR)"
-    },
-
-    LIE: {
-        area: 160,
-        languages: ["German"],
-        currency: "Swiss franc (CHF)"
-    },
-
-    LTU: {
-        area: 65300,
-        languages: ["Lithuanian"],
-        currency: "Euro (EUR)"
-    },
-
-    LUX: {
-        area: 2586,
-        languages: [
-            "Luxembourgish",
-            "French",
-            "German"
-        ],
-        currency: "Euro (EUR)"
-    },
-
-    MLT: {
-        area: 316,
-        languages: ["Maltese", "English"],
-        currency: "Euro (EUR)"
-    },
-
-    MDA: {
-        area: 33846,
-        languages: ["Romanian"],
-        currency: "Moldovan leu (MDL)"
-    },
-
-    MCO: {
-        area: 2.02,
-        languages: ["French"],
-        currency: "Euro (EUR)"
-    },
-
-    MNE: {
-        area: 13812,
-        languages: ["Montenegrin"],
-        currency: "Euro (EUR)"
-    },
-
-    NLD: {
-        area: 41850,
-        languages: ["Dutch"],
-        currency: "Euro (EUR)"
-    },
-
-    MKD: {
-        area: 25713,
-        languages: ["Macedonian", "Albanian"],
-        currency: "Macedonian denar (MKD)"
-    },
-
-    NOR: {
-        area: 385207,
-        languages: ["Norwegian"],
-        currency: "Norwegian krone (NOK)"
-    },
-
-    POL: {
-        area: 312696,
-        languages: ["Polish"],
-        currency: "Polish złoty (PLN)"
-    },
-
-    PRT: {
-        area: 92090,
-        languages: ["Portuguese"],
-        currency: "Euro (EUR)"
-    },
-
-    ROU: {
-        area: 238397,
-        languages: ["Romanian"],
-        currency: "Romanian leu (RON)"
-    },
-
-    RUS: {
-        area: 17098242,
-        languages: ["Russian"],
-        currency: "Russian ruble (RUB)"
-    },
-
-    SMR: {
-        area: 61,
-        languages: ["Italian"],
-        currency: "Euro (EUR)"
-    },
-
-    SRB: {
-        area: 88361,
-        languages: ["Serbian"],
-        currency: "Serbian dinar (RSD)"
-    },
-
-    SVK: {
-        area: 49037,
-        languages: ["Slovak"],
-        currency: "Euro (EUR)"
-    },
-
-    SVN: {
-        area: 20273,
-        languages: ["Slovene"],
-        currency: "Euro (EUR)"
-    },
-
-    ESP: {
-        area: 505992,
-        languages: ["Spanish"],
-        currency: "Euro (EUR)"
-    },
-
-    SWE: {
-        area: 450295,
-        languages: ["Swedish"],
-        currency: "Swedish krona (SEK)"
-    },
-
-    CHE: {
-        area: 41284,
-        languages: [
-            "German",
-            "French",
-            "Italian",
-            "Romansh"
-        ],
-        currency: "Swiss franc (CHF)"
-    },
-
-    UKR: {
-        area: 603500,
-        languages: ["Ukrainian"],
-        currency: "Ukrainian hryvnia (UAH)"
-    },
-
-    GBR: {
-        area: 242900,
-        languages: ["English"],
-        currency: "Pound sterling (GBP)"
-    },
-
-    VAT: {
-        area: 0.49,
-        languages: ["Italian", "Latin"],
-        currency: "Euro (EUR)"
-    },
-
-
-    // ========================================================
-    // NORTH AMERICA, CENTRAL AMERICA & CARIBBEAN
-    // ========================================================
-
-    ATG: {
-        area: 442,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    BHS: {
-        area: 13943,
-        languages: ["English"],
-        currency: "Bahamian dollar (BSD)"
-    },
-
-    BRB: {
-        area: 430,
-        languages: ["English"],
-        currency: "Barbadian dollar (BBD)"
-    },
-
-    BLZ: {
-        area: 22966,
-        languages: ["English"],
-        currency: "Belize dollar (BZD)"
-    },
-
-    CAN: {
-        area: 9984670,
-        languages: ["English", "French"],
-        currency: "Canadian dollar (CAD)"
-    },
-
-    CRI: {
-        area: 51100,
-        languages: ["Spanish"],
-        currency: "Costa Rican colón (CRC)"
-    },
-
-    CUB: {
-        area: 109884,
-        languages: ["Spanish"],
-        currency: "Cuban peso (CUP)"
-    },
-
-    DMA: {
-        area: 751,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    DOM: {
-        area: 48671,
-        languages: ["Spanish"],
-        currency: "Dominican peso (DOP)"
-    },
-
-    SLV: {
-        area: 21041,
-        languages: ["Spanish"],
-        currency: "United States dollar (USD)"
-    },
-
-    GRD: {
-        area: 344,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    GTM: {
-        area: 108889,
-        languages: ["Spanish"],
-        currency: "Guatemalan quetzal (GTQ)"
-    },
-
-    HTI: {
-        area: 27750,
-        languages: [
-            "Haitian Creole",
-            "French"
-        ],
-        currency: "Haitian gourde (HTG)"
-    },
-
-    HND: {
-        area: 112492,
-        languages: ["Spanish"],
-        currency: "Honduran lempira (HNL)"
-    },
-
-    JAM: {
-        area: 10991,
-        languages: ["English"],
-        currency: "Jamaican dollar (JMD)"
-    },
-
-    MEX: {
-        area: 1964375,
-        languages: ["Spanish"],
-        currency: "Mexican peso (MXN)"
-    },
-
-    NIC: {
-        area: 130373,
-        languages: ["Spanish"],
-        currency: "Nicaraguan córdoba (NIO)"
-    },
-
-    PAN: {
-        area: 75417,
-        languages: ["Spanish"],
-        currency: "Panamanian balboa (PAB), United States dollar (USD)"
-    },
-
-    KNA: {
-        area: 261,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    LCA: {
-        area: 616,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    VCT: {
-        area: 389,
-        languages: ["English"],
-        currency: "East Caribbean dollar (XCD)"
-    },
-
-    TTO: {
-        area: 5130,
-        languages: ["English"],
-        currency: "Trinidad and Tobago dollar (TTD)"
-    },
-
-    USA: {
-        area: 9833517,
-        languages: ["English"],
-        currency: "United States dollar (USD)"
-    },
-
-
-    // ========================================================
-    // SOUTH AMERICA
-    // ========================================================
-
-    ARG: {
-        area: 2780400,
-        languages: ["Spanish"],
-        currency: "Argentine peso (ARS)"
-    },
-
-    BOL: {
-        area: 1098581,
-        languages: [
-            "Spanish",
-            "Quechua",
-            "Aymara",
-            "Guaraní"
-        ],
-        currency: "Bolivian boliviano (BOB)"
-    },
-
-    BRA: {
-        area: 8515767,
-        languages: ["Portuguese"],
-        currency: "Brazilian real (BRL)"
-    },
-
-    CHL: {
-        area: 756102,
-        languages: ["Spanish"],
-        currency: "Chilean peso (CLP)"
-    },
-
-    COL: {
-        area: 1141748,
-        languages: ["Spanish"],
-        currency: "Colombian peso (COP)"
-    },
-
-    ECU: {
-        area: 276841,
-        languages: ["Spanish"],
-        currency: "United States dollar (USD)"
-    },
-
-    GUY: {
-        area: 214969,
-        languages: ["English"],
-        currency: "Guyanese dollar (GYD)"
-    },
-
-    PRY: {
-        area: 406752,
-        languages: ["Spanish", "Guaraní"],
-        currency: "Paraguayan guaraní (PYG)"
-    },
-
-    PER: {
-        area: 1285216,
-        languages: [
-            "Spanish",
-            "Quechua",
-            "Aymara"
-        ],
-        currency: "Peruvian sol (PEN)"
-    },
-
-    SUR: {
-        area: 163820,
-        languages: ["Dutch"],
-        currency: "Surinamese dollar (SRD)"
-    },
-
-    URY: {
-        area: 176215,
-        languages: ["Spanish"],
-        currency: "Uruguayan peso (UYU)"
-    },
-
-    VEN: {
-        area: 916445,
-        languages: ["Spanish"],
-        currency: "Venezuelan bolívar (VES)"
-    },
-
-
-    // ========================================================
-    // OCEANIA
-    // ========================================================
-
-    AUS: {
-        area: 7692024,
-        languages: ["English"],
-        currency: "Australian dollar (AUD)"
-    },
-
-    FJI: {
-        area: 18272,
-        languages: [
-            "English",
-            "Fijian",
-            "Fiji Hindi"
-        ],
-        currency: "Fijian dollar (FJD)"
-    },
-
-    KIR: {
-        area: 811,
-        languages: ["English", "Gilbertese"],
-        currency: "Australian dollar (AUD)"
-    },
-
-    MHL: {
-        area: 181,
-        languages: ["Marshallese", "English"],
-        currency: "United States dollar (USD)"
-    },
-
-    FSM: {
-        area: 702,
-        languages: ["English"],
-        currency: "United States dollar (USD)"
-    },
-
-    NRU: {
-        area: 21,
-        languages: ["Nauruan", "English"],
-        currency: "Australian dollar (AUD)"
-    },
-
-    NZL: {
-        area: 270467,
-        languages: [
-            "English",
-            "Māori",
-            "New Zealand Sign Language"
-        ],
-        currency: "New Zealand dollar (NZD)"
-    },
-
-    PLW: {
-        area: 459,
-        languages: ["Palauan", "English"],
-        currency: "United States dollar (USD)"
-    },
-
-    PNG: {
-        area: 462840,
-        languages: [
-            "English",
-            "Tok Pisin",
-            "Hiri Motu"
-        ],
-        currency: "Papua New Guinean kina (PGK)"
-    },
-
-    WSM: {
-        area: 2842,
-        languages: ["Samoan", "English"],
-        currency: "Samoan tālā (WST)"
-    },
-
-    SLB: {
-        area: 28896,
-        languages: ["English"],
-        currency: "Solomon Islands dollar (SBD)"
-    },
-
-    TON: {
-        area: 747,
-        languages: ["Tongan", "English"],
-        currency: "Tongan paʻanga (TOP)"
-    },
-
-    TUV: {
-        area: 26,
-        languages: ["Tuvaluan", "English"],
-        currency: "Australian dollar (AUD)"
-    },
-
-    VUT: {
-        area: 12189,
-        languages: [
-            "Bislama",
-            "English",
-            "French"
-        ],
-        currency: "Vanuatu vatu (VUV)"
+async function loadWorldBankCountryMetadata() {
+
+    const url =
+        `${WORLD_BANK_API}/country` +
+        `?format=json&per_page=400`;
+
+
+    try {
+
+        const data =
+            await fetchCountryFactsJson(
+                url
+            );
+
+
+        if (
+            !Array.isArray(data) ||
+            !Array.isArray(data[1])
+        ) {
+
+            return;
+
+        }
+
+
+        data[1].forEach(
+            item => {
+
+                if (
+                    !item ||
+                    !item.id
+                ) {
+
+                    return;
+
+                }
+
+
+                const country =
+                    countries.find(
+                        profile =>
+                            profile.iso3 ===
+                            item.id
+                    );
+
+
+                if (!country) {
+
+                    return;
+
+                }
+
+
+                if (
+                    item.currencyUnit &&
+                    String(
+                        item.currencyUnit
+                    ).trim()
+                ) {
+
+                    country.atAGlance.currency =
+                        String(
+                            item.currencyUnit
+                        ).trim();
+
+                }
+
+            }
+        );
+
+
+        countryFactsStatus.currencyLoaded =
+            true;
+
+
+    } catch (error) {
+
+        countryFactsStatus.errors.push({
+
+            country:
+                "All countries",
+
+            field:
+                "World Bank metadata",
+
+            message:
+                error.message
+
+        });
+
     }
 
-};
+}
+
+
 // ============================================================
-// APPLY STABLE COUNTRY FACTS
-// ============================================================
+// WIKIDATA GOVERNMENT DATA
 //
-// Matches every stable fact record to the corresponding
-// Conflict Atlas country profile using ISO-3.
+// This retrieves:
 //
+// Government type
+// Head of state
+// Head of government
+// Head-of-state office title
+// Head-of-government office title
+//
+// Countries are matched using ISO-3 codes.
 // ============================================================
 
-function applyStableCountryFacts() {
+async function loadGovernmentBatch(
+    countryBatch
+) {
 
-    let matchedCount = 0;
+    const isoValues =
+        countryBatch
+            .map(
+                country =>
+                    `"${country.iso3}"`
+            )
+            .join(
+                " "
+            );
 
-    countries.forEach(
-        country => {
 
-            const facts =
-                stableCountryFacts[
-                    country.iso3
-                ];
+    const query =
+`
+SELECT
+    ?iso3
+    ?governmentTypeLabel
+    ?headOfStateLabel
+    ?headOfGovernmentLabel
+    ?headOfStateOfficeLabel
+    ?headOfGovernmentOfficeLabel
 
-            if (!facts) {
+WHERE {
 
-                console.warn(
-                    `No stable country facts found for ${country.name} (${country.iso3}).`
+    VALUES ?iso3 {
+        ${isoValues}
+    }
+
+    ?country
+        wdt:P298
+        ?iso3 .
+
+
+    OPTIONAL {
+
+        ?country
+            wdt:P122
+            ?governmentType .
+
+    }
+
+
+    OPTIONAL {
+
+        ?country
+            wdt:P35
+            ?headOfState .
+
+    }
+
+
+    OPTIONAL {
+
+        ?country
+            wdt:P6
+            ?headOfGovernment .
+
+    }
+
+
+    OPTIONAL {
+
+        ?country
+            wdt:P1906
+            ?headOfStateOffice .
+
+    }
+
+
+    OPTIONAL {
+
+        ?country
+            wdt:P1313
+            ?headOfGovernmentOffice .
+
+    }
+
+
+    SERVICE wikibase:label {
+
+        bd:serviceParam
+            wikibase:language
+            "en" .
+
+    }
+
+}
+`;
+
+
+    const url =
+        `${WIKIDATA_SPARQL_API}` +
+        `?query=${encodeURIComponent(query)}` +
+        `&format=json`;
+
+
+    try {
+
+        const data =
+            await fetchCountryFactsJson(
+
+                url,
+
+                {
+
+                    headers: {
+
+                        Accept:
+                            "application/sparql-results+json",
+
+                        "Api-User-Agent":
+                            "OneWorldOneLife-ConflictAtlas/2.0"
+
+                    }
+
+                }
+
+            );
+
+
+        if (
+            !data ||
+            !data.results ||
+            !Array.isArray(
+                data.results.bindings
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        applyGovernmentBindings(
+            data.results.bindings
+        );
+
+
+    } catch (error) {
+
+        countryFactsStatus.errors.push({
+
+            country:
+                countryBatch
+                    .map(
+                        country =>
+                            country.iso3
+                    )
+                    .join(
+                        ", "
+                    ),
+
+            field:
+                "government",
+
+            message:
+                error.message
+
+        });
+
+    }
+
+}
+
+
+// ============================================================
+// CREATE / GET GOVERNMENT RESULT
+// ============================================================
+
+function createGovernmentResult() {
+
+    return {
+
+        governmentTypes:
+            new Set(),
+
+        headsOfState:
+            new Set(),
+
+        headsOfGovernment:
+            new Set(),
+
+        headOfStateOffices:
+            new Set(),
+
+        headOfGovernmentOffices:
+            new Set()
+
+    };
+
+}
+
+
+// ============================================================
+// CLEAN WIKIDATA LABEL
+// ============================================================
+
+function cleanGovernmentLabel(
+    binding,
+    field
+) {
+
+    if (
+        !binding ||
+        !binding[field] ||
+        !binding[field].value
+    ) {
+
+        return null;
+
+    }
+
+
+    const value =
+        String(
+            binding[field].value
+        ).trim();
+
+
+    if (!value) {
+
+        return null;
+
+    }
+
+
+    return value;
+
+}
+
+
+// ============================================================
+// APPLY GOVERNMENT QUERY RESULTS
+// ============================================================
+
+function applyGovernmentBindings(
+    bindings
+) {
+
+    const resultsByIso3 =
+        new Map();
+
+
+    bindings.forEach(
+        binding => {
+
+            const iso3 =
+                cleanGovernmentLabel(
+                    binding,
+                    "iso3"
                 );
+
+
+            if (!iso3) {
 
                 return;
 
             }
 
 
-            // ----------------------------------------
-            // AREA
-            // ----------------------------------------
-
-            country.atAGlance.areaKm2 =
-                facts.area;
-
-
-            // ----------------------------------------
-            // LANGUAGES
-            // ----------------------------------------
-
-            country.atAGlance.languages =
-                Array.isArray(
-                    facts.languages
+            if (
+                !resultsByIso3.has(
+                    iso3
                 )
-                    ? [...facts.languages]
-                    : [];
+            ) {
+
+                resultsByIso3.set(
+                    iso3,
+                    createGovernmentResult()
+                );
+
+            }
 
 
-            // ----------------------------------------
-            // CURRENCY
-            // ----------------------------------------
-
-            country.atAGlance.currency =
-                facts.currency || null;
+            const result =
+                resultsByIso3.get(
+                    iso3
+                );
 
 
-            // ----------------------------------------
-            // FACT VERIFICATION
-            // ----------------------------------------
+            const governmentType =
+                cleanGovernmentLabel(
+                    binding,
+                    "governmentTypeLabel"
+                );
+
+
+            const headOfState =
+                cleanGovernmentLabel(
+                    binding,
+                    "headOfStateLabel"
+                );
+
+
+            const headOfGovernment =
+                cleanGovernmentLabel(
+                    binding,
+                    "headOfGovernmentLabel"
+                );
+
+
+            const headOfStateOffice =
+                cleanGovernmentLabel(
+                    binding,
+                    "headOfStateOfficeLabel"
+                );
+
+
+            const headOfGovernmentOffice =
+                cleanGovernmentLabel(
+                    binding,
+                    "headOfGovernmentOfficeLabel"
+                );
+
+
+            if (governmentType) {
+
+                result
+                    .governmentTypes
+                    .add(
+                        governmentType
+                    );
+
+            }
+
+
+            if (headOfState) {
+
+                result
+                    .headsOfState
+                    .add(
+                        headOfState
+                    );
+
+            }
+
+
+            if (headOfGovernment) {
+
+                result
+                    .headsOfGovernment
+                    .add(
+                        headOfGovernment
+                    );
+
+            }
+
+
+            if (headOfStateOffice) {
+
+                result
+                    .headOfStateOffices
+                    .add(
+                        headOfStateOffice
+                    );
+
+            }
+
+
+            if (headOfGovernmentOffice) {
+
+                result
+                    .headOfGovernmentOffices
+                    .add(
+                        headOfGovernmentOffice
+                    );
+
+            }
+
+        }
+    );
+
+
+    resultsByIso3.forEach(
+        (
+            result,
+            iso3
+        ) => {
+
+            const country =
+                getCountryByIso3(
+                    iso3
+                );
+
+
+            if (!country) {
+
+                return;
+
+            }
+
+
+            const governmentTypes =
+                Array.from(
+                    result.governmentTypes
+                );
+
+
+            const headsOfState =
+                Array.from(
+                    result.headsOfState
+                );
+
+
+            const headsOfGovernment =
+                Array.from(
+                    result.headsOfGovernment
+                );
+
+
+            const headOfStateOffices =
+                Array.from(
+                    result.headOfStateOffices
+                );
+
+
+            const headOfGovernmentOffices =
+                Array.from(
+                    result.headOfGovernmentOffices
+                );
+
+
+            if (
+                governmentTypes.length >
+                0
+            ) {
+
+                country.government
+                    .governmentType =
+                        governmentTypes
+                            .join(
+                                "; "
+                            );
+
+            }
+
+
+            if (
+                headsOfState.length >
+                0
+            ) {
+
+                country.government
+                    .headOfState
+                    .name =
+                        headsOfState
+                            .join(
+                                " / "
+                            );
+
+
+                country.government
+                    .headOfState
+                    .asOf =
+                        new Date()
+                            .toISOString()
+                            .slice(
+                                0,
+                                10
+                            );
+
+
+                country.government
+                    .headOfState
+                    .sourceIds =
+                        [
+                            "wikidata-government"
+                        ];
+
+            }
+
+
+            if (
+                headOfStateOffices.length >
+                0
+            ) {
+
+                country.government
+                    .headOfState
+                    .title =
+                        headOfStateOffices
+                            .join(
+                                " / "
+                            );
+
+            }
+
+
+            if (
+                headsOfGovernment.length >
+                0
+            ) {
+
+                country.government
+                    .headOfGovernment
+                    .name =
+                        headsOfGovernment
+                            .join(
+                                " / "
+                            );
+
+
+                country.government
+                    .headOfGovernment
+                    .asOf =
+                        new Date()
+                            .toISOString()
+                            .slice(
+                                0,
+                                10
+                            );
+
+
+                country.government
+                    .headOfGovernment
+                    .sourceIds =
+                        [
+                            "wikidata-government"
+                        ];
+
+            }
+
+
+            if (
+                headOfGovernmentOffices.length >
+                0
+            ) {
+
+                country.government
+                    .headOfGovernment
+                    .title =
+                        headOfGovernmentOffices
+                            .join(
+                                " / "
+                            );
+
+            }
+
 
             if (!country.factVerification) {
 
@@ -1693,54 +992,102 @@ function applyStableCountryFacts() {
             }
 
 
-            country.factVerification.area = {
+            country.factVerification.government = {
 
                 source:
-                    "Conflict Atlas stable country reference data",
+                    "Wikidata structured government data",
 
-                unit:
-                    "square kilometres",
-
-                verified:
-                    "2026-09-30"
-
-            };
-
-
-            country.factVerification.languages = {
-
-                source:
-                    "Conflict Atlas stable country reference data",
-
-                verified:
-                    "2026-09-30"
+                retrieved:
+                    new Date()
+                        .toISOString()
+                        .slice(
+                            0,
+                            10
+                        )
 
             };
-
-
-            country.factVerification.currency = {
-
-                source:
-                    "Conflict Atlas stable country reference data",
-
-                verified:
-                    "2026-09-30"
-
-            };
-
-
-            matchedCount += 1;
 
         }
     );
 
+}
 
-    countryFactsStatus.stableFactsLoaded =
+
+// ============================================================
+// LOAD GOVERNMENT DATA FOR ALL 195 COUNTRIES
+//
+// Smaller batches reduce the chance of a Wikidata query
+// timing out.
+// ============================================================
+
+async function loadAllGovernmentData() {
+
+    const batchSize =
+        30;
+
+
+    for (
+        let index = 0;
+        index < countries.length;
+        index += batchSize
+    ) {
+
+        const batch =
+            countries.slice(
+                index,
+                index + batchSize
+            );
+
+
+        await loadGovernmentBatch(
+            batch
+        );
+
+    }
+
+
+    countryFactsStatus.governmentLoaded =
         true;
 
 
+    const typeCount =
+        countries.filter(
+            country =>
+                country.government
+                    .governmentType
+        ).length;
+
+
+    const stateCount =
+        countries.filter(
+            country =>
+                country.government
+                    .headOfState
+                    .name
+        ).length;
+
+
+    const governmentCount =
+        countries.filter(
+            country =>
+                country.government
+                    .headOfGovernment
+                    .name
+        ).length;
+
+
     console.log(
-        `Conflict Atlas loaded stable facts for ${matchedCount} of ${countries.length} country profiles.`
+        `Government types loaded: ${typeCount}/${countries.length}`
+    );
+
+
+    console.log(
+        `Heads of state loaded: ${stateCount}/${countries.length}`
+    );
+
+
+    console.log(
+        `Heads of government loaded: ${governmentCount}/${countries.length}`
     );
 
 }
@@ -1749,15 +1096,10 @@ function applyStableCountryFacts() {
 // ============================================================
 // COUNTRY OVERVIEWS
 // ============================================================
-//
-// These are intentionally short and neutral.
-//
-// More detailed country-specific descriptions can be added
-// later without changing the profile interface.
-//
-// ============================================================
 
-function buildCountryOverview(country) {
+function buildCountryOverview(
+    country
+) {
 
     if (!country) {
 
@@ -1788,7 +1130,7 @@ function buildCountryOverview(country) {
 
 
 // ============================================================
-// APPLY COUNTRY OVERVIEWS
+// APPLY OVERVIEWS
 // ============================================================
 
 function applyCountryOverviews() {
@@ -1808,18 +1150,7 @@ function applyCountryOverviews() {
 
 
 // ============================================================
-// UNITED NATIONS MEMBERSHIP BASELINE
-// ============================================================
-//
-// Conflict Atlas contains:
-//
-// 193 UN member states
-// Holy See
-// State of Palestine
-//
-// The latter two are represented as UN non-member observer
-// states.
-//
+// UNITED NATIONS MEMBERSHIP
 // ============================================================
 
 function applyUnitedNationsMembership() {
@@ -1827,35 +1158,20 @@ function applyUnitedNationsMembership() {
     countries.forEach(
         country => {
 
-            if (
-                !country.government ||
-                !Array.isArray(
-                    country.government
-                        .internationalOrganizations
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            // Prevent duplicate UN entries if this function
-            // is ever called more than once.
-
-            const alreadyHasUnitedNations =
+            const organizations =
                 country.government
-                    .internationalOrganizations
-                    .some(
-                        organization =>
-                            organization.name ===
-                            "United Nations"
-                    );
+                    .internationalOrganizations;
 
 
-            if (
-                alreadyHasUnitedNations
-            ) {
+            const alreadyExists =
+                organizations.some(
+                    organization =>
+                        organization.name ===
+                        "United Nations"
+                );
+
+
+            if (alreadyExists) {
 
                 return;
 
@@ -1867,31 +1183,27 @@ function applyUnitedNationsMembership() {
                 country.iso3 === "PSE"
             ) {
 
-                country.government
-                    .internationalOrganizations
-                    .push({
+                organizations.push({
 
-                        name:
-                            "United Nations",
+                    name:
+                        "United Nations",
 
-                        status:
-                            "Non-member observer state"
+                    status:
+                        "Non-member observer state"
 
-                    });
+                });
 
             } else {
 
-                country.government
-                    .internationalOrganizations
-                    .push({
+                organizations.push({
 
-                        name:
-                            "United Nations",
+                    name:
+                        "United Nations",
 
-                        status:
-                            "Member state"
+                    status:
+                        "Member state"
 
-                    });
+                });
 
             }
 
@@ -1903,15 +1215,6 @@ function applyUnitedNationsMembership() {
 
 // ============================================================
 // SPECIAL COUNTRY OVERVIEWS
-// ============================================================
-//
-// countries.js already contains special notes for countries
-// where the capital or constitutional arrangement benefits
-// from additional explanation.
-//
-// We preserve those notes rather than replacing them with the
-// generic overview.
-//
 // ============================================================
 
 function applySpecialCountryOverviews() {
@@ -1970,18 +1273,13 @@ function applySpecialCountryOverviews() {
 
 
 // ============================================================
-// ADD COUNTRY FACT SOURCES
+// COUNTRY FACT SOURCES
 // ============================================================
 
 function addCountryFactsSources() {
 
     countries.forEach(
         country => {
-
-
-            // ----------------------------------------
-            // WORLD BANK POPULATION
-            // ----------------------------------------
 
             addCountrySource(
                 country.iso3,
@@ -2003,25 +1301,81 @@ function addCountryFactsSources() {
             );
 
 
-            // ----------------------------------------
-            // UNITED NATIONS M49
-            // ----------------------------------------
+            addCountrySource(
+                country.iso3,
+                {
+
+                    id:
+                        "world-bank-country-metadata",
+
+                    name:
+                        "World Bank — Country Metadata",
+
+                    url:
+                        "https://api.worldbank.org/v2/country",
+
+                    type:
+                        "international-organization"
+
+                }
+            );
+
 
             addCountrySource(
                 country.iso3,
                 {
 
                     id:
-                        "un-m49-country-classification",
+                        "wikidata-government",
 
                     name:
-                        "United Nations Statistics Division — M49",
+                        "Wikidata — Government and leadership data",
 
                     url:
-                        "https://unstats.un.org/unsd/methodology/m49/",
+                        "https://www.wikidata.org/",
+
+                    type:
+                        "structured-data"
+
+                }
+            );
+
+
+            addCountrySource(
+                country.iso3,
+                {
+
+                    id:
+                        "un-protocol-leadership",
+
+                    name:
+                        "United Nations Protocol — Heads of State and Government",
+
+                    url:
+                        "https://www.un.org/dgacm/en/content/protocol/hshgnfa",
 
                     type:
                         "international-organization"
+
+                }
+            );
+
+
+            addCountrySource(
+                country.iso3,
+                {
+
+                    id:
+                        "cia-world-leaders",
+
+                    name:
+                        "CIA — World Leaders",
+
+                    url:
+                        "https://www.cia.gov/resources/world-leaders/",
+
+                    type:
+                        "government-reference"
 
                 }
             );
@@ -2033,159 +1387,7 @@ function addCountryFactsSources() {
 
 
 // ============================================================
-// VALIDATE STABLE FACT DATABASE
-// ============================================================
-
-function validateStableCountryFacts() {
-
-    const missingProfiles = [];
-
-    const unusedFactRecords = [];
-
-
-    // ----------------------------------------
-    // CHECK EVERY COUNTRY PROFILE
-    // ----------------------------------------
-
-    countries.forEach(
-        country => {
-
-            const facts =
-                stableCountryFacts[
-                    country.iso3
-                ];
-
-
-            if (!facts) {
-
-                missingProfiles.push(
-                    `${country.name} (${country.iso3})`
-                );
-
-                return;
-
-            }
-
-
-            // AREA
-
-            if (
-                facts.area === null ||
-                facts.area === undefined ||
-                Number.isNaN(
-                    Number(
-                        facts.area
-                    )
-                )
-            ) {
-
-                console.warn(
-                    `${country.name} has invalid area data.`
-                );
-
-            }
-
-
-            // LANGUAGES
-
-            if (
-                !Array.isArray(
-                    facts.languages
-                ) ||
-                facts.languages.length === 0
-            ) {
-
-                console.warn(
-                    `${country.name} has no language data.`
-                );
-
-            }
-
-
-            // CURRENCY
-
-            if (
-                !facts.currency
-            ) {
-
-                console.warn(
-                    `${country.name} has no currency data.`
-                );
-
-            }
-
-        }
-    );
-
-
-    // ----------------------------------------
-    // CHECK FOR UNUSED ISO RECORDS
-    // ----------------------------------------
-
-    Object.keys(
-        stableCountryFacts
-    )
-        .forEach(
-            iso3 => {
-
-                const exists =
-                    countries.some(
-                        country =>
-                            country.iso3 ===
-                            iso3
-                    );
-
-
-                if (!exists) {
-
-                    unusedFactRecords.push(
-                        iso3
-                    );
-
-                }
-
-            }
-        );
-
-
-    // ----------------------------------------
-    // REPORT
-    // ----------------------------------------
-
-    if (
-        missingProfiles.length === 0
-    ) {
-
-        console.log(
-            `Stable facts matched all ${countries.length} Conflict Atlas country profiles.`
-        );
-
-    } else {
-
-        console.warn(
-            "Country profiles missing stable facts:",
-            missingProfiles
-        );
-
-    }
-
-
-    if (
-        unusedFactRecords.length > 0
-    ) {
-
-        console.warn(
-            "Stable fact records without a matching country profile:",
-            unusedFactRecords
-        );
-
-    }
-
-}
-
-
-// ============================================================
-// VERIFY COUNTRY PROFILE STRUCTURE
+// VALIDATION
 // ============================================================
 
 function validateCountryFacts() {
@@ -2193,9 +1395,7 @@ function validateCountryFacts() {
     countries.forEach(
         country => {
 
-            if (
-                !country.atAGlance
-            ) {
+            if (!country.atAGlance) {
 
                 console.warn(
                     `${country.name} is missing atAGlance data.`
@@ -2204,9 +1404,7 @@ function validateCountryFacts() {
             }
 
 
-            if (
-                !country.government
-            ) {
+            if (!country.government) {
 
                 console.warn(
                     `${country.name} is missing government data.`
@@ -2237,86 +1435,80 @@ function validateCountryFacts() {
 
 
 // ============================================================
-// REFRESH AN OPEN COUNTRY PROFILE
-// ============================================================
-//
-// Population arrives asynchronously from the World Bank.
-//
-// If the user opens a country while population data is still
-// loading, this refreshes the currently open profile after the
-// external population requests finish.
-//
+// GOVERNMENT VALIDATION
 // ============================================================
 
-function refreshOpenCountryProfile() {
+function validateGovernmentData() {
 
-    if (
-        typeof openCountryPanel !==
-        "function"
-    ) {
-
-        return;
-
-    }
+    const missingType =
+        countries.filter(
+            country =>
+                !country.government
+                    .governmentType
+        );
 
 
-    if (
-        typeof countryPanel ===
-        "undefined" ||
-        !countryPanel
-    ) {
-
-        return;
-
-    }
+    const missingHeadOfState =
+        countries.filter(
+            country =>
+                !country.government
+                    .headOfState
+                    .name
+        );
 
 
-    if (
-        !countryPanel.classList.contains(
-            "open"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    const displayedCountryName =
-        (
-            typeof countryNameElement !==
-                "undefined" &&
-            countryNameElement
-        )
-            ? countryNameElement
-                .textContent
-                .trim()
-            : "";
-
-
-    if (
-        !displayedCountryName
-    ) {
-
-        return;
-
-    }
-
-
-    const country =
-        countries.find(
-            profile =>
-                profile.name ===
-                displayedCountryName
+    const missingHeadOfGovernment =
+        countries.filter(
+            country =>
+                !country.government
+                    .headOfGovernment
+                    .name
         );
 
 
     if (
-        country
+        missingType.length >
+        0
     ) {
 
-        openCountryPanel(
-            country
+        console.warn(
+            "Countries missing government type:",
+            missingType.map(
+                country =>
+                    country.name
+            )
+        );
+
+    }
+
+
+    if (
+        missingHeadOfState.length >
+        0
+    ) {
+
+        console.warn(
+            "Countries missing head of state:",
+            missingHeadOfState.map(
+                country =>
+                    country.name
+            )
+        );
+
+    }
+
+
+    if (
+        missingHeadOfGovernment.length >
+        0
+    ) {
+
+        console.warn(
+            "Countries missing head of government:",
+            missingHeadOfGovernment.map(
+                country =>
+                    country.name
+            )
         );
 
     }
@@ -2348,14 +1540,9 @@ async function initializeCountryFacts() {
     );
 
 
-    // ========================================================
-    // LOCAL INFORMATION
-    //
-    // Apply these immediately. They do not require an external
-    // request.
-    // ========================================================
-
-    applyStableCountryFacts();
+    // ----------------------------------------
+    // LOCAL DATA FIRST
+    // ----------------------------------------
 
     applyCountryOverviews();
 
@@ -2367,16 +1554,27 @@ async function initializeCountryFacts() {
 
     validateCountryFacts();
 
-    validateStableCountryFacts();
+
+    // ----------------------------------------
+    // EXTERNAL DATA
+    // ----------------------------------------
+
+    await Promise.all([
+
+        loadAllCountryPopulations(),
+
+        loadWorldBankCountryMetadata(),
+
+        loadAllGovernmentData()
+
+    ]);
 
 
-    // ========================================================
-    // EXTERNAL STATISTICAL INFORMATION
-    //
-    // Population remains sourced from the World Bank.
-    // ========================================================
+    // ----------------------------------------
+    // FINAL VALIDATION
+    // ----------------------------------------
 
-    await loadAllCountryPopulations();
+    validateGovernmentData();
 
 
     countryFactsStatus.loading =
@@ -2400,12 +1598,6 @@ async function initializeCountryFacts() {
 
     }
 
-
-    // If a country profile was opened before the World Bank
-    // population finished loading, update it now.
-
-    refreshOpenCountryProfile();
-
 }
 
 
@@ -2414,3 +1606,711 @@ async function initializeCountryFacts() {
 // ============================================================
 
 initializeCountryFacts();
+// ============================================================
+// ADDITIONAL VERIFIED CRISIS RELATIONSHIPS
+// Conflict Atlas
+//
+// These extend the first relationship set.
+//
+// Only substantial, documented relationships are included.
+// Merely issuing statements, voting at the UN, or providing
+// limited assistance is not enough for inclusion.
+// ============================================================
+
+
+// ============================================================
+// AFGHANISTAN — REGIONAL DISPLACEMENT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "IRN",
+    "afghanistan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Iran hosts a major Afghan refugee and displaced population and remains one of the principal countries affected by cross-border displacement from Afghanistan.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "PAK",
+    "afghanistan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Pakistan hosts a major Afghan refugee population and remains one of the principal countries affected by displacement from Afghanistan.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// SOMALIA — REGIONAL REFUGEE IMPACT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "ETH",
+    "somalia",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Ethiopia hosts one of the largest populations of refugees from Somalia.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "KEN",
+    "somalia",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Kenya hosts one of the largest populations of refugees from Somalia.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "UGA",
+    "somalia",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Uganda hosts a significant population of refugees from Somalia.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "DJI",
+    "somalia",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Djibouti hosts refugees from Somalia as part of the wider Horn of Africa displacement situation.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// NIGERIA — LAKE CHAD BASIN DISPLACEMENT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "CMR",
+    "nigeria-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Cameroon hosts a substantial Nigerian refugee population associated with the regional Lake Chad Basin displacement crisis.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "TCD",
+    "nigeria-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Chad hosts Nigerian refugees affected by conflict and displacement in the Lake Chad Basin.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "NER",
+    "nigeria-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Niger hosts the largest share of Nigerian refugees tracked in the regional Nigeria displacement situation.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// VENEZUELA — REGIONAL DISPLACEMENT
+// ============================================================
+
+addCountryCrisisRelationship(
+    "COL",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Colombia is one of the principal host countries for refugees and migrants from Venezuela.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "PER",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Peru hosts a large population of refugees and migrants from Venezuela.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "ECU",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Ecuador hosts and receives refugees and migrants from Venezuela as part of the regional displacement situation.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "BRA",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Brazil is significantly affected by Venezuelan displacement and hosts refugees and migrants from Venezuela.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "ARG",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Argentina hosts refugees and migrants from Venezuela as part of the wider regional displacement situation.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "PAN",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Panama is affected by regional Venezuelan displacement and hosts refugees and migrants from Venezuela.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "CRI",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Costa Rica hosts refugees and migrants from Venezuela as part of the regional displacement situation.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "MEX",
+    "venezuela-displacement",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Mexico is among the countries affected by the regional movement and displacement of Venezuelans.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// IRAN 2026 — DIRECT CONFLICT PARTIES
+// ============================================================
+//
+// United Nations reporting documents U.S. and Israeli
+// military strikes against Iran beginning February 28, 2026.
+//
+// The United States subsequently notified the Security
+// Council that it had commenced combat operations against
+// Iran in cooperation with Israel.
+// ============================================================
+
+addCountryCrisisRelationship(
+    "USA",
+    "iran-2026",
+    [
+        "party-to-conflict"
+    ],
+    "The United States began combat operations against Iran on February 28, 2026, in cooperation with Israel.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "ISR",
+    "iran-2026",
+    [
+        "party-to-conflict"
+    ],
+    "Israel participated with the United States in military strikes against Iran beginning on February 28, 2026.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// IRAN 2026 — REGIONAL COUNTRIES DIRECTLY AFFECTED
+//
+// The UN Secretary-General reported Iranian attacks affecting
+// Bahrain, Iraq, Jordan, Kuwait, Qatar, Saudi Arabia and the
+// United Arab Emirates during the February 2026 escalation.
+//
+// These countries are therefore connected as directly
+// affected by the regional military escalation, rather than
+// being classified as parties to the conflict.
+// ============================================================
+
+addCountryCrisisRelationship(
+    "BHR",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Bahrain was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "IRQ",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Iraq was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "JOR",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Jordan was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "KWT",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Kuwait was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "QAT",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Qatar was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "SAU",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "Saudi Arabia was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "ARE",
+    "iran-2026",
+    [
+        "directly-affected"
+    ],
+    "The United Arab Emirates was directly affected by Iranian strikes during the regional military escalation that began in February 2026.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// EASTERN DR CONGO — RWANDA
+// ============================================================
+
+addCountryCrisisRelationship(
+    "RWA",
+    "drc",
+    [
+        "military-involvement"
+    ],
+    "United Nations reporting has documented Rwanda Defence Force support for and joint military operations with AFC/M23 in eastern Democratic Republic of the Congo.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// SYRIA — REGIONAL REFUGEE HOSTS
+//
+// These may already exist in the first relationship section.
+// The helper safely merges duplicate crisis relationships,
+// so adding them again will not create duplicate crisis cards.
+// ============================================================
+
+addCountryCrisisRelationship(
+    "TUR",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Türkiye remains the largest host country for registered Syrian refugees.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "LBN",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Lebanon continues to host a large population of refugees from Syria.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "JOR",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Jordan continues to host a substantial population of refugees from Syria.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "IRQ",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Iraq continues to host a substantial population of refugees from Syria.",
+    "September 30, 2026"
+);
+
+addCountryCrisisRelationship(
+    "EGY",
+    "syria",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Egypt continues to host refugees from Syria.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// SOUTH SUDAN — KENYA
+//
+// Kenya's UNHCR population data identifies South Sudanese
+// refugees as one of the country's largest refugee groups.
+// ============================================================
+
+addCountryCrisisRelationship(
+    "KEN",
+    "south-sudan",
+    [
+        "humanitarian-refugee-impact"
+    ],
+    "Kenya hosts a large population of refugees from South Sudan.",
+    "September 30, 2026"
+);
+
+
+// ============================================================
+// SOURCE ENTRIES FOR NEW RELATIONSHIPS
+// ============================================================
+
+
+// ------------------------------
+// IRAN 2026
+// ------------------------------
+
+[
+    "IRN",
+    "USA",
+    "ISR",
+    "BHR",
+    "IRQ",
+    "JOR",
+    "KWT",
+    "QAT",
+    "SAU",
+    "ARE"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "un-iran-2026",
+
+                name:
+                    "United Nations — 2026 Middle East escalation",
+
+                url:
+                    "https://www.un.org/sg/en/content/sg/statements/2026-02-28/secretary-generals-remarks-the-security-council-meeting-the-situation-the-middle-east-delivered",
+
+                type:
+                    "united-nations"
+
+            }
+        );
+
+    }
+);
+
+
+[
+    "USA",
+    "ISR",
+    "IRN"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "un-sc-2026-161",
+
+                name:
+                    "UN Security Council Document S/2026/161",
+
+                url:
+                    "https://docs.un.org/S/2026/161",
+
+                type:
+                    "united-nations"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// AFGHANISTAN
+// ------------------------------
+
+[
+    "AFG",
+    "IRN",
+    "PAK"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "unhcr-afghanistan-situation",
+
+                name:
+                    "UNHCR — Afghanistan Situation",
+
+                url:
+                    "https://data.unhcr.org/en/situations/afghanistan",
+
+                type:
+                    "unhcr"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// SOMALIA
+// ------------------------------
+
+[
+    "SOM",
+    "ETH",
+    "KEN",
+    "UGA",
+    "DJI"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "unhcr-somalia-situation",
+
+                name:
+                    "UNHCR — Horn of Africa Somalia Situation",
+
+                url:
+                    "https://data.unhcr.org/en/situations/horn",
+
+                type:
+                    "unhcr"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// NIGERIA
+// ------------------------------
+
+[
+    "NGA",
+    "CMR",
+    "TCD",
+    "NER"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "unhcr-nigeria-situation",
+
+                name:
+                    "UNHCR — Nigeria Situation",
+
+                url:
+                    "https://data.unhcr.org/en/situations/nigeriasituation",
+
+                type:
+                    "unhcr"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// VENEZUELA
+// ------------------------------
+
+[
+    "VEN",
+    "COL",
+    "PER",
+    "ECU",
+    "BRA",
+    "ARG",
+    "PAN",
+    "CRI",
+    "MEX"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "unhcr-venezuela-situation",
+
+                name:
+                    "UNHCR — Venezuela Situation",
+
+                url:
+                    "https://www.unhcr.org/emergencies/venezuela-situation",
+
+                type:
+                    "unhcr"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// SYRIA
+// ------------------------------
+
+[
+    "SYR",
+    "TUR",
+    "LBN",
+    "JOR",
+    "IRQ",
+    "EGY"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "unhcr-syria-regional",
+
+                name:
+                    "UNHCR — Syria Regional Refugee Response",
+
+                url:
+                    "https://data.unhcr.org/en/situations/syria",
+
+                type:
+                    "unhcr"
+
+            }
+        );
+
+    }
+);
+
+
+// ------------------------------
+// DR CONGO / RWANDA
+// ------------------------------
+
+[
+    "COD",
+    "RWA"
+].forEach(
+    iso3 => {
+
+        addCountrySource(
+            iso3,
+            {
+
+                id:
+                    "un-drc-rwanda-experts",
+
+                name:
+                    "United Nations — Group of Experts on DR Congo",
+
+                url:
+                    "https://digitallibrary.un.org/record/4097846",
+
+                type:
+                    "united-nations"
+
+            }
+        );
+
+    }
+);
+
+
+// ============================================================
+// ADDITIONAL RELATIONSHIPS COMPLETE
+// ============================================================
+
+console.log(
+    "Conflict Atlas additional verified country-crisis relationships loaded."
+);
