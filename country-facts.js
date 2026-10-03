@@ -2,16 +2,16 @@
 // ONE WORLD, ONE LIFE — COUNTRY FACTS
 // Conflict Atlas
 //
-// VERSION 3.0
-//
-// Adds factual information to all 195 country profiles.
+// VERSION 4.0
 //
 // Population:
 // World Bank
 //
-// Area, official languages, currency,
-// government type, head of state and head of government:
-// Wikidata structured data.
+// Area, languages, currency:
+// REST Countries
+//
+// Government:
+// Wikidata
 //
 // Crisis relationships remain in countries.js.
 // ============================================================
@@ -21,10 +21,13 @@
 // SETTINGS
 // ============================================================
 
-const COUNTRY_FACTS_VERSION = "3.0";
+const COUNTRY_FACTS_VERSION = "4.0";
 
 const WORLD_BANK_API =
     "https://api.worldbank.org/v2";
+
+const REST_COUNTRIES_API =
+    "https://restcountries.com/v3.1/all?fields=cca3,area,languages,currencies";
 
 const WIKIDATA_SPARQL_API =
     "https://query.wikidata.org/sparql";
@@ -38,7 +41,9 @@ const countryFactsStatus = {
 
     populationLoaded: false,
 
-    wikidataLoaded: false,
+    geographicFactsLoaded: false,
+
+    governmentLoaded: false,
 
     loading: false,
 
@@ -48,8 +53,92 @@ const countryFactsStatus = {
 
 
 // ============================================================
-// HELPERS
+// BASIC HELPERS
 // ============================================================
+
+function safeText(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return null;
+
+    }
+
+    const text =
+        String(value).trim();
+
+    if (!text) {
+
+        return null;
+
+    }
+
+    return text;
+
+}
+
+
+function isWikidataId(value) {
+
+    if (!value) {
+
+        return false;
+
+    }
+
+    return /^Q\d+$/i.test(
+        String(value).trim()
+    );
+
+}
+
+
+function cleanWikidataText(value) {
+
+    const text =
+        safeText(value);
+
+    if (!text) {
+
+        return null;
+
+    }
+
+    if (isWikidataId(text)) {
+
+        return null;
+
+    }
+
+    return text;
+
+}
+
+
+function getBindingValue(
+    binding,
+    key
+) {
+
+    if (
+        !binding ||
+        !binding[key] ||
+        binding[key].value === undefined
+    ) {
+
+        return null;
+
+    }
+
+    return cleanWikidataText(
+        binding[key].value
+    );
+
+}
+
 
 function formatCountryPopulation(value) {
 
@@ -69,58 +158,6 @@ function formatCountryPopulation(value) {
 }
 
 
-function isUnresolvedWikidataLabel(value) {
-
-    if (!value) {
-
-        return true;
-
-    }
-
-    return /^Q\d+$/i.test(
-        String(value).trim()
-    );
-
-}
-
-
-function cleanWikidataLabel(
-    binding,
-    field
-) {
-
-    if (
-        !binding ||
-        !binding[field] ||
-        !binding[field].value
-    ) {
-
-        return null;
-
-    }
-
-
-    const value =
-        String(
-            binding[field].value
-        ).trim();
-
-
-    if (
-        !value ||
-        isUnresolvedWikidataLabel(value)
-    ) {
-
-        return null;
-
-    }
-
-
-    return value;
-
-}
-
-
 // ============================================================
 // FETCH JSON
 // ============================================================
@@ -136,7 +173,6 @@ async function fetchCountryFactsJson(
             options
         );
 
-
     if (!response.ok) {
 
         throw new Error(
@@ -145,14 +181,14 @@ async function fetchCountryFactsJson(
 
     }
 
-
     return response.json();
 
 }
 
 
 // ============================================================
-// WORLD BANK POPULATION
+// POPULATION
+// WORLD BANK
 // ============================================================
 
 async function loadCountryPopulation(
@@ -168,13 +204,11 @@ async function loadCountryPopulation(
 
     }
 
-
     const url =
         `${WORLD_BANK_API}/country/` +
         `${encodeURIComponent(country.iso3)}/` +
         `indicator/SP.POP.TOTL` +
         `?format=json&mrnev=1`;
-
 
     try {
 
@@ -182,7 +216,6 @@ async function loadCountryPopulation(
             await fetchCountryFactsJson(
                 url
             );
-
 
         if (
             !Array.isArray(data) ||
@@ -194,10 +227,8 @@ async function loadCountryPopulation(
 
         }
 
-
         const observation =
             data[1][0];
-
 
         if (
             observation.value === null ||
@@ -208,43 +239,15 @@ async function loadCountryPopulation(
 
         }
 
-
         country.atAGlance.population =
             Number(
                 observation.value
             );
 
-
         country.atAGlance.populationYear =
             Number(
                 observation.date
             );
-
-
-        if (!country.factVerification) {
-
-            country.factVerification = {};
-
-        }
-
-
-        country.factVerification.population = {
-
-            source:
-                "World Bank — Population, total",
-
-            year:
-                Number(
-                    observation.date
-                ),
-
-            retrieved:
-                new Date()
-                    .toISOString()
-                    .slice(0, 10)
-
-        };
-
 
     } catch (error) {
 
@@ -272,8 +275,7 @@ async function loadCountryPopulation(
 
 async function loadAllCountryPopulations() {
 
-    const batchSize = 12;
-
+    const batchSize = 15;
 
     for (
         let index = 0;
@@ -286,7 +288,6 @@ async function loadAllCountryPopulations() {
                 index,
                 index + batchSize
             );
-
 
         await Promise.all(
 
@@ -301,42 +302,227 @@ async function loadAllCountryPopulations() {
 
     }
 
-
     countryFactsStatus.populationLoaded =
         true;
 
-
-    const loaded =
-        countries.filter(
-            country =>
-                country.atAGlance.population !==
-                null
-        ).length;
-
-
     console.log(
-        `Population loaded for ${loaded}/${countries.length} countries.`
+        "World Bank population data loaded."
     );
 
 }
 
 
 // ============================================================
-// WIKIDATA RESULT STRUCTURE
+// AREA / LANGUAGES / CURRENCY
+// REST COUNTRIES
 // ============================================================
 
-function createWikidataCountryResult() {
+async function loadGeographicCountryFacts() {
+
+    try {
+
+        const data =
+            await fetchCountryFactsJson(
+                REST_COUNTRIES_API
+            );
+
+        if (!Array.isArray(data)) {
+
+            throw new Error(
+                "REST Countries returned an unexpected response."
+            );
+
+        }
+
+        data.forEach(
+            record => {
+
+                const iso3 =
+                    safeText(
+                        record.cca3
+                    );
+
+                if (!iso3) {
+
+                    return;
+
+                }
+
+                const country =
+                    getCountryByIso3(
+                        iso3
+                    );
+
+                if (!country) {
+
+                    return;
+
+                }
+
+
+                // ============================================
+                // AREA
+                // ============================================
+
+                if (
+                    record.area !== null &&
+                    record.area !== undefined &&
+                    Number.isFinite(
+                        Number(record.area)
+                    )
+                ) {
+
+                    country.atAGlance.areaKm2 =
+                        Math.round(
+                            Number(record.area)
+                        );
+
+                }
+
+
+                // ============================================
+                // LANGUAGES
+                // ============================================
+
+                if (
+                    record.languages &&
+                    typeof record.languages === "object"
+                ) {
+
+                    const languages =
+                        Object.values(
+                            record.languages
+                        )
+                        .map(
+                            language =>
+                                safeText(language)
+                        )
+                        .filter(Boolean)
+                        .filter(
+                            (
+                                language,
+                                index,
+                                array
+                            ) =>
+                                array.indexOf(language) ===
+                                index
+                        )
+                        .sort(
+                            (a, b) =>
+                                a.localeCompare(b)
+                        );
+
+                    country.atAGlance.languages =
+                        languages;
+
+                }
+
+
+                // ============================================
+                // CURRENCY
+                // ============================================
+
+                if (
+                    record.currencies &&
+                    typeof record.currencies === "object"
+                ) {
+
+                    const currencies =
+                        Object.entries(
+                            record.currencies
+                        )
+                        .map(
+                            (
+                                [
+                                    code,
+                                    currency
+                                ]
+                            ) => {
+
+                                const name =
+                                    safeText(
+                                        currency?.name
+                                    );
+
+                                if (
+                                    name &&
+                                    code
+                                ) {
+
+                                    return `${name} (${code})`;
+
+                                }
+
+                                if (name) {
+
+                                    return name;
+
+                                }
+
+                                return safeText(
+                                    code
+                                );
+
+                            }
+                        )
+                        .filter(Boolean);
+
+                    if (
+                        currencies.length >
+                        0
+                    ) {
+
+                        country.atAGlance.currency =
+                            currencies.join(
+                                ", "
+                            );
+
+                    }
+
+                }
+
+            }
+        );
+
+        countryFactsStatus.geographicFactsLoaded =
+            true;
+
+        console.log(
+            "Area, language and currency data loaded."
+        );
+
+    } catch (error) {
+
+        countryFactsStatus.errors.push({
+
+            country:
+                "all",
+
+            field:
+                "area/language/currency",
+
+            message:
+                error.message
+
+        });
+
+        console.error(
+            "Unable to load geographic country facts:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// GOVERNMENT RESULT STRUCTURE
+// ============================================================
+
+function createGovernmentResult() {
 
     return {
-
-        areas:
-            new Set(),
-
-        languages:
-            new Set(),
-
-        currencies:
-            new Set(),
 
         governmentTypes:
             new Set(),
@@ -353,20 +539,24 @@ function createWikidataCountryResult() {
 
 
 // ============================================================
-// WIKIDATA QUERY
+// GOVERNMENT QUERY
 //
-// P298  ISO-3
-// P2046 area
-// P37   official language
-// P38   currency
-// P122  basic form of government
-// P35   head of state
-// P6    head of government
+// P298 = ISO 3166-1 alpha-3
+// P122 = basic form of government
+// P35  = head of state
+// P6   = head of government
 //
-// Labels are explicitly requested as English labels.
+// IMPORTANT:
+//
+// We explicitly retrieve English rdfs:label values.
+//
+// We DO NOT use the raw entity URI as the public-facing
+// person's name.
+//
+// Q-numbers are rejected.
 // ============================================================
 
-async function loadWikidataBatch(
+async function loadGovernmentBatch(
     countryBatch
 ) {
 
@@ -378,72 +568,22 @@ async function loadWikidataBatch(
             )
             .join(" ");
 
-
     const query =
 `
 SELECT DISTINCT
     ?iso3
-    ?area
-    ?languageLabel
-    ?currencyLabel
     ?governmentTypeLabel
     ?headOfStateLabel
     ?headOfGovernmentLabel
-
 WHERE {
 
     VALUES ?iso3 {
         ${isoValues}
     }
 
-
     ?country
         wdt:P298
         ?iso3 .
-
-
-    OPTIONAL {
-
-        ?country
-            wdt:P2046
-            ?area .
-
-    }
-
-
-    OPTIONAL {
-
-        ?country
-            wdt:P37
-            ?language .
-
-        ?language
-            rdfs:label
-            ?languageLabel .
-
-        FILTER(
-            LANG(?languageLabel) = "en"
-        )
-
-    }
-
-
-    OPTIONAL {
-
-        ?country
-            wdt:P38
-            ?currency .
-
-        ?currency
-            rdfs:label
-            ?currencyLabel .
-
-        FILTER(
-            LANG(?currencyLabel) = "en"
-        )
-
-    }
-
 
     OPTIONAL {
 
@@ -461,7 +601,6 @@ WHERE {
 
     }
 
-
     OPTIONAL {
 
         ?country
@@ -477,7 +616,6 @@ WHERE {
         )
 
     }
-
 
     OPTIONAL {
 
@@ -498,12 +636,10 @@ WHERE {
 }
 `;
 
-
     const url =
         `${WIKIDATA_SPARQL_API}` +
         `?query=${encodeURIComponent(query)}` +
         `&format=json`;
-
 
     try {
 
@@ -525,7 +661,6 @@ WHERE {
 
             );
 
-
         if (
             !data ||
             !data.results ||
@@ -538,11 +673,9 @@ WHERE {
 
         }
 
-
-        applyWikidataBindings(
+        applyGovernmentBindings(
             data.results.bindings
         );
-
 
     } catch (error) {
 
@@ -557,7 +690,7 @@ WHERE {
                     .join(", "),
 
             field:
-                "Wikidata country facts",
+                "government",
 
             message:
                 error.message
@@ -570,26 +703,24 @@ WHERE {
 
 
 // ============================================================
-// APPLY WIKIDATA RESULTS
+// APPLY GOVERNMENT RESULTS
 // ============================================================
 
-function applyWikidataBindings(
+function applyGovernmentBindings(
     bindings
 ) {
 
-    const resultsByIso3 =
+    const results =
         new Map();
-
 
     bindings.forEach(
         binding => {
 
             const iso3 =
-                cleanWikidataLabel(
+                getBindingValue(
                     binding,
                     "iso3"
                 );
-
 
             if (!iso3) {
 
@@ -597,106 +728,34 @@ function applyWikidataBindings(
 
             }
 
-
             if (
-                !resultsByIso3.has(
+                !results.has(
                     iso3
                 )
             ) {
 
-                resultsByIso3.set(
+                results.set(
                     iso3,
-                    createWikidataCountryResult()
+                    createGovernmentResult()
                 );
 
             }
 
-
             const result =
-                resultsByIso3.get(
+                results.get(
                     iso3
                 );
 
 
-            // ------------------------------------------
-            // AREA
-            // ------------------------------------------
-
-            if (
-                binding.area &&
-                binding.area.value
-            ) {
-
-                const area =
-                    Number(
-                        binding.area.value
-                    );
-
-
-                if (
-                    Number.isFinite(area) &&
-                    area > 0
-                ) {
-
-                    result.areas.add(
-                        area
-                    );
-
-                }
-
-            }
-
-
-            // ------------------------------------------
-            // OFFICIAL LANGUAGE
-            // ------------------------------------------
-
-            const language =
-                cleanWikidataLabel(
-                    binding,
-                    "languageLabel"
-                );
-
-
-            if (language) {
-
-                result.languages.add(
-                    language
-                );
-
-            }
-
-
-            // ------------------------------------------
-            // CURRENCY
-            // ------------------------------------------
-
-            const currency =
-                cleanWikidataLabel(
-                    binding,
-                    "currencyLabel"
-                );
-
-
-            if (currency) {
-
-                result.currencies.add(
-                    currency
-                );
-
-            }
-
-
-            // ------------------------------------------
+            // ============================================
             // GOVERNMENT TYPE
-            // ------------------------------------------
+            // ============================================
 
             const governmentType =
-                cleanWikidataLabel(
+                getBindingValue(
                     binding,
                     "governmentTypeLabel"
                 );
-
 
             if (governmentType) {
 
@@ -707,16 +766,15 @@ function applyWikidataBindings(
             }
 
 
-            // ------------------------------------------
+            // ============================================
             // HEAD OF STATE
-            // ------------------------------------------
+            // ============================================
 
             const headOfState =
-                cleanWikidataLabel(
+                getBindingValue(
                     binding,
                     "headOfStateLabel"
                 );
-
 
             if (headOfState) {
 
@@ -727,16 +785,15 @@ function applyWikidataBindings(
             }
 
 
-            // ------------------------------------------
+            // ============================================
             // HEAD OF GOVERNMENT
-            // ------------------------------------------
+            // ============================================
 
             const headOfGovernment =
-                cleanWikidataLabel(
+                getBindingValue(
                     binding,
                     "headOfGovernmentLabel"
                 );
-
 
             if (headOfGovernment) {
 
@@ -750,7 +807,7 @@ function applyWikidataBindings(
     );
 
 
-    resultsByIso3.forEach(
+    results.forEach(
         (
             result,
             iso3
@@ -761,7 +818,6 @@ function applyWikidataBindings(
                     iso3
                 );
 
-
             if (!country) {
 
                 return;
@@ -769,240 +825,120 @@ function applyWikidataBindings(
             }
 
 
-            // ------------------------------------------
-            // AREA
-            //
-            // If multiple area values exist, use the
-            // largest current truthy value.
-            // ------------------------------------------
-
-            const areas =
-                Array.from(
-                    result.areas
-                )
-                .filter(
-                    value =>
-                        Number.isFinite(value)
-                )
-                .sort(
-                    (a, b) =>
-                        b - a
-                );
-
-
-            if (
-                areas.length >
-                0
-            ) {
-
-                country.atAGlance.areaKm2 =
-                    Math.round(
-                        areas[0]
-                    );
-
-            }
-
-
-            // ------------------------------------------
-            // LANGUAGES
-            // ------------------------------------------
-
-            const languages =
-                Array.from(
-                    result.languages
-                )
-                .sort(
-                    (a, b) =>
-                        a.localeCompare(b)
-                );
-
-
-            if (
-                languages.length >
-                0
-            ) {
-
-                country.atAGlance.languages =
-                    languages;
-
-            }
-
-
-            // ------------------------------------------
-            // CURRENCY
-            // ------------------------------------------
-
-            const currencies =
-                Array.from(
-                    result.currencies
-                )
-                .sort(
-                    (a, b) =>
-                        a.localeCompare(b)
-                );
-
-
-            if (
-                currencies.length >
-                0
-            ) {
-
-                country.atAGlance.currency =
-                    currencies.join(
-                        ", "
-                    );
-
-            }
-
-
-            // ------------------------------------------
+            // ============================================
             // GOVERNMENT TYPE
-            // ------------------------------------------
+            // ============================================
 
             const governmentTypes =
                 Array.from(
                     result.governmentTypes
                 )
+                .filter(
+                    value =>
+                        !isWikidataId(value)
+                )
                 .sort(
                     (a, b) =>
                         a.localeCompare(b)
                 );
-
 
             if (
                 governmentTypes.length >
                 0
             ) {
 
-                country.government
-                    .governmentType =
-                        governmentTypes.join(
-                            "; "
-                        );
+                country.government.governmentType =
+                    governmentTypes.join(
+                        "; "
+                    );
 
             }
 
 
-            // ------------------------------------------
+            // ============================================
             // HEAD OF STATE
-            // ------------------------------------------
+            // ============================================
 
             const headsOfState =
                 Array.from(
                     result.headsOfState
                 )
+                .filter(
+                    value =>
+                        !isWikidataId(value)
+                )
                 .sort(
                     (a, b) =>
                         a.localeCompare(b)
                 );
-
 
             if (
                 headsOfState.length >
                 0
             ) {
 
-                country.government
-                    .headOfState
-                    .name =
-                        headsOfState.join(
-                            " / "
-                        );
+                country.government.headOfState.name =
+                    headsOfState.join(
+                        " / "
+                    );
 
+                country.government.headOfState.title =
+                    null;
 
-                country.government
-                    .headOfState
-                    .title =
-                        null;
+                country.government.headOfState.asOf =
+                    new Date()
+                        .toISOString()
+                        .slice(0, 10);
 
-
-                country.government
-                    .headOfState
-                    .asOf =
-                        new Date()
-                            .toISOString()
-                            .slice(0, 10);
-
-
-                country.government
-                    .headOfState
-                    .sourceIds =
-                        [
-                            "wikidata-country-facts"
-                        ];
+                country.government.headOfState.sourceIds =
+                    [
+                        "wikidata-government"
+                    ];
 
             }
 
 
-            // ------------------------------------------
+            // ============================================
             // HEAD OF GOVERNMENT
-            // ------------------------------------------
+            // ============================================
 
             const headsOfGovernment =
                 Array.from(
                     result.headsOfGovernment
+                )
+                .filter(
+                    value =>
+                        !isWikidataId(value)
                 )
                 .sort(
                     (a, b) =>
                         a.localeCompare(b)
                 );
 
-
             if (
                 headsOfGovernment.length >
                 0
             ) {
 
-                country.government
-                    .headOfGovernment
-                    .name =
-                        headsOfGovernment.join(
-                            " / "
-                        );
+                country.government.headOfGovernment.name =
+                    headsOfGovernment.join(
+                        " / "
+                    );
 
+                country.government.headOfGovernment.title =
+                    null;
 
-                country.government
-                    .headOfGovernment
-                    .title =
-                        null;
-
-
-                country.government
-                    .headOfGovernment
-                    .asOf =
-                        new Date()
-                            .toISOString()
-                            .slice(0, 10);
-
-
-                country.government
-                    .headOfGovernment
-                    .sourceIds =
-                        [
-                            "wikidata-country-facts"
-                        ];
-
-            }
-
-
-            if (!country.factVerification) {
-
-                country.factVerification = {};
-
-            }
-
-
-            country.factVerification.wikidata = {
-
-                source:
-                    "Wikidata structured country data",
-
-                retrieved:
+                country.government.headOfGovernment.asOf =
                     new Date()
                         .toISOString()
-                        .slice(0, 10)
+                        .slice(0, 10);
 
-            };
+                country.government.headOfGovernment.sourceIds =
+                    [
+                        "wikidata-government"
+                    ];
+
+            }
 
         }
     );
@@ -1011,16 +947,14 @@ function applyWikidataBindings(
 
 
 // ============================================================
-// LOAD WIKIDATA DATA FOR ALL 195 COUNTRIES
+// LOAD GOVERNMENT INFORMATION
+//
+// Small batches are deliberate.
 // ============================================================
 
-async function loadAllWikidataCountryFacts() {
+async function loadAllGovernmentFacts() {
 
-    // Smaller batches make the query much less likely
-    // to time out.
-
-    const batchSize = 20;
-
+    const batchSize = 10;
 
     for (
         let index = 0;
@@ -1034,23 +968,22 @@ async function loadAllWikidataCountryFacts() {
                 index + batchSize
             );
 
-
-        await loadWikidataBatch(
+        await loadGovernmentBatch(
             batch
         );
 
     }
 
-
-    countryFactsStatus.wikidataLoaded =
+    countryFactsStatus.governmentLoaded =
         true;
 
-
     console.log(
-        "Conflict Atlas Wikidata country facts loaded."
+        "Government information loaded."
     );
 
 }
+
+
 // ============================================================
 // COUNTRY OVERVIEWS
 // ============================================================
@@ -1065,7 +998,6 @@ function buildCountryOverview(
 
     }
 
-
     const regionText =
         country.subregion &&
         country.region
@@ -1077,18 +1009,18 @@ function buildCountryOverview(
                 "its geographic region"
             );
 
-
     return (
         `${country.name} is located in ${regionText}. ` +
         `Its capital is ${country.capital}. ` +
-        `This profile provides geographic, political, humanitarian and crisis-related context used throughout Conflict Atlas.`
+        `This profile provides geographic, political, humanitarian ` +
+        `and crisis-related context used throughout Conflict Atlas.`
     );
 
 }
 
 
 // ============================================================
-// APPLY COUNTRY OVERVIEWS
+// APPLY OVERVIEWS
 // ============================================================
 
 function applyCountryOverviews() {
@@ -1108,7 +1040,7 @@ function applyCountryOverviews() {
 
 
 // ============================================================
-// SPECIAL COUNTRY OVERVIEWS
+// SPECIAL OVERVIEWS
 // ============================================================
 
 function applySpecialCountryOverviews() {
@@ -1133,7 +1065,6 @@ function applySpecialCountryOverviews() {
 
     ];
 
-
     specialOverviewIso3.forEach(
         iso3 => {
 
@@ -1141,7 +1072,6 @@ function applySpecialCountryOverviews() {
                 getCountryByIso3(
                     iso3
                 );
-
 
             if (
                 !country ||
@@ -1152,13 +1082,10 @@ function applySpecialCountryOverviews() {
 
             }
 
-
             country.overview =
-                (
-                    `${country.name} is located in ` +
-                    `${country.subregion}, ${country.region}. ` +
-                    `${country.countryNote}`
-                );
+                `${country.name} is located in ` +
+                `${country.subregion}, ${country.region}. ` +
+                `${country.countryNote}`;
 
         }
     );
@@ -1167,7 +1094,7 @@ function applySpecialCountryOverviews() {
 
 
 // ============================================================
-// UNITED NATIONS MEMBERSHIP
+// UNITED NATIONS ORGANIZATION ENTRY
 // ============================================================
 
 function applyUnitedNationsMembership() {
@@ -1187,11 +1114,9 @@ function applyUnitedNationsMembership() {
 
             }
 
-
             const organizations =
                 country.government
                     .internationalOrganizations;
-
 
             const alreadyExists =
                 organizations.some(
@@ -1200,13 +1125,11 @@ function applyUnitedNationsMembership() {
                         "United Nations"
                 );
 
-
             if (alreadyExists) {
 
                 return;
 
             }
-
 
             if (
                 country.iso3 === "VAT" ||
@@ -1244,13 +1167,18 @@ function applyUnitedNationsMembership() {
 
 
 // ============================================================
-// SOURCES
+// SOURCE LIBRARY
 // ============================================================
 
 function addCountryFactsSources() {
 
     countries.forEach(
         country => {
+
+
+            // ============================================
+            // WORLD BANK
+            // ============================================
 
             addCountrySource(
                 country.iso3,
@@ -1272,15 +1200,43 @@ function addCountryFactsSources() {
             );
 
 
+            // ============================================
+            // REST COUNTRIES
+            // ============================================
+
             addCountrySource(
                 country.iso3,
                 {
 
                     id:
-                        "wikidata-country-facts",
+                        "rest-countries",
 
                     name:
-                        "Wikidata — Structured Country Data",
+                        "REST Countries — Country Metadata",
+
+                    url:
+                        "https://restcountries.com/",
+
+                    type:
+                        "structured-data"
+
+                }
+            );
+
+
+            // ============================================
+            // WIKIDATA
+            // ============================================
+
+            addCountrySource(
+                country.iso3,
+                {
+
+                    id:
+                        "wikidata-government",
+
+                    name:
+                        "Wikidata — Government Data",
 
                     url:
                         "https://www.wikidata.org/",
@@ -1291,6 +1247,10 @@ function addCountryFactsSources() {
                 }
             );
 
+
+            // ============================================
+            // UN
+            // ============================================
 
             addCountrySource(
                 country.iso3,
@@ -1311,6 +1271,10 @@ function addCountryFactsSources() {
                 }
             );
 
+
+            // ============================================
+            // CIA
+            // ============================================
 
             addCountrySource(
                 country.iso3,
@@ -1338,266 +1302,195 @@ function addCountryFactsSources() {
 
 
 // ============================================================
-// VALIDATE BASIC STRUCTURE
+// REMOVE BAD WIKIDATA VALUES
 // ============================================================
 
-function validateCountryFacts() {
+function cleanGovernmentValues() {
 
     countries.forEach(
         country => {
 
-            if (!country.atAGlance) {
+            const government =
+                country.government;
 
-                console.warn(
-                    `${country.name} is missing atAGlance data.`
-                );
+            if (!government) {
+
+                return;
 
             }
 
 
-            if (!country.government) {
-
-                console.warn(
-                    `${country.name} is missing government data.`
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// VALIDATE LOADED FACTS
-// ============================================================
-
-function validateLoadedCountryFacts() {
-
-    const checks = {
-
-        area:
-            countries.filter(
-                country =>
-                    country.atAGlance.areaKm2
-            ).length,
-
-        languages:
-            countries.filter(
-                country =>
-                    Array.isArray(
-                        country.atAGlance.languages
-                    ) &&
-                    country.atAGlance.languages.length > 0
-            ).length,
-
-        currency:
-            countries.filter(
-                country =>
-                    country.atAGlance.currency
-            ).length,
-
-        governmentType:
-            countries.filter(
-                country =>
-                    country.government
-                        .governmentType
-            ).length,
-
-        headOfState:
-            countries.filter(
-                country =>
-                    country.government
-                        .headOfState
-                        .name
-            ).length,
-
-        headOfGovernment:
-            countries.filter(
-                country =>
-                    country.government
-                        .headOfGovernment
-                        .name
-            ).length
-
-    };
-
-
-    console.log(
-        "Conflict Atlas country fact coverage:",
-        checks
-    );
-
-
-    // ----------------------------------------
-    // Detect unresolved Wikidata IDs.
-    // ----------------------------------------
-
-    countries.forEach(
-        country => {
-
-            const values = [
-
-                country.government
-                    ?.governmentType,
-
-                country.government
-                    ?.headOfState
-                    ?.name,
-
-                country.government
-                    ?.headOfGovernment
-                    ?.name,
-
-                country.atAGlance
-                    ?.currency
-
-            ];
-
-
-            values.forEach(
-                value => {
-
-                    if (
-                        value &&
-                        /\bQ\d+\b/i.test(
-                            String(value)
-                        )
-                    ) {
-
-                        console.warn(
-                            `Unresolved Wikidata ID detected for ${country.name}:`,
-                            value
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// CLEAN INVALID DISPLAY VALUES
-//
-// Nothing like Q22686 should ever appear on the public site.
-// ============================================================
-
-function cleanInvalidCountryFacts() {
-
-    countries.forEach(
-        country => {
-
-            // ----------------------------------------
+            // ============================================
             // GOVERNMENT TYPE
-            // ----------------------------------------
+            // ============================================
 
             if (
-                country.government
-                    .governmentType &&
+                government.governmentType &&
                 /\bQ\d+\b/i.test(
-                    country.government
-                        .governmentType
+                    government.governmentType
                 )
             ) {
 
-                country.government
-                    .governmentType =
-                        null;
-
-            }
-
-
-            // ----------------------------------------
-            // HEAD OF STATE
-            // ----------------------------------------
-
-            if (
-                country.government
-                    .headOfState
-                    .name &&
-                /\bQ\d+\b/i.test(
-                    country.government
-                        .headOfState
-                        .name
-                )
-            ) {
-
-                country.government
-                    .headOfState
-                    .name =
-                        null;
-
-            }
-
-
-            // ----------------------------------------
-            // HEAD OF GOVERNMENT
-            // ----------------------------------------
-
-            if (
-                country.government
-                    .headOfGovernment
-                    .name &&
-                /\bQ\d+\b/i.test(
-                    country.government
-                        .headOfGovernment
-                        .name
-                )
-            ) {
-
-                country.government
-                    .headOfGovernment
-                    .name =
-                        null;
-
-            }
-
-
-            // ----------------------------------------
-            // CURRENCY
-            // ----------------------------------------
-
-            if (
-                country.atAGlance.currency &&
-                /\bQ\d+\b/i.test(
-                    country.atAGlance.currency
-                )
-            ) {
-
-                country.atAGlance.currency =
+                government.governmentType =
                     null;
 
             }
 
 
-            // ----------------------------------------
-            // LANGUAGES
-            // ----------------------------------------
+            // ============================================
+            // HEAD OF STATE
+            // ============================================
 
             if (
-                Array.isArray(
-                    country.atAGlance.languages
+                government.headOfState &&
+                government.headOfState.name &&
+                /\bQ\d+\b/i.test(
+                    government.headOfState.name
                 )
             ) {
 
-                country.atAGlance.languages =
-                    country.atAGlance.languages
-                        .filter(
-                            language =>
-                                !/\bQ\d+\b/i.test(
-                                    language
-                                )
-                        );
+                government.headOfState.name =
+                    null;
+
+                government.headOfState.title =
+                    null;
+
+            }
+
+
+            // ============================================
+            // HEAD OF GOVERNMENT
+            // ============================================
+
+            if (
+                government.headOfGovernment &&
+                government.headOfGovernment.name &&
+                /\bQ\d+\b/i.test(
+                    government.headOfGovernment.name
+                )
+            ) {
+
+                government.headOfGovernment.name =
+                    null;
+
+                government.headOfGovernment.title =
+                    null;
 
             }
 
         }
+    );
+
+}
+
+
+// ============================================================
+// VALIDATION
+// ============================================================
+
+function validateCountryFacts() {
+
+    const coverage = {
+
+        totalCountries:
+            countries.length,
+
+        population:
+            0,
+
+        area:
+            0,
+
+        languages:
+            0,
+
+        currency:
+            0,
+
+        governmentType:
+            0,
+
+        headOfState:
+            0,
+
+        headOfGovernment:
+            0
+
+    };
+
+
+    countries.forEach(
+        country => {
+
+            if (
+                country.atAGlance.population !==
+                null
+            ) {
+
+                coverage.population++;
+
+            }
+
+            if (
+                country.atAGlance.areaKm2 !==
+                null
+            ) {
+
+                coverage.area++;
+
+            }
+
+            if (
+                Array.isArray(
+                    country.atAGlance.languages
+                ) &&
+                country.atAGlance.languages.length >
+                0
+            ) {
+
+                coverage.languages++;
+
+            }
+
+            if (
+                country.atAGlance.currency
+            ) {
+
+                coverage.currency++;
+
+            }
+
+            if (
+                country.government.governmentType
+            ) {
+
+                coverage.governmentType++;
+
+            }
+
+            if (
+                country.government.headOfState.name
+            ) {
+
+                coverage.headOfState++;
+
+            }
+
+            if (
+                country.government.headOfGovernment.name
+            ) {
+
+                coverage.headOfGovernment++;
+
+            }
+
+        }
+    );
+
+
+    console.log(
+        "Conflict Atlas country coverage:",
+        coverage
     );
 
 }
@@ -1617,7 +1510,6 @@ async function initializeCountryFacts() {
 
     }
 
-
     countryFactsStatus.loading =
         true;
 
@@ -1627,9 +1519,9 @@ async function initializeCountryFacts() {
     );
 
 
-    // ========================================================
-    // LOCAL INFORMATION
-    // ========================================================
+    // ============================================
+    // LOCAL DATA FIRST
+    // ============================================
 
     applyCountryOverviews();
 
@@ -1639,29 +1531,34 @@ async function initializeCountryFacts() {
 
     addCountryFactsSources();
 
-    validateCountryFacts();
 
+    // ============================================
+    // LOAD EXTERNAL DATA
+    //
+    // These are independent.
+    //
+    // Failure of one source does NOT prevent
+    // the others from working.
+    // ============================================
 
-    // ========================================================
-    // EXTERNAL FACTUAL INFORMATION
-    // ========================================================
-
-    await Promise.all([
+    await Promise.allSettled([
 
         loadAllCountryPopulations(),
 
-        loadAllWikidataCountryFacts()
+        loadGeographicCountryFacts(),
+
+        loadAllGovernmentFacts()
 
     ]);
 
 
-    // ========================================================
-    // CLEAN + VALIDATE
-    // ========================================================
+    // ============================================
+    // FINAL CLEANUP
+    // ============================================
 
-    cleanInvalidCountryFacts();
+    cleanGovernmentValues();
 
-    validateLoadedCountryFacts();
+    validateCountryFacts();
 
 
     countryFactsStatus.loading =
