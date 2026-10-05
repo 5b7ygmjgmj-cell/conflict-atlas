@@ -1,6 +1,7 @@
 /* ============================================================
-   ONE WORLD, ONE LIFE — CONFLICT ATLAS
+   ONE WORLD, ONE LIFE
    MAIN STYLESHEET
+   VERSION 5
    ============================================================ */
 
 
@@ -53,22 +54,18 @@ body {
 
 .brand h1 {
     margin: 0;
+
     font-size: 30px;
     line-height: 1.1;
     font-weight: 750;
     letter-spacing: -0.5px;
 }
 
-.product-name {
-    margin: 7px 0 0;
-    color: #aeb9c6;
-    font-size: 14px;
-    font-weight: 600;
-}
-
 .tagline {
-    margin: 5px 0 0;
+    margin: 7px 0 0;
+
     color: #8f9ba8;
+
     font-size: 14px;
 }
 
@@ -98,20 +95,22 @@ body {
 .view-selector {
     display: flex;
     align-items: center;
+
     gap: 8px;
+
     margin-bottom: 14px;
 }
 
 .view-button {
     appearance: none;
 
+    padding: 9px 16px;
+
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
     background: #151e28;
     color: #cbd4dd;
-
-    padding: 9px 16px;
 
     font: inherit;
     font-size: 14px;
@@ -146,7 +145,9 @@ body {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+
     gap: 8px;
+
     margin-bottom: 14px;
 }
 
@@ -174,6 +175,7 @@ body {
     line-height: 1;
 
     white-space: nowrap;
+
     cursor: pointer;
 
     transition:
@@ -202,12 +204,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 20px;
+
     width: 100%;
 }
 
 .search-container {
     position: relative;
+
     width: min(500px, 100%);
 }
 
@@ -243,16 +248,19 @@ body {
 .atlas-counter {
     display: flex;
     align-items: baseline;
+
     gap: 5px;
 
     flex-shrink: 0;
 
     color: #aeb9c6;
+
     font-size: 14px;
 }
 
 #crisis-count {
     color: #ffffff;
+
     font-size: 21px;
     font-weight: 750;
 }
@@ -266,6 +274,7 @@ body {
     display: none;
 
     position: absolute;
+
     top: calc(100% + 6px);
     left: 0;
     right: 0;
@@ -273,6 +282,7 @@ body {
     z-index: 5000;
 
     max-height: 350px;
+
     overflow-y: auto;
 
     border: 1px solid rgba(255, 255, 255, 0.13);
@@ -303,6 +313,7 @@ body {
     color: #ffffff;
 
     text-align: left;
+
     font: inherit;
 
     cursor: pointer;
@@ -414,6 +425,7 @@ body {
 .legend-item {
     display: flex;
     align-items: center;
+
     gap: 8px;
 
     margin: 7px 0;
@@ -457,8 +469,202 @@ body {
 
 
 /* ============================================================
+   ABOUT VIEW
+   ============================================================ */
+
+.about-view {
+    display: none;
+
+    width: 100%;
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding: 12px 32px 60px;
+}
+
+.about-view.active {
+    display: block;
+}
+
+.about-container {
+    width: min(900px, 100%);
+
+    margin: 0 auto;
+}
+
+.about-hero {
+    padding: 45px 0 34px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-label {
+    margin-bottom: 9px;
+
+    color: #98a7b6;
+
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+.about-hero h2 {
+    margin: 0 0 14px;
+
+    color: #ffffff;
+
+    font-size: 38px;
+    line-height: 1.1;
+    letter-spacing: -0.7px;
+}
+
+.about-intro {
+    max-width: 760px;
+
+    margin: 0;
+
+    color: #cbd4dd;
+
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.about-section {
+    padding: 30px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.about-section:last-child {
+    border-bottom: 0;
+}
+
+.about-section h3 {
+    margin: 0 0 14px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.about-section p {
+    margin: 0 0 14px;
+
+    color: #b9c4ce;
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.about-section p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   ABOUT CATEGORY CARDS
+   ============================================================ */
+
+.about-category-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin: 22px 0;
+}
+
+.about-category-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.about-category-card strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+.about-category-card p {
+    margin: 0;
+
+    color: #aeb9c4;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.about-category-dot {
+    display: block;
+
+    width: 11px;
+    height: 11px;
+
+    margin-top: 4px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+
+/* ============================================================
+   ABOUT NOTICE
+   ============================================================ */
+
+.about-notice {
+    margin: 18px 0;
+    padding: 17px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 3px solid #a8bacb;
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.about-notice strong {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+.about-notice p {
+    margin: 0;
+
+    color: #bcc7d1;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
    INFORMATION PANELS
-   SMALLER FLOATING PANEL
    ============================================================ */
 
 .info-panel {
@@ -607,6 +813,7 @@ body {
     font-size: 11px;
     font-weight: 750;
     letter-spacing: 1px;
+
     text-transform: uppercase;
 }
 
@@ -631,6 +838,7 @@ body {
 
 .info-panel a {
     color: #dcecff;
+
     text-decoration: none;
 }
 
@@ -646,6 +854,7 @@ body {
 .country-title {
     display: flex;
     align-items: center;
+
     gap: 13px;
 
     margin-right: 45px;
@@ -669,6 +878,7 @@ body {
     font-size: 11px;
     font-weight: 750;
     letter-spacing: 1.4px;
+
     text-transform: uppercase;
 }
 
@@ -679,6 +889,7 @@ body {
 
 .country-facts {
     display: grid;
+
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 9px;
@@ -705,6 +916,7 @@ body {
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.7px;
+
     text-transform: uppercase;
 }
 
@@ -778,27 +990,64 @@ body {
 
 
 /* ============================================================
-   SOURCES
+   SOURCES + HUMANITARIAN AID CARDS
    ============================================================ */
 
 #crisis-sources a,
-#country-sources a {
+#country-sources a,
+#crisis-aid a {
     display: block;
 
-    margin: 6px 0;
-    padding: 9px 11px;
+    width: 100%;
 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 7px;
+    margin: 7px 0;
+    padding: 10px 12px;
 
-    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.03);
+
+    color: #dcecff;
 
     overflow-wrap: anywhere;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
 
 #crisis-sources a:hover,
-#country-sources a:hover {
-    background: rgba(255, 255, 255, 0.06);
+#country-sources a:hover,
+#crisis-aid a:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+
+    background: rgba(255, 255, 255, 0.07);
+
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   HUMANITARIAN AID FALLBACK ITEMS
+   ============================================================ */
+
+#crisis-aid > div,
+#crisis-aid > p {
+    margin: 7px 0;
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.03);
+
+    color: #d1d8df;
+
+    font-size: 14px;
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -830,6 +1079,7 @@ body {
 
 .panel-scroll {
     scrollbar-width: thin;
+
     scrollbar-color:
         rgba(255, 255, 255, 0.25)
         transparent;
@@ -845,6 +1095,7 @@ body {
 
 .panel-scroll::-webkit-scrollbar-thumb {
     border-radius: 20px;
+
     background: rgba(255, 255, 255, 0.22);
 }
 
@@ -857,6 +1108,7 @@ body {
 
     .header-content,
     .controls,
+    .about-view,
     .site-footer {
         padding-left: 20px;
         padding-right: 20px;
@@ -904,6 +1156,9 @@ body {
 
     .view-button {
         flex: 1;
+
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .filters,
@@ -913,12 +1168,14 @@ body {
 
     .filter {
         padding: 7px 10px;
+
         font-size: 11px;
     }
 
     .search-area {
         align-items: stretch;
         flex-direction: column;
+
         gap: 9px;
     }
 
@@ -941,6 +1198,46 @@ body {
 
         max-width: calc(100% - 20px);
     }
+
+
+    /* ABOUT */
+
+    .about-view {
+        padding: 0 15px 45px;
+    }
+
+    .about-hero {
+        padding: 31px 0 26px;
+    }
+
+    .about-hero h2 {
+        font-size: 31px;
+    }
+
+    .about-intro {
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    .about-section {
+        padding: 25px 0;
+    }
+
+    .about-section h3 {
+        font-size: 20px;
+    }
+
+    .about-section p {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .about-category-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* PANELS */
 
     .info-panel {
         top: 50%;
@@ -991,19 +1288,20 @@ body {
 @media (max-width: 400px) {
 
     .filter {
-        font-size: 10px;
         padding: 6px 8px;
+
+        font-size: 10px;
+    }
+
+    .view-button {
+        padding: 8px 7px;
+
+        font-size: 12px;
     }
 
     .info-panel {
         right: 6px;
         left: 6px;
-
-        max-height: 84vh;
-    }
-
-    .panel-scroll {
-        max-height: 84vh;
     }
 
 }
