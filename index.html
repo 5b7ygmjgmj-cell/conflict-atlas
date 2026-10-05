@@ -9,7 +9,12 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>One World, One Life | Conflict Atlas</title>
+    <meta
+        name="description"
+        content="One World, One Life provides an interactive way to explore global crises, country profiles, humanitarian conditions, and verified ways to help."
+    >
+
+    <title>One World, One Life</title>
 
     <!-- LEAFLET CSS -->
     <link
@@ -20,7 +25,7 @@
     <!-- SITE CSS -->
     <link
         rel="stylesheet"
-        href="style.css?v=4"
+        href="style.css?v=5"
     >
 </head>
 
@@ -39,10 +44,6 @@
 
                 <h1>One World, One Life</h1>
 
-                <p class="product-name">
-                    Conflict Atlas
-                </p>
-
                 <p class="tagline">
                     Understand global crises. Find verified ways to help.
                 </p>
@@ -55,10 +56,13 @@
 
 
     <!-- =====================================================
-         CONTROLS
+         CONTROLS / NAVIGATION
          ===================================================== -->
 
-    <section class="controls">
+    <section
+        id="main-controls"
+        class="controls"
+    >
 
         <!-- VIEW SELECTOR -->
 
@@ -78,6 +82,14 @@
                 type="button"
             >
                 Countries
+            </button>
+
+            <button
+                id="about-view-button"
+                class="view-button"
+                type="button"
+            >
+                About
             </button>
 
         </div>
@@ -135,7 +147,10 @@
 
         <!-- SEARCH -->
 
-        <div class="search-area">
+        <div
+            id="search-area"
+            class="search-area"
+        >
 
             <div class="search-container">
 
@@ -144,7 +159,7 @@
                     type="text"
                     autocomplete="off"
                     placeholder="Search for a crisis..."
-                    aria-label="Search Conflict Atlas crises"
+                    aria-label="Search crises"
                 >
 
                 <div
@@ -176,11 +191,14 @@
          MAP
          ===================================================== -->
 
-    <main class="atlas-main">
+    <main
+        id="atlas-main"
+        class="atlas-main"
+    >
 
         <div
             id="map"
-            aria-label="Conflict Atlas interactive map"
+            aria-label="One World, One Life interactive world map"
         ></div>
 
 
@@ -236,6 +254,297 @@
             <div class="legend-item">
                 Borders are shown for geographic reference.
             </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         ABOUT VIEW
+         ===================================================== -->
+
+    <main
+        id="about-view"
+        class="about-view"
+        aria-hidden="true"
+    >
+
+        <div class="about-container">
+
+            <div class="about-hero">
+
+                <div class="about-label">
+                    ABOUT THE PROJECT
+                </div>
+
+                <h2>
+                    One World, One Life
+                </h2>
+
+                <p class="about-intro">
+                    One World, One Life is an independent informational
+                    project designed to make global crises easier to
+                    understand, explore, and follow.
+                </p>
+
+            </div>
+
+
+            <section class="about-section">
+
+                <h3>Our Purpose</h3>
+
+                <p>
+                    Events around the world can be difficult to understand
+                    when information is spread across many different
+                    organizations, reports, and news sources. One World,
+                    One Life brings crisis information, country context,
+                    humanitarian conditions, and relevant sources together
+                    in one accessible place.
+                </p>
+
+                <p>
+                    The goal is to help visitors understand what is
+                    happening, where it is happening, why it matters, and
+                    where they can find reliable information or established
+                    humanitarian organizations responding to a crisis.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>What the Site Covers</h3>
+
+                <p>
+                    The interactive map documents major ongoing or recent
+                    global crises and connects them with country profiles
+                    that provide geographic, political, humanitarian, and
+                    crisis-related context.
+                </p>
+
+
+                <div class="about-category-grid">
+
+                    <div class="about-category-card">
+
+                        <span
+                            class="about-category-dot legend-conflict"
+                        ></span>
+
+                        <div>
+                            <strong>Armed Conflict</strong>
+                            <p>
+                                Wars, major armed confrontations, and other
+                                significant organized conflicts.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="about-category-card">
+
+                        <span
+                            class="about-category-dot legend-humanitarian"
+                        ></span>
+
+                        <div>
+                            <strong>Humanitarian Crisis</strong>
+                            <p>
+                                Emergencies involving severe humanitarian
+                                needs, including food insecurity, health
+                                emergencies, and threats to civilian
+                                populations.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="about-category-card">
+
+                        <span
+                            class="about-category-dot legend-displacement"
+                        ></span>
+
+                        <div>
+                            <strong>Displacement Crisis</strong>
+                            <p>
+                                Situations involving substantial refugee,
+                                asylum, or internal displacement.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="about-category-card">
+
+                        <span
+                            class="about-category-dot legend-disaster"
+                        ></span>
+
+                        <div>
+                            <strong>Natural Disaster</strong>
+                            <p>
+                                Major earthquakes, floods, cyclones, and
+                                other disasters with significant human or
+                                humanitarian impacts.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    A crisis can belong to more than one category when
+                    several dimensions of an emergency overlap.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>Country Profiles</h3>
+
+                <p>
+                    Country profiles provide additional context for
+                    understanding events on the map. Profiles can include
+                    population, geography, languages, currency, government
+                    structure, national leadership, United Nations status,
+                    humanitarian conditions, displacement information,
+                    recent history, and related crises.
+                </p>
+
+                <p>
+                    A country may also be connected to a crisis when it is
+                    directly affected, is a party to a conflict, has
+                    significant military involvement, experiences a major
+                    humanitarian or refugee impact, or has another important
+                    diplomatic or humanitarian role.
+                </p>
+
+                <p>
+                    A relationship shown between a country and a crisis
+                    provides context. It does not by itself assign
+                    responsibility, blame, or support to that country.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>Sources &amp; Accuracy</h3>
+
+                <p>
+                    One World, One Life uses source links throughout the
+                    project so visitors can examine information beyond the
+                    summaries shown on the site.
+                </p>
+
+                <p>
+                    Sources may include United Nations agencies,
+                    international humanitarian organizations, official
+                    institutions, governments, and other established
+                    organizations relevant to a particular crisis or
+                    country profile.
+                </p>
+
+                <p>
+                    The project aims to present information accurately,
+                    clearly, and as neutrally as possible. The inclusion of
+                    a source does not mean that every statement or position
+                    of that organization is endorsed by One World, One Life.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>Humanitarian Aid</h3>
+
+                <div class="about-notice">
+
+                    <strong>
+                        One World, One Life does not collect or process
+                        donations.
+                    </strong>
+
+                    <p>
+                        Humanitarian aid links direct visitors to external
+                        organizations involved in humanitarian work. They are
+                        provided to make it easier for visitors who want to
+                        help to find established organizations responding to
+                        an emergency.
+                    </p>
+
+                </div>
+
+                <p>
+                    Visitors should review an organization's own information,
+                    policies, and donation options before contributing.
+                    External organizations operate independently from One
+                    World, One Life.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>Neutrality</h3>
+
+                <p>
+                    One World, One Life is intended as an informational
+                    resource. The project does not advocate for a government,
+                    political party, armed organization, or side in a
+                    conflict.
+                </p>
+
+                <p>
+                    Describing a conflict, government, organization,
+                    territorial claim, humanitarian condition, or country's
+                    involvement in a crisis does not constitute an
+                    endorsement or political judgment.
+                </p>
+
+                <p>
+                    Geographic boundaries are displayed for reference and
+                    do not imply a position on sovereignty, recognition,
+                    borders, or territorial disputes.
+                </p>
+
+            </section>
+
+
+            <section class="about-section">
+
+                <h3>A Changing World</h3>
+
+                <p>
+                    Global events can change quickly. Political leadership,
+                    conflict conditions, humanitarian needs, displacement
+                    figures, casualty estimates, and disaster impacts can
+                    change after information is published.
+                </p>
+
+                <p>
+                    Where available, profiles include source links and
+                    verification dates to help visitors understand when
+                    information was last reviewed. One World, One Life will
+                    continue to be updated as the project develops and as
+                    reliable new information becomes available.
+                </p>
+
+            </section>
 
         </div>
 
@@ -421,9 +730,7 @@
             </p>
 
 
-            <!-- =================================================
-                 AT A GLANCE
-                 ================================================= -->
+            <!-- AT A GLANCE -->
 
             <section class="panel-section">
 
@@ -589,7 +896,7 @@
             ></div>
 
 
-            <!-- ABOUT -->
+            <!-- ABOUT COUNTRY -->
 
             <section class="panel-section">
 
@@ -600,9 +907,7 @@
             </section>
 
 
-            <!-- =================================================
-                 GOVERNMENT & INTERNATIONAL RELATIONS
-                 ================================================= -->
+            <!-- GOVERNMENT & INTERNATIONAL RELATIONS -->
 
             <section
                 id="country-government-section"
@@ -690,9 +995,7 @@
             </section>
 
 
-            <!-- =================================================
-                 RELATED CRISES
-                 ================================================= -->
+            <!-- RELATED CRISES -->
 
             <section
                 id="country-crises-section"
@@ -706,9 +1009,7 @@
             </section>
 
 
-            <!-- =================================================
-                 HUMANITARIAN SNAPSHOT
-                 ================================================= -->
+            <!-- HUMANITARIAN SNAPSHOT -->
 
             <section
                 id="country-humanitarian-section"
@@ -722,9 +1023,7 @@
             </section>
 
 
-            <!-- =================================================
-                 DISPLACEMENT
-                 ================================================= -->
+            <!-- DISPLACEMENT -->
 
             <section
                 id="country-displacement-section"
@@ -738,9 +1037,7 @@
             </section>
 
 
-            <!-- =================================================
-                 RECENT HISTORY
-                 ================================================= -->
+            <!-- RECENT HISTORY -->
 
             <section
                 id="country-timeline-section"
@@ -754,9 +1051,7 @@
             </section>
 
 
-            <!-- =================================================
-                 HUMANITARIAN ORGANIZATIONS
-                 ================================================= -->
+            <!-- HUMANITARIAN ORGANIZATIONS -->
 
             <section
                 id="country-organizations-section"
@@ -770,9 +1065,7 @@
             </section>
 
 
-            <!-- =================================================
-                 SOURCES
-                 ================================================= -->
+            <!-- SOURCES -->
 
             <section class="panel-section">
 
@@ -783,9 +1076,7 @@
             </section>
 
 
-            <!-- =================================================
-                 PROFILE NOTE
-                 ================================================= -->
+            <!-- PROFILE NOTE -->
 
             <section class="panel-section">
 
@@ -794,10 +1085,9 @@
                 <p>
                     Country Profiles provide geographic, political,
                     humanitarian, and crisis-related context. The
-                    presence or absence of a Conflict Atlas crisis
-                    entry does not constitute an assessment of a
-                    country, government, political organization, or
-                    population.
+                    presence or absence of a documented crisis entry
+                    does not constitute an assessment of a country,
+                    government, political organization, or population.
                 </p>
 
             </section>
@@ -814,7 +1104,7 @@
     <footer class="site-footer">
 
         <p>
-            One World, One Life — Conflict Atlas
+            One World, One Life
         </p>
 
         <p>
@@ -853,14 +1143,14 @@
     <!-- COUNTRY FACTS -->
 
     <script
-        src="country-facts.js?v=5"
+        src="country-facts.js?v=6"
     ></script>
 
 
-    <!-- MAIN CONFLICT ATLAS -->
+    <!-- MAIN SITE -->
 
     <script
-        src="script.js?v=7"
+        src="script.js?v=8"
     ></script>
 
 </body>
