@@ -1,6 +1,7 @@
 // ============================================================
-// ONE WORLD, ONE LIFE — CONFLICT ATLAS
-// CRISIS VIEW + COUNTRY VIEW WITH INTERACTIVE COUNTRY BORDERS
+// ONE WORLD, ONE LIFE
+// CRISIS + COUNTRY + ABOUT VIEWS
+// VERSION 8
 // ============================================================
 
 
@@ -73,6 +74,9 @@ const crisisViewButton =
 const countryViewButton =
     document.getElementById("country-view-button");
 
+const aboutViewButton =
+    document.getElementById("about-view-button");
+
 const crisisFilters =
     document.getElementById("crisis-filters");
 
@@ -84,6 +88,15 @@ const crisisLegend =
 
 const countryLegend =
     document.getElementById("country-legend");
+
+const atlasMain =
+    document.getElementById("atlas-main");
+
+const aboutView =
+    document.getElementById("about-view");
+
+const searchArea =
+    document.getElementById("search-area");
 
 
 // ============================================================
@@ -309,7 +322,7 @@ const conflictMarkers = [];
 
 
 conflicts.forEach(
-    (conflict) => {
+    conflict => {
 
         const primaryCategory =
             conflict.primaryCategory ||
@@ -543,9 +556,7 @@ function findCountryForFeature(
                 )
         );
 
-    if (
-        codeMatch
-    ) {
+    if (codeMatch) {
 
         return codeMatch;
 
@@ -576,9 +587,7 @@ function findCountryForFeature(
                 normalizedName
             ];
 
-        if (
-            aliasCode
-        ) {
+        if (aliasCode) {
 
             const aliasMatch =
                 countries.find(
@@ -587,9 +596,7 @@ function findCountryForFeature(
                         aliasCode
                 );
 
-            if (
-                aliasMatch
-            ) {
+            if (aliasMatch) {
 
                 return aliasMatch;
 
@@ -606,9 +613,7 @@ function findCountryForFeature(
                     normalizedName
             );
 
-        if (
-            nameMatch
-        ) {
+        if (nameMatch) {
 
             return nameMatch;
 
@@ -961,7 +966,7 @@ fetch(
             }
 
             console.log(
-                `Conflict Atlas loaded country borders for ${matchedIso3.size} profiles.`
+                `One World, One Life loaded country borders for ${matchedIso3.size} profiles.`
             );
 
         }
@@ -1003,6 +1008,46 @@ fetch(
 
         }
     );
+
+
+// ============================================================
+// SAFE EXTERNAL LINK
+// ============================================================
+
+function createExternalLink(
+    name,
+    url
+) {
+
+    if (
+        !name ||
+        !url
+    ) {
+
+        return null;
+
+    }
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+    link.textContent =
+        name;
+
+    link.href =
+        url;
+
+    link.target =
+        "_blank";
+
+    link.rel =
+        "noopener noreferrer";
+
+    return link;
+
+}
 
 
 // ============================================================
@@ -1168,6 +1213,11 @@ function openConflictPanel(
 
     }
 
+
+    // ========================================================
+    // SOURCES
+    // ========================================================
+
     crisisSources.innerHTML =
         "";
 
@@ -1180,25 +1230,18 @@ function openConflictPanel(
             source => {
 
                 const link =
-                    document.createElement(
-                        "a"
+                    createExternalLink(
+                        source.name,
+                        source.url
                     );
 
-                link.textContent =
-                    source.name;
+                if (link) {
 
-                link.href =
-                    source.url;
+                    crisisSources.appendChild(
+                        link
+                    );
 
-                link.target =
-                    "_blank";
-
-                link.rel =
-                    "noopener noreferrer";
-
-                crisisSources.appendChild(
-                    link
-                );
+                }
 
             }
         );
@@ -1209,6 +1252,12 @@ function openConflictPanel(
             "Sources have not yet been added.";
 
     }
+
+
+    // ========================================================
+    // HUMANITARIAN AID
+    // Each organization is deliberately rendered separately.
+    // ========================================================
 
     crisisAid.innerHTML =
         "";
@@ -1221,26 +1270,44 @@ function openConflictPanel(
         conflict.aid.forEach(
             organization => {
 
+                const organizationName =
+                    organization.name ||
+                    organization.label ||
+                    organization.title ||
+                    "Humanitarian organization";
+
+                const organizationUrl =
+                    organization.url ||
+                    organization.link ||
+                    "";
+
                 const link =
-                    document.createElement(
-                        "a"
+                    createExternalLink(
+                        organizationName,
+                        organizationUrl
                     );
 
-                link.textContent =
-                    organization.name;
+                if (link) {
 
-                link.href =
-                    organization.url;
+                    crisisAid.appendChild(
+                        link
+                    );
 
-                link.target =
-                    "_blank";
+                } else {
 
-                link.rel =
-                    "noopener noreferrer";
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
 
-                crisisAid.appendChild(
-                    link
-                );
+                    item.textContent =
+                        organizationName;
+
+                    crisisAid.appendChild(
+                        item
+                    );
+
+                }
 
             }
         );
@@ -1428,9 +1495,7 @@ function formatUnStatus(
     status
 ) {
 
-    if (
-        !status
-    ) {
+    if (!status) {
 
         return "—";
 
@@ -1478,7 +1543,9 @@ function formatUnStatus(
     );
 
 }
-
+// ============================================================
+// COUNTRY / CRISIS RELATIONSHIPS
+// ============================================================
 
 function getCountryCrisisRelationships(
     country
@@ -1502,9 +1569,7 @@ function getCountryCrisisRelationships(
                                 relationship.crisisId
                         );
 
-                    if (
-                        !conflict
-                    ) {
+                    if (!conflict) {
 
                         return null;
 
@@ -1540,9 +1605,7 @@ function getCountryCrisisRelationships(
                                 crisisId
                         );
 
-                    if (
-                        !conflict
-                    ) {
+                    if (!conflict) {
 
                         return null;
 
@@ -1688,6 +1751,11 @@ function openCountryPanel(
             "Country overview not yet available."
         );
 
+
+    // ========================================================
+    // COUNTRY NOTE
+    // ========================================================
+
     if (
         country.countryNote
     ) {
@@ -1770,28 +1838,22 @@ function openCountryPanel(
                 ) {
 
                     const link =
-                        document.createElement(
-                            "a"
+                        createExternalLink(
+                            organization.name ||
+                            organization.label ||
+                            organization.title ||
+                            "Organization",
+
+                            organization.url
                         );
 
-                    link.textContent =
-                        organization.name ||
-                        organization.label ||
-                        organization.title ||
-                        "Organization";
+                    if (link) {
 
-                    link.href =
-                        organization.url;
+                        countryInternationalOrganizations.appendChild(
+                            link
+                        );
 
-                    link.target =
-                        "_blank";
-
-                    link.rel =
-                        "noopener noreferrer";
-
-                    countryInternationalOrganizations.appendChild(
-                        link
-                    );
+                    }
 
                 } else {
 
@@ -1835,12 +1897,12 @@ function openCountryPanel(
     countryCrisisCount.textContent =
         relatedCrises.length;
 
+    countryCrisesSection.style.display =
+        "block";
+
     if (
         relatedCrises.length > 0
     ) {
-
-        countryCrisesSection.style.display =
-            "block";
 
         relatedCrises.forEach(
             item => {
@@ -1975,16 +2037,13 @@ function openCountryPanel(
 
     } else {
 
-        countryCrisesSection.style.display =
-            "block";
-
         const noCrisis =
             document.createElement(
                 "p"
             );
 
         noCrisis.textContent =
-            "Conflict Atlas currently has no verified crisis relationship listed for this country.";
+            "No verified crisis relationship is currently listed for this country.";
 
         countryCrises.appendChild(
             noCrisis
@@ -2147,25 +2206,18 @@ function openCountryPanel(
             organization => {
 
                 const link =
-                    document.createElement(
-                        "a"
+                    createExternalLink(
+                        organization.name,
+                        organization.url
                     );
 
-                link.textContent =
-                    organization.name;
+                if (link) {
 
-                link.href =
-                    organization.url;
+                    countryOrganizations.appendChild(
+                        link
+                    );
 
-                link.target =
-                    "_blank";
-
-                link.rel =
-                    "noopener noreferrer";
-
-                countryOrganizations.appendChild(
-                    link
-                );
+                }
 
             }
         );
@@ -2194,25 +2246,18 @@ function openCountryPanel(
             source => {
 
                 const link =
-                    document.createElement(
-                        "a"
+                    createExternalLink(
+                        source.name,
+                        source.url
                     );
 
-                link.textContent =
-                    source.name;
+                if (link) {
 
-                link.href =
-                    source.url;
+                    countrySources.appendChild(
+                        link
+                    );
 
-                link.target =
-                    "_blank";
-
-                link.rel =
-                    "noopener noreferrer";
-
-                countrySources.appendChild(
-                    link
-                );
+                }
 
             }
         );
@@ -2229,6 +2274,8 @@ function openCountryPanel(
     );
 
 }
+
+
 // ============================================================
 // CLOSE PANELS
 // ============================================================
@@ -2280,15 +2327,12 @@ filterButtons.forEach(
                     }
                 );
 
-
                 button.classList.add(
                     "active"
                 );
 
-
                 const selectedFilter =
                     button.dataset.filter;
-
 
                 conflictMarkers.forEach(
                     item => {
@@ -2297,14 +2341,12 @@ filterButtons.forEach(
                             item.conflict.categories ||
                             [];
 
-
                         const shouldShow =
                             selectedFilter ===
                                 "all" ||
                             categories.includes(
                                 selectedFilter
                             );
-
 
                         if (
                             shouldShow
@@ -2341,11 +2383,9 @@ filterButtons.forEach(
                     }
                 );
 
-
                 infoPanel.classList.remove(
                     "open"
                 );
-
 
                 clearSearch();
 
@@ -2357,43 +2397,10 @@ filterButtons.forEach(
 
 
 // ============================================================
-// SWITCH TO CRISIS VIEW
+// REMOVE COUNTRY MAP LAYERS
 // ============================================================
 
-function switchToCrisisView() {
-
-    currentView =
-        "crises";
-
-
-    crisisViewButton.classList.add(
-        "active"
-    );
-
-
-    countryViewButton.classList.remove(
-        "active"
-    );
-
-
-    crisisFilters.style.display =
-        "flex";
-
-
-    crisisLegend.style.display =
-        "block";
-
-
-    countryLegend.style.display =
-        "none";
-
-
-    countryPanel.classList.remove(
-        "open"
-    );
-
-
-    // REMOVE COUNTRY POLYGONS
+function removeCountryLayers() {
 
     if (
         countryGeoJsonLayer &&
@@ -2407,9 +2414,6 @@ function switchToCrisisView() {
         );
 
     }
-
-
-    // REMOVE SMALL-COUNTRY FALLBACK MARKERS
 
     fallbackCountryMarkers.forEach(
         item => {
@@ -2429,18 +2433,111 @@ function switchToCrisisView() {
         }
     );
 
+}
+
+
+// ============================================================
+// REMOVE CRISIS MAP LAYERS
+// ============================================================
+
+function removeCrisisLayers() {
+
+    conflictMarkers.forEach(
+        item => {
+
+            if (
+                map.hasLayer(
+                    item.marker
+                )
+            ) {
+
+                map.removeLayer(
+                    item.marker
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// RESET VIEW BUTTONS
+// ============================================================
+
+function resetViewButtons() {
+
+    crisisViewButton.classList.remove(
+        "active"
+    );
+
+    countryViewButton.classList.remove(
+        "active"
+    );
+
+    aboutViewButton.classList.remove(
+        "active"
+    );
+
+}
+
+
+// ============================================================
+// SWITCH TO CRISIS VIEW
+// ============================================================
+
+function switchToCrisisView() {
+
+    currentView =
+        "crises";
+
+    resetViewButtons();
+
+    crisisViewButton.classList.add(
+        "active"
+    );
+
+    atlasMain.style.display =
+        "block";
+
+    aboutView.classList.remove(
+        "active"
+    );
+
+    aboutView.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    crisisFilters.style.display =
+        "flex";
+
+    searchArea.style.display =
+        "flex";
+
+    crisisLegend.style.display =
+        "block";
+
+    countryLegend.style.display =
+        "none";
+
+    countryPanel.classList.remove(
+        "open"
+    );
+
+    removeCountryLayers();
 
     const activeFilter =
         document.querySelector(
             ".filter.active"
         );
 
-
     const selectedFilter =
         activeFilter
             ? activeFilter.dataset.filter
             : "all";
-
 
     conflictMarkers.forEach(
         item => {
@@ -2449,14 +2546,12 @@ function switchToCrisisView() {
                 item.conflict.categories ||
                 [];
 
-
             const shouldShow =
                 selectedFilter ===
                     "all" ||
                 categories.includes(
                     selectedFilter
                 );
-
 
             if (
                 shouldShow &&
@@ -2474,26 +2569,30 @@ function switchToCrisisView() {
         }
     );
 
-
     crisisSearch.placeholder =
         "Search for a crisis...";
 
-
     crisisSearch.setAttribute(
         "aria-label",
-        "Search Conflict Atlas crises"
+        "Search crises"
     );
-
 
     crisisCount.textContent =
         conflicts.length;
 
-
     counterLabel.textContent =
         "crises currently documented";
 
-
     clearSearch();
+
+    window.setTimeout(
+        function () {
+
+            map.invalidateSize();
+
+        },
+        50
+    );
 
 }
 
@@ -2507,56 +2606,41 @@ function switchToCountryView() {
     currentView =
         "countries";
 
+    resetViewButtons();
 
     countryViewButton.classList.add(
         "active"
     );
 
+    atlasMain.style.display =
+        "block";
 
-    crisisViewButton.classList.remove(
+    aboutView.classList.remove(
         "active"
     );
 
+    aboutView.setAttribute(
+        "aria-hidden",
+        "true"
+    );
 
     crisisFilters.style.display =
         "none";
 
+    searchArea.style.display =
+        "flex";
 
     crisisLegend.style.display =
         "none";
 
-
     countryLegend.style.display =
         "block";
-
 
     infoPanel.classList.remove(
         "open"
     );
 
-
-    // REMOVE CRISIS MARKERS
-
-    conflictMarkers.forEach(
-        item => {
-
-            if (
-                map.hasLayer(
-                    item.marker
-                )
-            ) {
-
-                map.removeLayer(
-                    item.marker
-                );
-
-            }
-
-        }
-    );
-
-
-    // ADD COUNTRY POLYGONS
+    removeCrisisLayers();
 
     if (
         countryGeoJsonLayer &&
@@ -2570,9 +2654,6 @@ function switchToCountryView() {
         );
 
     }
-
-
-    // ADD FALLBACK MARKERS FOR SMALL COUNTRIES
 
     fallbackCountryMarkers.forEach(
         item => {
@@ -2592,26 +2673,87 @@ function switchToCountryView() {
         }
     );
 
-
     crisisSearch.placeholder =
         "Search for a country...";
-
 
     crisisSearch.setAttribute(
         "aria-label",
         "Search country profiles"
     );
 
-
     crisisCount.textContent =
         countries.length;
-
 
     counterLabel.textContent =
         "country profiles";
 
+    clearSearch();
+
+    window.setTimeout(
+        function () {
+
+            map.invalidateSize();
+
+        },
+        50
+    );
+
+}
+
+
+// ============================================================
+// SWITCH TO ABOUT VIEW
+// ============================================================
+
+function switchToAboutView() {
+
+    currentView =
+        "about";
+
+    resetViewButtons();
+
+    aboutViewButton.classList.add(
+        "active"
+    );
+
+    infoPanel.classList.remove(
+        "open"
+    );
+
+    countryPanel.classList.remove(
+        "open"
+    );
 
     clearSearch();
+
+    crisisFilters.style.display =
+        "none";
+
+    searchArea.style.display =
+        "none";
+
+    crisisLegend.style.display =
+        "none";
+
+    countryLegend.style.display =
+        "none";
+
+    atlasMain.style.display =
+        "none";
+
+    aboutView.classList.add(
+        "active"
+    );
+
+    aboutView.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 }
 
@@ -2640,6 +2782,14 @@ countryViewButton.addEventListener(
 );
 
 
+aboutViewButton.addEventListener(
+    "click",
+    function () {
+
+        switchToAboutView();
+
+    }
+);
 // ============================================================
 // SEARCH
 // ============================================================
@@ -2653,10 +2803,8 @@ crisisSearch.addEventListener(
                 .trim()
                 .toLowerCase();
 
-
         searchResults.innerHTML =
             "";
-
 
         if (
             searchTerm ===
@@ -2666,11 +2814,9 @@ crisisSearch.addEventListener(
             searchResults.style.display =
                 "none";
 
-
             return;
 
         }
-
 
         if (
             currentView ===
@@ -2681,7 +2827,10 @@ crisisSearch.addEventListener(
                 searchTerm
             );
 
-        } else {
+        } else if (
+            currentView ===
+            "countries"
+        ) {
 
             searchCountries(
                 searchTerm
@@ -2713,7 +2862,6 @@ function searchCrises(
                                 searchTerm
                             );
 
-
                     const categoryMatch =
                         conflict.categories
                             .some(
@@ -2725,7 +2873,6 @@ function searchCrises(
                                         ] ||
                                         category;
 
-
                                     return readableName
                                         .toLowerCase()
                                         .includes(
@@ -2734,7 +2881,6 @@ function searchCrises(
 
                                 }
                             );
-
 
                     const actorMatch =
                         (
@@ -2750,7 +2896,6 @@ function searchCrises(
                                         )
                             );
 
-
                     return (
                         nameMatch ||
                         categoryMatch ||
@@ -2764,7 +2909,6 @@ function searchCrises(
                 8
             );
 
-
     if (
         matches.length ===
         0
@@ -2774,11 +2918,9 @@ function searchCrises(
             "No matching crisis found."
         );
 
-
         return;
 
     }
-
 
     matches.forEach(
         conflict => {
@@ -2786,7 +2928,6 @@ function searchCrises(
             const primaryCategory =
                 conflict.primaryCategory ||
                 conflict.categories[0];
-
 
             createSearchResult(
                 conflict.name,
@@ -2807,7 +2948,6 @@ function searchCrises(
 
         }
     );
-
 
     searchResults.style.display =
         "block";
@@ -2882,7 +3022,6 @@ function searchCountries(
                 10
             );
 
-
     if (
         matches.length ===
         0
@@ -2892,11 +3031,9 @@ function searchCountries(
             "No matching country found."
         );
 
-
         return;
 
     }
-
 
     matches.forEach(
         country => {
@@ -2920,7 +3057,6 @@ function searchCountries(
         }
     );
 
-
     searchResults.style.display =
         "block";
 
@@ -2942,58 +3078,47 @@ function createSearchResult(
             "button"
         );
 
-
     result.type =
         "button";
 
-
     result.className =
         "search-result-item";
-
 
     const resultName =
         document.createElement(
             "span"
         );
 
-
     resultName.className =
         "search-result-name";
 
-
     resultName.textContent =
         name;
-
 
     const resultCategory =
         document.createElement(
             "span"
         );
 
-
     resultCategory.className =
         "search-result-category";
 
-
     resultCategory.textContent =
-        subtitle;
-
+        subtitle ||
+        "";
 
     result.appendChild(
         resultName
     );
 
-
     result.appendChild(
         resultCategory
     );
-
 
     result.addEventListener(
         "click",
         clickFunction
     );
-
 
     searchResults.appendChild(
         result
@@ -3015,19 +3140,15 @@ function showNoSearchResult(
             "div"
         );
 
-
     noResult.className =
         "search-no-result";
-
 
     noResult.textContent =
         message;
 
-
     searchResults.appendChild(
         noResult
     );
-
 
     searchResults.style.display =
         "block";
@@ -3050,7 +3171,6 @@ function selectCrisisSearchResult(
                 "active"
             );
 
-
             if (
                 button.dataset.filter ===
                 "all"
@@ -3064,7 +3184,6 @@ function selectCrisisSearchResult(
 
         }
     );
-
 
     conflictMarkers.forEach(
         item => {
@@ -3084,14 +3203,12 @@ function selectCrisisSearchResult(
         }
     );
 
-
     const selectedMarker =
         conflictMarkers.find(
             item =>
                 item.conflict.id ===
                 conflict.id
         );
-
 
     map.flyTo(
         conflict.coordinates,
@@ -3102,11 +3219,9 @@ function selectCrisisSearchResult(
         }
     );
 
-
     openConflictPanel(
         conflict
     );
-
 
     if (
         selectedMarker
@@ -3118,14 +3233,11 @@ function selectCrisisSearchResult(
 
     }
 
-
     crisisSearch.value =
         conflict.name;
 
-
     searchResults.innerHTML =
         "";
-
 
     searchResults.style.display =
         "none";
@@ -3145,7 +3257,6 @@ function selectCountrySearchResult(
         countryLayersByIso3.get(
             country.iso3
         );
-
 
     if (
         countryLayer
@@ -3168,11 +3279,9 @@ function selectCountrySearchResult(
             }
         );
 
-
         openCountryPanel(
             country
         );
-
 
         const fallbackMarker =
             fallbackCountryMarkers.find(
@@ -3180,7 +3289,6 @@ function selectCountrySearchResult(
                     item.country.iso3 ===
                     country.iso3
             );
-
 
         if (
             fallbackMarker
@@ -3194,14 +3302,11 @@ function selectCountrySearchResult(
 
     }
 
-
     crisisSearch.value =
         country.name;
 
-
     searchResults.innerHTML =
         "";
-
 
     searchResults.style.display =
         "none";
@@ -3218,10 +3323,8 @@ function clearSearch() {
     crisisSearch.value =
         "";
 
-
     searchResults.innerHTML =
         "";
-
 
     searchResults.style.display =
         "none";
@@ -3276,11 +3379,9 @@ document.addEventListener(
                 "open"
             );
 
-
             countryPanel.classList.remove(
                 "open"
             );
-
 
             clearSearch();
 
