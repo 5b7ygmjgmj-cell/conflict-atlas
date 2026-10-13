@@ -142,6 +142,14 @@
                 Natural Disaster
             </button>
 
+            <button
+                class="filter"
+                data-filter="unrest"
+                type="button"
+            >
+                Civil Unrest
+            </button>
+
         </div>
 
 
@@ -231,6 +239,11 @@
             <div class="legend-item">
                 <span class="legend-dot legend-disaster"></span>
                 Natural Disaster
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot legend-unrest"></span>
+                Civil Unrest
             </div>
 
         </div>
@@ -398,6 +411,24 @@
 
                     </div>
 
+
+                    <div class="about-category-card">
+
+                        <span
+                            class="about-category-dot legend-unrest"
+                        ></span>
+
+                        <div>
+                            <strong>Civil Unrest</strong>
+                            <p>
+                                Major protests, demonstrations, strikes, and
+                                other significant periods of political or
+                                social unrest.
+                            </p>
+                        </div>
+
+                    </div>
+
                 </div>
 
 
@@ -549,9 +580,7 @@
         </div>
 
     </main>
-
-
-    <!-- =====================================================
+        <!-- =====================================================
          CRISIS PANEL
          ===================================================== -->
 
@@ -973,11 +1002,11 @@
                     <div class="country-fact">
 
                         <span class="fact-label">
-                            UN Status
+                            UN Member
                         </span>
 
                         <span
-                            id="country-un-status"
+                            id="country-un-member"
                             class="fact-value"
                         >
                             —
@@ -987,36 +1016,17 @@
 
                 </div>
 
-
-                <div
-                    id="country-international-organizations"
-                ></div>
-
             </section>
 
 
-            <!-- RELATED CRISES -->
-
-            <section
-                id="country-crises-section"
-                class="panel-section"
-            >
-
-                <h3>Related Crises</h3>
-
-                <div id="country-crises"></div>
-
-            </section>
-
-
-            <!-- HUMANITARIAN SNAPSHOT -->
+            <!-- HUMANITARIAN CONTEXT -->
 
             <section
                 id="country-humanitarian-section"
                 class="panel-section"
             >
 
-                <h3>Humanitarian Snapshot</h3>
+                <h3>Humanitarian Context</h3>
 
                 <div id="country-humanitarian"></div>
 
@@ -1040,34 +1050,37 @@
             <!-- RECENT HISTORY -->
 
             <section
-                id="country-timeline-section"
+                id="country-history-section"
                 class="panel-section"
             >
 
                 <h3>Recent History</h3>
 
-                <div id="country-timeline"></div>
+                <div id="country-history"></div>
 
             </section>
 
 
-            <!-- HUMANITARIAN ORGANIZATIONS -->
+            <!-- RELATED CRISES -->
 
             <section
-                id="country-organizations-section"
+                id="country-related-crises-section"
                 class="panel-section"
             >
 
-                <h3>Humanitarian Organizations</h3>
+                <h3>Related Crises</h3>
 
-                <div id="country-organizations"></div>
+                <div id="country-related-crises"></div>
 
             </section>
 
 
-            <!-- SOURCES -->
+            <!-- COUNTRY SOURCES -->
 
-            <section class="panel-section">
+            <section
+                id="country-sources-section"
+                class="panel-section"
+            >
 
                 <h3>Sources</h3>
 
@@ -1075,46 +1088,9 @@
 
             </section>
 
-
-            <!-- PROFILE NOTE -->
-
-            <section class="panel-section">
-
-                <h3>About Country Profiles</h3>
-
-                <p>
-                    Country Profiles provide geographic, political,
-                    humanitarian, and crisis-related context. The
-                    presence or absence of a documented crisis entry
-                    does not constitute an assessment of a country,
-                    government, political organization, or population.
-                </p>
-
-            </section>
-
         </div>
 
     </aside>
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-        <p>
-            One World, One Life
-        </p>
-
-        <p>
-            Geographic boundaries are shown for reference and
-            do not imply a political position or endorsement.
-        </p>
-
-    </footer>
-
-
     <!-- =====================================================
          JAVASCRIPT
          ===================================================== -->
@@ -1128,30 +1104,23 @@
 
     <!-- CRISIS DATABASE -->
 
-    <script
-        src="conflicts.js?v=3"
-    ></script>
+    <script src="conflicts.js"></script>
 
 
     <!-- COUNTRY DATABASE -->
 
-    <script
-        src="countries.js?v=3"
-    ></script>
+    <script src="countries.js"></script>
 
 
     <!-- COUNTRY FACTS -->
 
-    <script
-        src="country-facts.js?v=6"
-    ></script>
+    <script src="country-facts.js"></script>
 
 
-    <!-- MAIN SITE -->
+    <!-- MAIN SITE SCRIPT -->
 
-    <script
-        src="script.js?v=8"
-    ></script>
+    <script src="script.js?v=9"></script>
+
 
 </body>
 
