@@ -1,7 +1,8 @@
 // =====================================================
 // ONE WORLD, ONE LIFE — CONFLICT ATLAS DATABASE
-// 32 UNIQUE CRISIS / DISASTER ENTRIES
-// Updated: September 30, 2026
+// 42 CRISIS / DISASTER / UNREST ENTRIES
+// Research update: October 12, 2026
+// Individual verification dates are listed below.
 // =====================================================
 
 const conflicts = [
@@ -39,11 +40,11 @@ const conflicts = [
     primaryCategory: "conflict",
     categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [15.5, 30.5],
-    lastUpdated: "September 30, 2026",
+    lastUpdated: "October 12, 2026",
     overview: "Sudan has been at war since April 2023, when fighting broke out between the Sudanese Armed Forces and the paramilitary Rapid Support Forces following a power struggle during Sudan's attempted political transition.",
-    currentSituation: "Fighting remains active in several parts of Sudan, including Darfur and the Kordofan regions. Long-range attacks and drones have become increasingly important in the conflict.",
+    currentSituation: "Fighting between the SAF and RSF continues. An October 12 IPC warning describes deteriorating food insecurity in Darfur and Kordofan, compounded by conflict, drought and insufficient aid funding.",
     actors: ["Sudanese Armed Forces (SAF)", "Rapid Support Forces (RSF)"],
-    humanitarianImpact: "Millions of people have been displaced inside Sudan and across its borders while food insecurity and other humanitarian needs remain severe.",
+    humanitarianImpact: "Conflict, displacement and drought are undermining access to food. IPC assessments indicate widespread acute food insecurity, with famine risks in parts of Darfur and Kordofan.",
     timeline: [
         {date: "April 15, 2023", event: "Large-scale fighting begins between the SAF and RSF."},
         {date: "2023–2024", event: "Fighting expands beyond Khartoum and severely affects Darfur."},
@@ -51,6 +52,7 @@ const conflicts = [
         {date: "September 2026", event: "Fighting and displacement continue."}
     ],
     sources: [
+        {name: "AP / IPC — Sudan food insecurity", url: "https://apnews.com/article/123204872e733d39b0b67713b418b0c2"},
         {name: "UNHCR — Sudan Situation", url: "https://data.unhcr.org/en/situations/sudansituation"},
         {name: "WFP — Sudan", url: "https://www.wfp.org/emergencies/sudan"}
     ],
@@ -66,17 +68,18 @@ const conflicts = [
     primaryCategory: "conflict",
     categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [31.5, 34.7],
-    lastUpdated: "September 30, 2026",
+    lastUpdated: "June 26, 2026",
     overview: "The current Israel–Gaza war began after the Hamas-led attacks on Israel on October 7, 2023 and Israel's subsequent military campaign in Gaza.",
-    currentSituation: "Military activity continues to affect Gaza while humanitarian organizations report severe needs involving shelter, health care, water, sanitation and other essential services.",
+    currentSituation: "Despite the ceasefire announced in October 2025, OCHA documented continued casualties, restrictions on movement, severe displacement and major humanitarian needs in Gaza as of June 2026.",
     actors: ["Israel", "Hamas", "Other Palestinian armed groups"],
-    humanitarianImpact: "The conflict has caused extensive casualties, destruction and displacement. Humanitarian conditions remain severe in Gaza.",
+    humanitarianImpact: "OCHA reported that most of Gaza's population remained displaced, with limited access to basic services and humanitarian assistance.",
     timeline: [
         {date: "October 7, 2023", event: "Hamas-led armed groups attack Israel; Israel subsequently launches a major military campaign in Gaza."},
         {date: "2023–2025", event: "Large-scale fighting causes extensive casualties, destruction and displacement."},
         {date: "2026", event: "Humanitarian needs remain severe amid continued instability."}
     ],
     sources: [
+        {name: "OCHA — Gaza humanitarian report June 2026", url: "https://www.un.org/unispal/document/ocha-humanitarian-situation-report-26-june-2026/"},
         {name: "UN OCHA — Occupied Palestinian Territory", url: "https://www.ochaopt.org/"},
         {name: "ICRC — Israel and occupied territories", url: "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories"}
     ],
@@ -92,23 +95,25 @@ const conflicts = [
     primaryCategory: "conflict",
     categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [-1.7, 29.2],
-    lastUpdated: "September 30, 2026",
+    lastUpdated: "October 9, 2026",
     overview: "Eastern Democratic Republic of the Congo has experienced decades of conflict involving government forces and numerous armed groups.",
-    currentSituation: "Persistent insecurity and armed-group activity continue in eastern DRC despite diplomatic efforts. Violence continues to cause new and repeated displacement.",
+    currentSituation: "Conflict and insecurity continue in eastern DRC. UN officials reported over 6.1 million people displaced and more than 26 million facing food insecurity; an Ebola outbreak adds pressure to already strained services.",
     actors: ["Democratic Republic of the Congo armed forces", "AFC/M23", "Other armed groups"],
-    humanitarianImpact: "Millions remain displaced while conflict, food insecurity, disease and limited access to services affect civilians.",
+    humanitarianImpact: "Displacement, hunger, malnutrition, damaged infrastructure and the Ebola response overlap in conflict-affected areas.",
     timeline: [
         {date: "1990s–present", event: "Eastern DRC experiences prolonged cycles of conflict."},
         {date: "2022–2025", event: "M23 expands military operations."},
         {date: "2026", event: "Conflict and insecurity continue despite peace initiatives."}
     ],
-    sources: [{name: "UNHCR — DR Congo Emergency", url: "https://www.unhcr.org/emergencies/dr-congo-emergency"}],
+    sources: [
+        {name: "UN Geneva — DRC humanitarian briefing", url: "https://www.ungeneva.org/ar/news-media/press-briefing/2026/10/un-geneva-press-briefing-1"},
+        {name: "UNHCR — DR Congo Emergency", url: "https://www.unhcr.org/emergencies/dr-congo-emergency"}
+    ],
     aid: [
         {name: "UNHCR — DR Congo", url: "https://www.unhcr.org/emergencies/dr-congo-emergency"},
         {name: "ICRC — DR Congo", url: "https://www.icrc.org/en/where-we-work/democratic-republic-congo"}
     ]
 },
-
 {
     id: "myanmar",
     name: "Myanmar Civil Conflict",
@@ -123,11 +128,12 @@ const conflicts = [
     timeline: [
         {date: "February 1, 2021", event: "Myanmar's military seizes power in a coup."},
         {date: "2021–2023", event: "Armed resistance expands."},
-        {date: "2023–2026", event: "Major armed operations continue across multiple regions."}
+        {date: "2024–2025", event: "Opposition forces and ethnic armed organizations expand operations in multiple regions."},
+        {date: "2026", event: "Fighting and displacement continue across the country."}
     ],
     sources: [
-        {name: "United Nations — Myanmar", url: "https://myanmar.un.org/"},
-        {name: "UNHCR — Myanmar", url: "https://www.unhcr.org/where-we-work/countries/myanmar"}
+        {name: "UN OCHA — Myanmar", url: "https://www.unocha.org/myanmar"},
+        {name: "UNHCR — Myanmar Situation", url: "https://data.unhcr.org/en/situations/myanmar"}
     ],
     aid: [
         {name: "UNHCR — Myanmar", url: "https://www.unhcr.org/where-we-work/countries/myanmar"},
@@ -139,21 +145,26 @@ const conflicts = [
     id: "yemen",
     name: "Yemen Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [15.5, 47.5],
-    lastUpdated: "September 30, 2026",
-    overview: "Yemen faces a prolonged humanitarian emergency shaped by years of armed conflict, economic deterioration, food insecurity and weakened essential services.",
-    currentSituation: "Humanitarian organizations continue responding to food insecurity, displacement and weakened health and public services.",
-    actors: ["Yemeni authorities and aligned forces", "Ansar Allah (Houthis)", "Other Yemeni political and armed groups"],
-    humanitarianImpact: "Millions require humanitarian assistance and millions remain internally displaced.",
+    lastUpdated: "October 12, 2026",
+    overview: "Yemen has faced prolonged conflict and humanitarian crisis since fighting escalated nationally in 2015.",
+    currentSituation: "Years of conflict, economic deterioration and disruption to essential services continue to create severe humanitarian needs. Food insecurity, disease, displacement and limited access to health care remain major concerns.",
+    actors: ["Houthi movement (Ansar Allah)", "Internationally recognized Yemeni government", "Other Yemeni armed and political groups"],
+    humanitarianImpact: "Millions of people require humanitarian assistance, while food insecurity, malnutrition, displacement and weakened health services continue to affect civilians.",
     timeline: [
-        {date: "2014–2015", event: "Conflict escalates and a Saudi-led coalition intervenes."},
-        {date: "2022", event: "A UN-mediated truce reduces major fighting."},
-        {date: "2026", event: "Humanitarian and displacement needs remain extensive."}
+        {date: "2014", event: "Houthi forces take control of Sanaa."},
+        {date: "2015", event: "A Saudi-led coalition intervenes in Yemen's conflict."},
+        {date: "2022", event: "A UN-mediated truce significantly reduces some forms of nationwide fighting."},
+        {date: "2023–2025", event: "Humanitarian needs remain severe despite reduced front-line fighting in some areas."},
+        {date: "2026", event: "Conflict-related instability and humanitarian needs continue."}
     ],
-    sources: [{name: "UNHCR — Yemen", url: "https://www.unhcr.org/where-we-work/countries/yemen"}],
+    sources: [
+        {name: "UN OCHA — Yemen", url: "https://www.unocha.org/yemen"},
+        {name: "WFP — Yemen", url: "https://www.wfp.org/emergencies/yemen-emergency"}
+    ],
     aid: [
-        {name: "WFP — Yemen", url: "https://www.wfp.org/countries/yemen"},
+        {name: "WFP — Yemen", url: "https://www.wfp.org/emergencies/yemen-emergency"},
         {name: "UNICEF — Yemen", url: "https://www.unicef.org/yemen/"}
     ]
 },
@@ -165,348 +176,442 @@ const conflicts = [
     categories: ["humanitarian", "displacement"],
     coordinates: [33.9, 67.7],
     lastUpdated: "September 30, 2026",
-    overview: "Afghanistan faces widespread humanitarian needs shaped by economic hardship, food insecurity, displacement, natural hazards and large-scale returns from neighboring countries.",
-    currentSituation: "Humanitarian agencies continue assisting vulnerable communities, displaced people and returnees amid funding and access constraints.",
-    actors: ["Afghan de facto authorities", "United Nations humanitarian agencies", "Humanitarian organizations"],
-    humanitarianImpact: "Millions continue to require humanitarian assistance while returns and displacement place pressure on services and livelihoods.",
+    overview: "Afghanistan faces a prolonged humanitarian crisis shaped by decades of conflict, economic hardship, natural disasters and large-scale displacement.",
+    currentSituation: "Millions of Afghans continue to require humanitarian assistance. Economic vulnerability, food insecurity, displacement, restrictions affecting women and girls, and returns from neighboring countries continue to place pressure on communities.",
+    actors: ["Taliban authorities", "Afghan civilians", "Humanitarian organizations"],
+    humanitarianImpact: "Food insecurity, poverty, displacement and limited access to essential services continue to affect millions of people.",
     timeline: [
-        {date: "August 2021", event: "The Taliban takes control of Kabul."},
-        {date: "2022–2025", event: "Economic pressures, disasters and displacement contribute to humanitarian needs."},
-        {date: "2026", event: "Large-scale humanitarian needs continue."}
+        {date: "2001–2021", event: "Afghanistan experiences two decades of war involving Afghan forces, international forces and the Taliban."},
+        {date: "August 2021", event: "The Taliban takes control of Kabul and most of Afghanistan."},
+        {date: "2022–2025", event: "Economic hardship and humanitarian needs remain widespread."},
+        {date: "2026", event: "Humanitarian organizations continue responding to food insecurity, displacement and return movements."}
     ],
     sources: [
-        {name: "UNHCR — Afghanistan", url: "https://www.unhcr.org/where-we-work/countries/afghanistan"},
-        {name: "OCHA — Afghanistan", url: "https://www.unocha.org/afghanistan"}
+        {name: "UN OCHA — Afghanistan", url: "https://www.unocha.org/afghanistan"},
+        {name: "UNHCR — Afghanistan", url: "https://www.unhcr.org/emergencies/afghanistan-emergency"}
     ],
-    aid: [{name: "WFP — Afghanistan", url: "https://www.wfp.org/countries/afghanistan"}]
+    aid: [
+        {name: "UNHCR — Afghanistan", url: "https://www.unhcr.org/emergencies/afghanistan-emergency"},
+        {name: "WFP — Afghanistan", url: "https://www.wfp.org/countries/afghanistan"}
+    ]
 },
 
 {
     id: "syria",
     name: "Syria Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [35.0, 38.5],
     lastUpdated: "September 30, 2026",
-    overview: "Syria continues to face extensive humanitarian and displacement needs after years of conflict and political upheaval.",
-    currentSituation: "Returns are occurring alongside damaged infrastructure, limited services and substantial humanitarian needs.",
-    actors: ["Syrian authorities", "Local and regional armed actors", "Humanitarian organizations"],
-    humanitarianImpact: "Millions remain internally displaced or outside Syria as refugees despite significant return movements.",
+    overview: "Syria has faced conflict, displacement and humanitarian crisis since 2011, leaving millions of people displaced inside the country and abroad.",
+    currentSituation: "Syria remains affected by insecurity, damaged infrastructure, economic hardship and displacement. Humanitarian needs continue despite major political and military changes in the country.",
+    actors: ["Syrian authorities", "Various armed groups", "Regional and international actors"],
+    humanitarianImpact: "Millions of Syrians remain displaced or require assistance, while access to housing, food, health care and other essential services remains difficult for many communities.",
     timeline: [
-        {date: "2011", event: "Conflict begins following anti-government protests."},
-        {date: "2011–2024", event: "Years of war cause mass displacement and infrastructure damage."},
-        {date: "2025–2026", event: "Returns increase while humanitarian needs remain substantial."}
+        {date: "2011", event: "Anti-government protests develop into a nationwide armed conflict."},
+        {date: "2011–2024", event: "War causes extensive destruction, casualties and mass displacement."},
+        {date: "2024–2025", event: "Major political and military changes reshape control within Syria."},
+        {date: "2026", event: "Humanitarian needs and displacement remain substantial."}
     ],
-    sources: [{name: "UNHCR — Syria", url: "https://www.unhcr.org/where-we-work/countries/syrian-arab-republic"}],
-    aid: [{name: "UNICEF — Syria", url: "https://www.unicef.org/syria/"}]
+    sources: [
+        {name: "UN OCHA — Syria", url: "https://www.unocha.org/syrian-arab-republic"},
+        {name: "UNHCR — Syria Emergency", url: "https://www.unhcr.org/emergencies/syria-emergency"}
+    ],
+    aid: [
+        {name: "UNHCR — Syria", url: "https://www.unhcr.org/emergencies/syria-emergency"},
+        {name: "ICRC — Syria", url: "https://www.icrc.org/en/where-we-work/syria"}
+    ]
 },
 
 {
     id: "somalia",
-    name: "Somalia Humanitarian and Displacement Crisis",
+    name: "Somalia Humanitarian and Security Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
-    coordinates: [5.2, 46.2],
-    lastUpdated: "September 30, 2026",
-    overview: "Somalia faces overlapping humanitarian pressures from armed conflict, insecurity, drought and other climate-related shocks.",
-    currentSituation: "Conflict and drought continue to drive displacement and humanitarian needs.",
-    actors: ["Federal Government of Somalia", "Al-Shabaab", "Humanitarian organizations"],
-    humanitarianImpact: "Millions of people remain internally displaced.",
+    categories: ["conflict", "humanitarian", "displacement"],
+    coordinates: [5.0, 46.0],
+    lastUpdated: "October 12, 2026",
+    overview: "Somalia faces overlapping armed conflict, political instability, climate shocks, displacement and severe food insecurity.",
+    currentSituation: "Armed violence involving al-Shabaab continues while recurrent drought and flooding place additional pressure on vulnerable communities. Humanitarian organizations continue warning about severe hunger and displacement.",
+    actors: ["Federal Government of Somalia", "Somali security forces", "Al-Shabaab", "Other armed actors"],
+    humanitarianImpact: "Conflict, climate shocks and food insecurity have displaced large numbers of people and left vulnerable communities dependent on humanitarian assistance.",
     timeline: [
-        {date: "1990s–present", event: "Somalia experiences prolonged political instability and conflict."},
-        {date: "2020s", event: "Conflict increasingly overlaps with drought and flooding."},
-        {date: "2026", event: "Conflict and drought continue driving displacement."}
+        {date: "1991", event: "Somalia's central government collapses, beginning decades of instability."},
+        {date: "2000s–present", event: "Al-Shabaab becomes a major armed actor in Somalia."},
+        {date: "2022–2025", event: "Conflict and repeated climate shocks worsen humanitarian conditions."},
+        {date: "2026", event: "Violence, hunger and displacement continue."}
     ],
-    sources: [{name: "UNHCR — Somalia", url: "https://www.unhcr.org/where-we-work/countries/somalia"}],
-    aid: [{name: "WFP — Somalia", url: "https://www.wfp.org/countries/somalia"}]
+    sources: [
+        {name: "UN OCHA — Somalia", url: "https://www.unocha.org/somalia"},
+        {name: "WFP — Somalia", url: "https://www.wfp.org/countries/somalia"}
+    ],
+    aid: [
+        {name: "WFP — Somalia", url: "https://www.wfp.org/countries/somalia"},
+        {name: "UNHCR — Somalia", url: "https://www.unhcr.org/where-we-work/countries/somalia"}
+    ]
 },
 
 {
     id: "south-sudan",
     name: "South Sudan Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [7.3, 30.3],
     lastUpdated: "September 30, 2026",
-    overview: "South Sudan faces humanitarian pressures linked to internal displacement, insecurity, flooding, food insecurity and the neighboring war in Sudan.",
-    currentSituation: "Communities continue to face displacement while South Sudan also receives people fleeing Sudan.",
-    actors: ["Government of South Sudan", "Local political and armed actors", "Humanitarian organizations"],
-    humanitarianImpact: "Millions remain internally displaced while cross-border arrivals from Sudan place additional pressure on services.",
+    overview: "South Sudan continues to experience humanitarian pressures linked to conflict, political instability, intercommunal violence, flooding, food insecurity and displacement.",
+    currentSituation: "Political tensions and localized violence continue alongside severe humanitarian needs. The arrival of people fleeing the war in neighboring Sudan has added further pressure to communities and humanitarian services.",
+    actors: ["Government of South Sudan", "Opposition groups", "Local armed groups and community militias"],
+    humanitarianImpact: "Millions of people face food insecurity, displacement and limited access to health care, clean water and other essential services.",
     timeline: [
         {date: "2011", event: "South Sudan becomes independent."},
-        {date: "2013", event: "Civil war begins."},
+        {date: "2013–2018", event: "Civil war causes mass displacement and humanitarian suffering."},
         {date: "2018", event: "A revitalized peace agreement is signed."},
-        {date: "2023–2026", event: "The Sudan war adds further displacement pressure."}
+        {date: "2023–2026", event: "Humanitarian pressures increase as people flee into South Sudan from the war in Sudan."}
     ],
-    sources: [{name: "UNHCR — South Sudan", url: "https://www.unhcr.org/where-we-work/countries/south-sudan"}],
-    aid: [{name: "WFP — South Sudan", url: "https://www.wfp.org/countries/south-sudan"}]
+    sources: [
+        {name: "UN OCHA — South Sudan", url: "https://www.unocha.org/south-sudan"},
+        {name: "UNHCR — South Sudan", url: "https://www.unhcr.org/where-we-work/countries/south-sudan"}
+    ],
+    aid: [
+        {name: "WFP — South Sudan", url: "https://www.wfp.org/countries/south-sudan"},
+        {name: "UNHCR — South Sudan", url: "https://www.unhcr.org/where-we-work/countries/south-sudan"}
+    ]
 },
 
 {
     id: "haiti",
-    name: "Haiti Humanitarian and Displacement Crisis",
+    name: "Haiti Security and Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
-    coordinates: [19.0, -72.7],
+    categories: ["conflict", "humanitarian", "displacement"],
+    coordinates: [18.9, -72.3],
     lastUpdated: "September 30, 2026",
-    overview: "Haiti faces a severe humanitarian and security crisis as armed groups have expanded their influence and violence has displaced large numbers of civilians.",
-    currentSituation: "Armed-group violence continues to cause displacement and disrupt access to essential services.",
-    actors: ["Haitian authorities and security forces", "Multiple armed gangs and coalitions", "Humanitarian organizations"],
-    humanitarianImpact: "Large-scale internal displacement, food insecurity and disrupted services continue to affect civilians.",
+    overview: "Haiti faces a severe security and humanitarian crisis driven by armed-group violence, political instability, displacement and weakened public services.",
+    currentSituation: "Armed groups continue to control or contest areas of Port-au-Prince and other communities. Violence, insecurity and limited humanitarian access continue to disrupt everyday life.",
+    actors: ["Haitian authorities and security forces", "Armed gangs", "Multinational security personnel"],
+    humanitarianImpact: "Violence has forced large numbers of people from their homes and disrupted access to food, health care, education and other essential services.",
     timeline: [
-        {date: "2021–2024", event: "Political instability and armed-group violence intensify."},
-        {date: "2025–2026", event: "Violence and displacement expand."}
+        {date: "2021", event: "President Jovenel Moïse is assassinated amid worsening political instability."},
+        {date: "2022–2024", event: "Armed gangs expand control and violence increases."},
+        {date: "2024", event: "A multinational security mission begins deploying to Haiti."},
+        {date: "2025–2026", event: "Violence and displacement remain severe."}
     ],
-    sources: [{name: "United Nations — Haiti", url: "https://haiti.un.org/"}],
-    aid: [{name: "WFP — Haiti", url: "https://www.wfp.org/countries/haiti"}]
+    sources: [
+        {name: "UN OCHA — Haiti", url: "https://www.unocha.org/haiti"},
+        {name: "UNHCR — Haiti", url: "https://www.unhcr.org/where-we-work/countries/haiti"}
+    ],
+    aid: [
+        {name: "WFP — Haiti", url: "https://www.wfp.org/countries/haiti"},
+        {name: "UNICEF — Haiti", url: "https://www.unicef.org/haiti/"}
+    ]
 },
-
 {
     id: "central-sahel",
-    name: "Central Sahel Displacement Crisis",
-    primaryCategory: "displacement",
-    categories: ["humanitarian", "displacement"],
-    coordinates: [15.0, -1.5],
+    name: "Central Sahel Crisis",
+    primaryCategory: "conflict",
+    categories: ["conflict", "humanitarian", "displacement"],
+    coordinates: [14.5, -1.5],
     lastUpdated: "September 30, 2026",
-    overview: "Burkina Faso, Mali and Niger face a regional displacement and protection crisis driven primarily by insecurity and violence.",
-    currentSituation: "Forced displacement continues across the Central Sahel and increasingly affects neighboring countries.",
-    actors: ["Governments and security forces", "Multiple non-state armed groups", "Humanitarian organizations"],
-    humanitarianImpact: "Millions are forcibly displaced across Burkina Faso, Mali and Niger.",
+    overview: "Burkina Faso, Mali and Niger face interconnected security and humanitarian crises involving armed groups, military operations, political instability and large-scale displacement.",
+    currentSituation: "Armed violence continues across parts of the Central Sahel. Insecurity restricts access to communities while attacks and military operations continue to force people from their homes.",
+    actors: ["Burkina Faso security forces", "Malian security forces", "Nigerien security forces", "Jihadist armed groups", "Other armed actors"],
+    humanitarianImpact: "Millions of people across the Central Sahel have been displaced or otherwise affected by violence, food insecurity and reduced access to health care, education and humanitarian assistance.",
     timeline: [
-        {date: "2010s", event: "Armed violence expands across parts of the Central Sahel."},
-        {date: "2020–2026", event: "Forced displacement rises substantially across the region."}
+        {date: "2012", event: "Conflict escalates in northern Mali."},
+        {date: "2015–2020", event: "Armed violence spreads into Burkina Faso and Niger."},
+        {date: "2020–2023", event: "Military coups reshape governments across Mali, Burkina Faso and Niger."},
+        {date: "2024–2026", event: "Armed violence and displacement continue across the region."}
     ],
-    sources: [{name: "UNHCR — Sahel Emergency", url: "https://www.unhcr.org/emergencies/sahel-emergency"}],
-    aid: [{name: "UNHCR — Sahel Emergency", url: "https://www.unhcr.org/emergencies/sahel-emergency"}]
+    sources: [
+        {name: "UNHCR — Sahel Situation", url: "https://data.unhcr.org/en/situations/sahelcrisis"},
+        {name: "UN OCHA — West and Central Africa", url: "https://www.unocha.org/west-and-central-africa"}
+    ],
+    aid: [
+        {name: "UNHCR — Sahel Situation", url: "https://data.unhcr.org/en/situations/sahelcrisis"},
+        {name: "ICRC — Sahel", url: "https://www.icrc.org/en/where-we-work/africa/sahel"}
+    ]
 },
 
 {
     id: "ethiopia",
-    name: "Ethiopia Displacement Crisis",
-    primaryCategory: "displacement",
-    categories: ["humanitarian", "displacement"],
+    name: "Ethiopia Humanitarian and Conflict Crisis",
+    primaryCategory: "humanitarian",
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [9.1, 40.5],
     lastUpdated: "September 30, 2026",
-    overview: "Ethiopia faces significant displacement linked to conflict, localized insecurity and climate-related shocks while hosting refugees from neighboring countries.",
-    currentSituation: "Displacement and humanitarian needs remain significant in several regions.",
-    actors: ["Ethiopian federal and regional authorities", "Local armed actors", "Humanitarian organizations"],
-    humanitarianImpact: "Millions remain internally displaced and Ethiopia hosts a substantial refugee population.",
+    overview: "Ethiopia faces overlapping humanitarian challenges involving armed violence, displacement, food insecurity, climate shocks and the continuing effects of previous conflicts.",
+    currentSituation: "Insecurity continues in parts of Ethiopia, including areas affected by fighting and political tensions. Humanitarian organizations continue responding to displacement, food insecurity and disrupted services.",
+    actors: ["Ethiopian federal authorities", "Regional security forces", "Various armed groups"],
+    humanitarianImpact: "Conflict and climate shocks have displaced communities and disrupted livelihoods, while millions continue to require humanitarian assistance.",
     timeline: [
-        {date: "2020–2022", event: "War in northern Ethiopia causes major displacement."},
-        {date: "2022", event: "The Pretoria agreement ends large-scale fighting between federal and Tigrayan forces."},
-        {date: "2023–2026", event: "Other insecurity and climate shocks continue causing displacement."}
+        {date: "November 2020", event: "War begins in Ethiopia's Tigray region."},
+        {date: "November 2022", event: "The Ethiopian government and Tigrayan forces sign a cessation-of-hostilities agreement."},
+        {date: "2023–2025", event: "Violence and insecurity continue in other parts of Ethiopia."},
+        {date: "2026", event: "Humanitarian needs and localized insecurity continue."}
     ],
-    sources: [{name: "UNHCR — Ethiopia", url: "https://www.unhcr.org/where-we-work/countries/ethiopia"}],
-    aid: [{name: "WFP — Ethiopia", url: "https://www.wfp.org/countries/ethiopia"}]
+    sources: [
+        {name: "UN OCHA — Ethiopia", url: "https://www.unocha.org/ethiopia"},
+        {name: "UNHCR — Ethiopia", url: "https://www.unhcr.org/where-we-work/countries/ethiopia"}
+    ],
+    aid: [
+        {name: "WFP — Ethiopia", url: "https://www.wfp.org/countries/ethiopia"},
+        {name: "UNHCR — Ethiopia", url: "https://www.unhcr.org/where-we-work/countries/ethiopia"}
+    ]
 },
 
 {
     id: "mozambique-displacement",
-    name: "Northern Mozambique Displacement Crisis",
-    primaryCategory: "displacement",
-    categories: ["humanitarian", "displacement"],
-    coordinates: [-12.5, 39.3],
+    name: "Northern Mozambique Conflict",
+    primaryCategory: "conflict",
+    categories: ["conflict", "humanitarian", "displacement"],
+    coordinates: [-12.5, 40.0],
     lastUpdated: "September 30, 2026",
-    overview: "Northern Mozambique faces prolonged displacement associated with insurgent violence, insecurity and repeated natural disasters.",
-    currentSituation: "Violence continues to expose civilians to protection risks and repeated displacement.",
-    actors: ["Mozambican authorities and security forces", "Insurgent armed groups", "Humanitarian organizations"],
-    humanitarianImpact: "Hundreds of thousands remain internally displaced.",
+    overview: "Northern Mozambique has faced an armed insurgency centered largely in Cabo Delgado province since 2017.",
+    currentSituation: "Attacks and insecurity continue to affect communities in northern Mozambique. Security operations and humanitarian responses continue while some communities experience repeated displacement.",
+    actors: ["Mozambican security forces", "Islamic State-linked insurgents", "Regional security partners"],
+    humanitarianImpact: "Violence has displaced large numbers of people and disrupted livelihoods, education, health care and access to food.",
     timeline: [
-        {date: "2017", event: "Insurgent violence begins in Cabo Delgado."},
-        {date: "2020–2026", event: "Violence and disasters cause repeated displacement."}
+        {date: "2017", event: "Insurgency begins in Cabo Delgado."},
+        {date: "2020–2021", event: "Insurgents capture territory and attack major population centers."},
+        {date: "2021", event: "Regional and international security forces deploy to assist Mozambique."},
+        {date: "2022–2026", event: "Security operations continue while attacks and displacement persist."}
     ],
-    sources: [{name: "UNHCR — Mozambique", url: "https://www.unhcr.org/where-we-work/countries/mozambique"}],
-    aid: [{name: "UNHCR — Mozambique", url: "https://www.unhcr.org/where-we-work/countries/mozambique"}]
+    sources: [
+        {name: "UNHCR — Mozambique", url: "https://www.unhcr.org/where-we-work/countries/mozambique"},
+        {name: "UN OCHA — Mozambique", url: "https://www.unocha.org/mozambique"}
+    ],
+    aid: [
+        {name: "UNHCR — Mozambique", url: "https://www.unhcr.org/where-we-work/countries/mozambique"},
+        {name: "ICRC — Mozambique", url: "https://www.icrc.org/en/where-we-work/mozambique"}
+    ]
 },
 
 {
     id: "car",
-    name: "Central African Republic Displacement Crisis",
-    primaryCategory: "displacement",
-    categories: ["humanitarian", "displacement"],
+    name: "Central African Republic Crisis",
+    primaryCategory: "humanitarian",
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [6.6, 20.9],
     lastUpdated: "September 30, 2026",
-    overview: "The Central African Republic continues to experience a protracted humanitarian and displacement crisis after years of armed violence and instability.",
-    currentSituation: "Displaced communities and refugees continue to face protection and humanitarian needs.",
-    actors: ["Central African Republic authorities", "Multiple armed groups", "Humanitarian organizations"],
-    humanitarianImpact: "Large numbers remain internally displaced or live as refugees in neighboring countries.",
+    overview: "The Central African Republic has experienced prolonged political instability and armed conflict involving government forces and multiple armed groups.",
+    currentSituation: "Insecurity continues in parts of the country despite peace and stabilization efforts. Armed violence, limited state services and difficult humanitarian access continue to affect civilians.",
+    actors: ["Central African Republic government forces", "Armed groups", "International peacekeeping and security forces"],
+    humanitarianImpact: "Conflict has displaced communities inside the country and into neighboring states while food insecurity and limited access to basic services remain significant concerns.",
     timeline: [
-        {date: "2012–2013", event: "A major political and armed crisis begins."},
-        {date: "2013–2020", event: "Repeated violence causes extensive displacement."},
-        {date: "2021–2026", event: "A protracted displacement crisis continues."}
+        {date: "2012–2013", event: "A new cycle of conflict begins and the Seleka coalition takes power."},
+        {date: "2013–2020", event: "Violence involving numerous armed groups continues."},
+        {date: "2020–2021", event: "A rebel coalition launches a major offensive."},
+        {date: "2022–2026", event: "Localized conflict and humanitarian needs continue."}
     ],
-    sources: [{name: "UNHCR — Central African Republic", url: "https://www.unhcr.org/where-we-work/countries/central-african-republic"}],
-    aid: [{name: "UNHCR — Central African Republic", url: "https://www.unhcr.org/where-we-work/countries/central-african-republic"}]
+    sources: [
+        {name: "UNHCR — Central African Republic", url: "https://www.unhcr.org/where-we-work/countries/central-african-republic"},
+        {name: "UN OCHA — Central African Republic", url: "https://www.unocha.org/central-african-republic"}
+    ],
+    aid: [
+        {name: "UNHCR — Central African Republic", url: "https://www.unhcr.org/where-we-work/countries/central-african-republic"},
+        {name: "WFP — Central African Republic", url: "https://www.wfp.org/countries/central-african-republic"}
+    ]
 },
 
 {
     id: "philippines-floods-2026",
-    name: "Philippines Monsoon Floods",
+    name: "Philippines Floods and Storms — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [14.6, 121.0],
+    categories: ["disaster", "humanitarian", "displacement"],
+    coordinates: [12.8, 122.0],
     lastUpdated: "September 30, 2026",
-    overview: "Heavy monsoon rainfall caused widespread flooding in parts of the Philippines during 2026.",
-    currentSituation: "Emergency and recovery efforts continue in affected communities.",
-    actors: ["Philippine authorities", "Philippine Red Cross", "Humanitarian organizations"],
-    humanitarianImpact: "Flooding affected communities across multiple regions and caused displacement and damage.",
-    timeline: [{date: "2026", event: "Heavy monsoon rainfall causes widespread flooding."}],
-    sources: [{name: "IFRC GO — Emergencies", url: "https://go.ifrc.org/emergencies"}],
-    aid: [{name: "Philippine Red Cross", url: "https://redcross.org.ph/"}]
+    overview: "Communities in the Philippines have faced flooding and severe weather during the 2026 storm and monsoon season.",
+    currentSituation: "Flooding and storm impacts have affected communities, damaged homes and infrastructure and forced evacuations in affected areas.",
+    actors: ["Philippine national and local authorities", "Emergency responders", "Humanitarian organizations"],
+    humanitarianImpact: "Flooding and severe weather can cause temporary displacement, damage homes and infrastructure and interrupt transportation, education and essential services.",
+    timeline: [
+        {date: "2026", event: "Seasonal storms and monsoon conditions cause flooding in multiple areas of the Philippines."},
+        {date: "2026", event: "Authorities and humanitarian organizations conduct evacuation and relief operations."}
+    ],
+    sources: [
+        {name: "ReliefWeb — Philippines", url: "https://reliefweb.int/country/phl"},
+        {name: "Philippine Red Cross", url: "https://redcross.org.ph/"}
+    ],
+    aid: [
+        {name: "Philippine Red Cross", url: "https://redcross.org.ph/"},
+        {name: "IFRC — Philippines", url: "https://www.ifrc.org/national-societies-directory/philippine-red-cross"}
+    ]
 },
 
 {
     id: "nepal-floods-2026",
-    name: "Nepal Flash Floods",
+    name: "Nepal Floods and Landslides — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
+    categories: ["disaster", "humanitarian", "displacement"],
     coordinates: [28.2, 84.0],
-    lastUpdated: "September 30, 2026",
-    overview: "Severe flash floods struck Nepal in August 2026, damaging homes, roads, bridges and infrastructure.",
-    currentSituation: "Humanitarian and recovery operations continue in affected communities.",
-    actors: ["Government of Nepal", "Nepal Red Cross Society", "Humanitarian organizations"],
-    humanitarianImpact: "Flooding caused displacement and extensive infrastructure and livelihood damage.",
+    lastUpdated: "October 2026",
+    overview: "Heavy rainfall during Nepal's monsoon season has caused flooding and landslides affecting communities and infrastructure.",
+    currentSituation: "Flooding and landslides have damaged roads and other infrastructure and led to evacuations and emergency response operations in affected areas.",
+    actors: ["Government of Nepal", "Local authorities", "Emergency responders", "Humanitarian organizations"],
+    humanitarianImpact: "Flooding and landslides have affected homes, transportation and livelihoods while creating temporary displacement and emergency shelter needs.",
     timeline: [
-        {date: "August 26, 2026", event: "Severe flash floods affect Nepal."},
-        {date: "August 27, 2026", event: "IFRC launches an emergency appeal."}
+        {date: "2026 monsoon season", event: "Heavy rainfall causes flooding and landslides in Nepal."},
+        {date: "October 2026", event: "Further heavy rainfall produces additional flooding, infrastructure damage and evacuations."}
     ],
-    sources: [{name: "IFRC — Nepal Flash Floods", url: "https://www.ifrc.org/emergency/nepal-flash-floods-2026"}],
-    aid: [{name: "IFRC — Nepal Response", url: "https://www.ifrc.org/emergency/nepal-flash-floods-2026"}]
+    sources: [
+        {name: "ReliefWeb — Nepal", url: "https://reliefweb.int/country/npl"},
+        {name: "Nepal Red Cross Society", url: "https://nrcs.org/"}
+    ],
+    aid: [
+        {name: "Nepal Red Cross Society", url: "https://nrcs.org/"},
+        {name: "IFRC — Nepal", url: "https://www.ifrc.org/national-societies-directory/nepal-red-cross-society"}
+    ]
 },
 
 {
     id: "colombia-earthquake-2026",
-    name: "Colombia Earthquake",
+    name: "Colombia Earthquake — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [5.0, -76.5],
+    categories: ["disaster", "humanitarian"],
+    coordinates: [4.6, -74.1],
     lastUpdated: "September 30, 2026",
-    overview: "A magnitude 7.4 earthquake struck western Colombia on August 10, 2026, affecting communities across multiple departments.",
-    currentSituation: "Humanitarian assistance and recovery operations continue.",
-    actors: ["Colombian authorities", "Colombian Red Cross", "Humanitarian organizations"],
-    humanitarianImpact: "Hundreds of thousands of people were registered as disaster-affected.",
+    overview: "A significant earthquake affected parts of Colombia in 2026, prompting damage assessments and emergency response operations.",
+    currentSituation: "Authorities and emergency organizations have assessed affected communities and infrastructure following the earthquake.",
+    actors: ["Colombian authorities", "Emergency responders", "Affected communities"],
+    humanitarianImpact: "Earthquakes can damage homes and infrastructure, interrupt essential services and create temporary shelter and emergency assistance needs.",
     timeline: [
-        {date: "August 10, 2026", event: "A magnitude 7.4 earthquake strikes western Colombia."},
-        {date: "August–September 2026", event: "Emergency response transitions toward recovery."}
+        {date: "2026", event: "An earthquake affects parts of Colombia."},
+        {date: "2026", event: "Authorities conduct emergency assessments and response operations."}
     ],
-    sources: [{name: "UNHCR — Colombia Earthquake Response", url: "https://data.unhcr.org/en/country/COL"}],
-    aid: [{name: "IFRC", url: "https://www.ifrc.org/"}]
+    sources: [
+        {name: "USGS — Earthquake Hazards Program", url: "https://earthquake.usgs.gov/"},
+        {name: "ReliefWeb — Colombia", url: "https://reliefweb.int/country/col"}
+    ],
+    aid: [
+        {name: "Colombian Red Cross", url: "https://www.cruzrojacolombiana.org/"},
+        {name: "IFRC — Colombia", url: "https://www.ifrc.org/national-societies-directory/colombian-red-cross-society"}
+    ]
 },
-
 {
     id: "madagascar-cyclones-2026",
-    name: "Madagascar Cyclones",
+    name: "Madagascar Cyclones — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [-18.9, 47.5],
+    categories: ["disaster", "humanitarian", "displacement"],
+    coordinates: [-19.0, 46.7],
     lastUpdated: "September 30, 2026",
-    overview: "Back-to-back cyclones struck Madagascar in early 2026, causing flooding and damage to homes, services and livelihoods.",
-    currentSituation: "Recovery efforts continue.",
-    actors: ["Madagascar authorities", "Malagasy Red Cross Society", "Humanitarian organizations"],
-    humanitarianImpact: "Hundreds of thousands were affected by the cyclones.",
+    overview: "Madagascar has faced destructive tropical cyclones and severe weather that have affected communities, homes, agriculture and infrastructure.",
+    currentSituation: "Affected communities continue recovering from storm damage while humanitarian organizations and authorities support shelter, food, water and other needs.",
+    actors: ["Government of Madagascar", "Local authorities", "Emergency responders", "Humanitarian organizations"],
+    humanitarianImpact: "Cyclones and flooding can destroy homes, damage crops and infrastructure and temporarily displace affected communities.",
     timeline: [
-        {date: "Early 2026", event: "Successive cyclones strike Madagascar."},
-        {date: "February 2026", event: "IFRC launches an emergency appeal."}
+        {date: "2026", event: "Tropical cyclones and severe weather affect communities in Madagascar."},
+        {date: "2026", event: "Emergency response and recovery operations support affected areas."}
     ],
-    sources: [{name: "IFRC — Madagascar Cyclones", url: "https://www.ifrc.org/emergency/madagascar-cyclones-2026"}],
-    aid: [{name: "IFRC — Madagascar Response", url: "https://www.ifrc.org/emergency/madagascar-cyclones-2026"}]
+    sources: [
+        {name: "ReliefWeb — Madagascar", url: "https://reliefweb.int/country/mdg"},
+        {name: "IFRC — Madagascar", url: "https://www.ifrc.org/national-societies-directory/malagasy-red-cross-society"}
+    ],
+    aid: [
+        {name: "Malagasy Red Cross Society", url: "https://www.ifrc.org/national-societies-directory/malagasy-red-cross-society"},
+        {name: "UNICEF — Madagascar", url: "https://www.unicef.org/madagascar/"}
+    ]
 },
 
 {
     id: "mozambique-floods-2026",
-    name: "Mozambique Floods",
+    name: "Mozambique Floods — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [-23.0, 33.0],
+    categories: ["disaster", "humanitarian", "displacement"],
+    coordinates: [-18.5, 35.0],
     lastUpdated: "September 30, 2026",
-    overview: "Severe flooding affected large areas of Mozambique during 2026, damaging homes, crops, water systems and infrastructure.",
-    currentSituation: "Relief and recovery continue in affected communities.",
-    actors: ["Mozambican authorities", "Mozambique Red Cross", "Humanitarian organizations"],
-    humanitarianImpact: "Hundreds of thousands were affected across multiple provinces.",
+    overview: "Flooding and severe weather have affected communities in Mozambique during 2026, adding to existing humanitarian pressures in the country.",
+    currentSituation: "Affected communities continue dealing with damage to homes, infrastructure and livelihoods while emergency and humanitarian organizations provide assistance.",
+    actors: ["Government of Mozambique", "Local authorities", "Emergency responders", "Humanitarian organizations"],
+    humanitarianImpact: "Flooding can force people from their homes, damage crops and infrastructure and disrupt access to food, clean water, health care and transportation.",
     timeline: [
-        {date: "Late 2025–2026", event: "Heavy rainfall and river flooding affect Mozambique."},
-        {date: "January 2026", event: "IFRC launches an emergency appeal."}
+        {date: "2026", event: "Heavy rainfall and flooding affect parts of Mozambique."},
+        {date: "2026", event: "Emergency response and recovery operations continue in affected communities."}
     ],
-    sources: [{name: "IFRC — Mozambique Floods", url: "https://www.ifrc.org/emergency/mozambique-floods-2026"}],
-    aid: [{name: "IFRC — Mozambique Response", url: "https://www.ifrc.org/emergency/mozambique-floods-2026"}]
+    sources: [
+        {name: "ReliefWeb — Mozambique", url: "https://reliefweb.int/country/moz"},
+        {name: "UN OCHA — Mozambique", url: "https://www.unocha.org/mozambique"}
+    ],
+    aid: [
+        {name: "Mozambique Red Cross", url: "https://www.ifrc.org/national-societies-directory/mozambique-red-cross-society"},
+        {name: "UNICEF — Mozambique", url: "https://www.unicef.org/mozambique/"}
+    ]
 },
-
-// =====================================================
-// NEW ENTRIES 21–32
-// =====================================================
 
 {
     id: "lebanon-2026",
-    name: "Lebanon Conflict",
-    primaryCategory: "conflict",
+    name: "Lebanon Humanitarian and Security Crisis",
+    primaryCategory: "humanitarian",
     categories: ["conflict", "humanitarian", "displacement"],
-    coordinates: [33.9, 35.7],
+    coordinates: [33.9, 35.8],
     lastUpdated: "September 30, 2026",
-    overview: "Lebanon experienced a sharp escalation of hostilities beginning in March 2026, worsening an already difficult humanitarian and economic situation.",
-    currentSituation: "The 2026 escalation caused civilian casualties, extensive damage, disruption of basic services and large-scale displacement. Humanitarian and stabilization partners expanded their response for September through December.",
-    actors: ["Lebanese authorities and armed forces", "Hezbollah", "Israel"],
-    humanitarianImpact: "The UN's September 2026 Lebanon Response Plan Addendum seeks to provide prioritized assistance to 732,125 people affected by renewed hostilities and related humanitarian pressures.",
+    overview: "Lebanon faces overlapping security, economic and humanitarian pressures, including the effects of regional conflict and displacement.",
+    currentSituation: "Communities continue to face insecurity and humanitarian needs alongside economic pressures and damage from previous fighting.",
+    actors: ["Lebanese authorities", "Hezbollah", "Israel", "Affected civilian communities"],
+    humanitarianImpact: "Conflict-related damage and displacement have affected communities while economic conditions continue to limit access to essential services for vulnerable households.",
     timeline: [
-        {date: "2024", event: "A major escalation causes casualties, destruction and displacement in Lebanon."},
-        {date: "March 2026", event: "Hostilities sharply escalate again."},
-        {date: "September 2026", event: "The UN expands the 2026 Lebanon Response Plan in response to worsening needs."}
+        {date: "2019", event: "Lebanon enters a severe economic and financial crisis."},
+        {date: "October 2023", event: "Cross-border fighting between Israel and Hezbollah escalates following the outbreak of the Israel–Gaza war."},
+        {date: "2024", event: "Fighting intensifies and causes widespread displacement in Lebanon."},
+        {date: "2025–2026", event: "Humanitarian and security pressures continue."}
     ],
     sources: [
-        {name: "United Nations — Lebanon Response Plan 2026 Addendum", url: "https://lebanon.un.org/en/323037-lebanon-response-plan-2026-addendum"},
-        {name: "UNHCR — Middle East Emergency", url: "https://www.unhcr.org/emergencies/middle-east-emergency"}
+        {name: "UN OCHA — Lebanon", url: "https://www.unocha.org/lebanon"},
+        {name: "UNHCR — Lebanon", url: "https://www.unhcr.org/where-we-work/countries/lebanon"}
     ],
     aid: [
-        {name: "UNHCR — Middle East Emergency", url: "https://www.unhcr.org/emergencies/middle-east-emergency"},
-        {name: "Lebanese Red Cross", url: "https://www.redcross.org.lb/"}
+        {name: "Lebanese Red Cross", url: "https://www.redcross.org.lb/"},
+        {name: "UNHCR — Lebanon", url: "https://www.unhcr.org/where-we-work/countries/lebanon"}
     ]
 },
 
 {
     id: "iran-2026",
-    name: "Iran Conflict and Displacement Emergency",
+    name: "Iran Regional Security Crisis",
     primaryCategory: "conflict",
-    categories: ["conflict", "humanitarian", "displacement"],
+    categories: ["conflict", "humanitarian"],
     coordinates: [32.4, 53.7],
     lastUpdated: "September 30, 2026",
-    overview: "A major military escalation affecting Iran and the wider Middle East began on February 28, 2026, causing civilian casualties, infrastructure damage and large-scale temporary displacement.",
-    currentSituation: "Humanitarian organizations continue monitoring population movements and supporting vulnerable communities affected by the conflict.",
-    actors: ["Iran", "Other states involved in the regional military escalation"],
-    humanitarianImpact: "UNHCR estimated in March 2026 that between 600,000 and one million Iranian households had temporarily left their homes, representing as many as 3.2 million people.",
+    overview: "Iran remains a central actor in regional security tensions involving Israel, the United States and armed groups across the Middle East.",
+    currentSituation: "Regional tensions and the risk of direct military escalation continue to affect Iran and neighboring countries.",
+    actors: ["Iran", "Israel", "United States", "Regional armed groups"],
+    humanitarianImpact: "Military escalation can threaten civilians and infrastructure and disrupt transportation, economic activity and access to essential services.",
     timeline: [
-        {date: "February 28, 2026", event: "A major military escalation begins in the Middle East."},
-        {date: "March 12, 2026", event: "UNHCR reports up to 3.2 million people temporarily displaced inside Iran."},
-        {date: "2026", event: "Humanitarian response and displacement monitoring continue."}
+        {date: "2023–2024", event: "Regional tensions increase during the Israel–Gaza war."},
+        {date: "2024", event: "Iran and Israel conduct direct attacks against one another during periods of escalation."},
+        {date: "2025–2026", event: "Regional security tensions and risks of renewed escalation continue."}
     ],
     sources: [
-        {name: "UNHCR — Middle East Emergency", url: "https://www.unhcr.org/emergencies/middle-east-emergency"},
-        {name: "IFRC — Iran Complex Emergency 2026", url: "https://www.ifrc.org/emergencies/all"}
+        {name: "UN — Middle East", url: "https://www.un.org/sg/en/content/sg/press-encounter"},
+        {name: "ICRC — Iran", url: "https://www.icrc.org/en/where-we-work/iran"}
     ],
     aid: [
-        {name: "IFRC", url: "https://www.ifrc.org/"},
-        {name: "UNHCR — Middle East Emergency", url: "https://www.unhcr.org/emergencies/middle-east-emergency"}
+        {name: "Iranian Red Crescent Society", url: "https://en.rcs.ir/"},
+        {name: "ICRC — Iran", url: "https://www.icrc.org/en/where-we-work/iran"}
     ]
 },
 
 {
     id: "colombia-conflict",
-    name: "Colombia Internal Armed Conflicts",
+    name: "Colombia Armed Conflict",
     primaryCategory: "conflict",
     categories: ["conflict", "humanitarian", "displacement"],
-    coordinates: [4.7, -74.1],
+    coordinates: [4.5, -74.0],
     lastUpdated: "September 30, 2026",
-    overview: "Colombia continues to experience several internal armed conflicts involving state forces and non-state armed organizations despite the 2016 peace agreement with the FARC-EP.",
-    currentSituation: "Violence, territorial disputes and armed-group activity continue to cause displacement and confinement in several parts of the country.",
-    actors: ["Colombian security forces", "ELN", "FARC dissident groups", "Other non-state armed groups"],
-    humanitarianImpact: "Government data published through UNHCR listed 7,133,444 registered internally displaced people eligible for assistance and reparation as of April 30, 2026.",
+    overview: "Colombia continues to experience violence involving armed groups despite the 2016 peace agreement that ended the government's conflict with the main FARC organization.",
+    currentSituation: "Armed groups continue competing for territorial control in several regions, causing violence, confinement and displacement among civilian communities.",
+    actors: ["Colombian security forces", "ELN", "FARC dissident groups", "Other armed and criminal organizations"],
+    humanitarianImpact: "Violence continues to cause displacement, confinement and threats against civilians, particularly in rural and marginalized communities.",
     timeline: [
-        {date: "1960s", event: "Colombia's long-running internal armed conflict develops."},
-        {date: "2016", event: "The government and FARC-EP sign a peace agreement."},
-        {date: "2016–2026", event: "Other armed conflicts and violence continue to cause displacement."}
+        {date: "1960s–2016", event: "Colombia experiences decades of armed conflict involving the government, guerrilla groups and paramilitary organizations."},
+        {date: "2016", event: "The Colombian government and FARC sign a peace agreement."},
+        {date: "2017–2025", event: "Other armed groups and dissident factions continue operating."},
+        {date: "2026", event: "Violence and displacement continue in conflict-affected regions."}
     ],
-    sources: [{name: "UNHCR — Colombia", url: "https://data.unhcr.org/en/country/COL"}],
+    sources: [
+        {name: "ICRC — Colombia", url: "https://www.icrc.org/en/where-we-work/colombia"},
+        {name: "UNHCR — Colombia", url: "https://www.unhcr.org/where-we-work/countries/colombia"}
+    ],
     aid: [
-        {name: "UNHCR — Colombia", url: "https://data.unhcr.org/en/country/COL"},
-        {name: "ICRC — Colombia", url: "https://www.icrc.org/en/where-we-work/colombia"}
+        {name: "ICRC — Colombia", url: "https://www.icrc.org/en/where-we-work/colombia"},
+        {name: "UNHCR — Colombia", url: "https://www.unhcr.org/where-we-work/countries/colombia"}
     ]
 },
 
@@ -515,182 +620,464 @@ const conflicts = [
     name: "Chad Humanitarian Crisis",
     primaryCategory: "humanitarian",
     categories: ["humanitarian", "displacement"],
-    coordinates: [15.4, 18.7],
+    coordinates: [15.5, 18.7],
     lastUpdated: "September 30, 2026",
-    overview: "Chad faces a major humanitarian and displacement emergency intensified by the war in neighboring Sudan, insecurity in the Lake Chad region and pressure on essential services.",
-    currentSituation: "Refugees continue arriving from Sudan while humanitarian resources and services in eastern Chad remain heavily strained.",
-    actors: ["Government of Chad", "Sudanese refugees and host communities", "United Nations and humanitarian organizations"],
-    humanitarianImpact: "UN data showed approximately 2.26 million forcibly displaced people in Chad at the end of June 2026, including roughly 1.55 million refugees and asylum-seekers and nearly 219,600 internally displaced people.",
+    overview: "Chad faces food insecurity, climate shocks and displacement while hosting large numbers of refugees from neighboring conflicts, particularly Sudan.",
+    currentSituation: "The war in Sudan continues to drive refugees into eastern Chad, placing additional pressure on communities, humanitarian services and already limited resources.",
+    actors: ["Government of Chad", "Refugees and displaced communities", "Humanitarian organizations"],
+    humanitarianImpact: "Refugee arrivals, food insecurity and limited access to essential services have created significant humanitarian needs in eastern Chad and other vulnerable areas.",
     timeline: [
-        {date: "April 2023", event: "War begins in Sudan and large-scale refugee arrivals into Chad accelerate."},
-        {date: "June 2026", event: "Chad hosts approximately 2.26 million forcibly displaced people."},
-        {date: "September 2026", event: "New refugee arrivals from Sudan continue."}
+        {date: "2023", event: "War begins in Sudan and large numbers of refugees flee into Chad."},
+        {date: "2024–2025", event: "Refugee arrivals continue while humanitarian resources face increasing pressure."},
+        {date: "2026", event: "Chad continues hosting people displaced by regional conflict."}
     ],
     sources: [
-        {name: "UNHCR — Chad Displacement Data", url: "https://data.unhcr.org/en/documents/details/123202"},
-        {name: "UNFPA — Chad 2026 Humanitarian Appeal", url: "https://www.unfpa.org/resources/humanitarian-country-appeal-chad-2026"}
+        {name: "UNHCR — Chad", url: "https://www.unhcr.org/where-we-work/countries/chad"},
+        {name: "WFP — Chad", url: "https://www.wfp.org/countries/chad"}
     ],
-    aid: [{name: "UNHCR — Chad", url: "https://www.unhcr.org/where-we-work/countries/chad"}]
+    aid: [
+        {name: "UNHCR — Chad", url: "https://www.unhcr.org/where-we-work/countries/chad"},
+        {name: "WFP — Chad", url: "https://www.wfp.org/countries/chad"}
+    ]
 },
 
 {
     id: "cameroon-humanitarian",
     name: "Cameroon Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian", "displacement"],
-    coordinates: [5.9, 12.4],
+    categories: ["conflict", "humanitarian", "displacement"],
+    coordinates: [5.7, 12.7],
     lastUpdated: "September 30, 2026",
-    overview: "Cameroon faces overlapping humanitarian pressures from armed violence, internal displacement, refugee arrivals, climate shocks and worsening food insecurity.",
-    currentSituation: "Insecurity persists in the North-West, South-West and Far North while food insecurity places additional pressure on vulnerable households.",
-    actors: ["Government of Cameroon", "Non-state armed groups", "Separatist armed groups", "Humanitarian organizations"],
-    humanitarianImpact: "IFRC reported in 2026 that 3.3 million people were unable to afford enough food. UNHCR also describes a large population of internally displaced people, refugees and asylum-seekers.",
+    overview: "Cameroon faces multiple humanitarian emergencies, including violence in the Northwest and Southwest regions and insecurity linked to armed groups in the Far North.",
+    currentSituation: "Violence and insecurity continue to affect civilians in several parts of Cameroon while humanitarian organizations respond to displacement and other needs.",
+    actors: ["Cameroonian security forces", "Anglophone separatist groups", "Boko Haram and Islamic State-linked militants", "Affected communities"],
+    humanitarianImpact: "Conflict and insecurity have displaced people inside Cameroon and across borders while disrupting education, health care and livelihoods.",
     timeline: [
-        {date: "2010s", event: "Multiple security crises drive displacement in several regions."},
-        {date: "2025–2026", event: "Conflict, climate pressures and food insecurity continue to overlap."},
-        {date: "February 2026", event: "IFRC launches a food-insecurity emergency appeal."}
+        {date: "2014–2015", event: "Boko Haram violence increasingly affects Cameroon's Far North."},
+        {date: "2016–2017", event: "Political protests in the Northwest and Southwest develop into armed conflict."},
+        {date: "2018–2025", event: "Violence and displacement continue in multiple regions."},
+        {date: "2026", event: "Humanitarian and security challenges remain unresolved."}
     ],
     sources: [
-        {name: "IFRC — Cameroon Food Insecurity 2026", url: "https://www.ifrc.org/emergency/cameroon-food-insecurity-2026"},
+        {name: "UN OCHA — Cameroon", url: "https://www.unocha.org/cameroon"},
         {name: "UNHCR — Cameroon", url: "https://www.unhcr.org/where-we-work/countries/cameroon"}
     ],
-    aid: [{name: "IFRC — Cameroon Response", url: "https://www.ifrc.org/emergency/cameroon-food-insecurity-2026"}]
+    aid: [
+        {name: "UNHCR — Cameroon", url: "https://www.unhcr.org/where-we-work/countries/cameroon"},
+        {name: "ICRC — Cameroon", url: "https://www.icrc.org/en/where-we-work/cameroon"}
+    ]
 },
-
 {
     id: "kenya-humanitarian",
-    name: "Kenya Food Insecurity Crisis",
+    name: "Kenya Humanitarian Crisis",
     primaryCategory: "humanitarian",
-    categories: ["humanitarian"],
-    coordinates: [0.2, 37.9],
+    categories: ["humanitarian", "displacement"],
+    coordinates: [0.5, 37.8],
     lastUpdated: "September 30, 2026",
-    overview: "Recurrent drought, climate shocks and constrained livelihoods contribute to persistent food insecurity and malnutrition in Kenya's arid and semi-arid areas.",
-    currentSituation: "Humanitarian and government programs continue providing food, nutrition and livelihood support while strengthening longer-term drought-response systems.",
-    actors: ["Government of Kenya", "County governments", "United Nations and humanitarian organizations"],
-    humanitarianImpact: "Food insecurity and malnutrition continue to affect vulnerable households, particularly in Kenya's arid and semi-arid counties.",
+    overview: "Kenya faces recurring humanitarian pressures linked to drought, flooding, food insecurity and regional displacement.",
+    currentSituation: "Climate shocks continue to affect vulnerable communities while Kenya also hosts refugees and asylum seekers from conflicts elsewhere in East Africa.",
+    actors: ["Government of Kenya", "Affected communities", "Refugees and asylum seekers", "Humanitarian organizations"],
+    humanitarianImpact: "Drought and flooding can damage livelihoods and increase food insecurity, while refugee-hosting areas face additional pressure on services and resources.",
     timeline: [
-        {date: "2020s", event: "Repeated drought and climate shocks affect pastoral and rural communities."},
-        {date: "2025–2026", event: "Food and nutrition assistance continues across vulnerable counties."}
+        {date: "2020–2023", event: "Severe drought affects Kenya and other countries in the Horn of Africa."},
+        {date: "2023–2024", event: "Heavy rainfall and flooding affect communities after prolonged drought."},
+        {date: "2025–2026", event: "Climate-related humanitarian needs and refugee pressures continue."}
     ],
-    sources: [{name: "United Nations — Kenya Food and Nutrition Response", url: "https://kenya.un.org/en/316545-protecting-families-hunger-while-building-better-response-system"}],
-    aid: [{name: "WFP — Kenya", url: "https://www.wfp.org/countries/kenya"}]
+    sources: [
+        {name: "UNHCR — Kenya", url: "https://www.unhcr.org/where-we-work/countries/kenya"},
+        {name: "WFP — Kenya", url: "https://www.wfp.org/countries/kenya"}
+    ],
+    aid: [
+        {name: "Kenya Red Cross Society", url: "https://www.redcross.or.ke/"},
+        {name: "UNHCR — Kenya", url: "https://www.unhcr.org/where-we-work/countries/kenya"}
+    ]
 },
 
 {
     id: "venezuela-displacement",
-    name: "Venezuela Regional Displacement Crisis",
+    name: "Venezuela Displacement Crisis",
     primaryCategory: "displacement",
     categories: ["humanitarian", "displacement"],
-    coordinates: [8.0, -66.0],
+    coordinates: [7.0, -66.0],
     lastUpdated: "September 30, 2026",
-    overview: "Millions of Venezuelans have left the country over the past decade, creating one of the world's largest international displacement situations.",
-    currentSituation: "Cross-border movement continues despite some returns. Host countries across Latin America and the Caribbean continue supporting integration, regularization and humanitarian assistance.",
-    actors: ["Venezuelan refugees and migrants", "Host governments", "UNHCR and partner organizations"],
-    humanitarianImpact: "UNHCR reports nearly 7.9 million refugees and migrants from Venezuela worldwide, based on government figures.",
+    overview: "Millions of Venezuelans have left the country during a prolonged economic, political and humanitarian crisis, creating one of the world's largest international displacement situations.",
+    currentSituation: "Venezuelan refugees and migrants continue living across Latin America and the Caribbean while host countries and humanitarian organizations support access to documentation, employment, education, health care and other services.",
+    actors: ["Venezuelan refugees and migrants", "Host governments", "Humanitarian organizations"],
+    humanitarianImpact: "Millions of Venezuelans live outside their country, and vulnerable migrants and refugees can face poverty, discrimination, irregular status and limited access to services.",
     timeline: [
-        {date: "Mid-2010s", event: "Large-scale outward migration from Venezuela accelerates."},
-        {date: "2020–2025", event: "Regional governments expand regularization and protection programs."},
-        {date: "2026", event: "The regional displacement situation continues alongside some return movements."}
+        {date: "2015–2018", event: "Migration from Venezuela increases sharply amid economic and political crisis."},
+        {date: "2019–2022", event: "The number of Venezuelans living abroad continues to rise."},
+        {date: "2023–2026", event: "Regional governments and humanitarian organizations continue supporting Venezuelan refugees and migrants."}
     ],
-    sources: [{name: "UNHCR — Venezuela Situation", url: "https://www.unhcr.org/emergencies/venezuela-situation"}],
-    aid: [{name: "UNHCR — Venezuela Situation", url: "https://www.unhcr.org/emergencies/venezuela-situation"}]
+    sources: [
+        {name: "R4V — Venezuelan Refugees and Migrants", url: "https://www.r4v.info/"},
+        {name: "UNHCR — Venezuela Situation", url: "https://www.unhcr.org/emergencies/venezuela-situation"}
+    ],
+    aid: [
+        {name: "UNHCR — Venezuela Situation", url: "https://www.unhcr.org/emergencies/venezuela-situation"},
+        {name: "IOM — Venezuela Response", url: "https://www.iom.int/venezuela"}
+    ]
 },
 
 {
     id: "nigeria-displacement",
-    name: "Nigeria Displacement Crisis",
+    name: "Nigeria Displacement and Security Crisis",
     primaryCategory: "displacement",
-    categories: ["humanitarian", "displacement"],
+    categories: ["conflict", "humanitarian", "displacement"],
     coordinates: [9.1, 8.7],
     lastUpdated: "September 30, 2026",
-    overview: "Nigeria faces a complex displacement crisis driven by armed conflict, insecurity, communal violence and climate-related disasters.",
-    currentSituation: "Displacement remains concentrated particularly in northern Nigeria while violence, economic pressures and climate shocks continue to generate humanitarian needs.",
-    actors: ["Government of Nigeria", "Boko Haram and ISWAP", "Other armed and communal actors", "Humanitarian organizations"],
-    humanitarianImpact: "UNHCR's 2026 strategy describes more than 3.6 million internally displaced people in Nigeria, alongside refugees and asylum-seekers hosted by the country.",
+    overview: "Nigeria faces multiple security and humanitarian emergencies involving insurgency in the northeast, armed violence in other regions and large-scale internal displacement.",
+    currentSituation: "Violence involving jihadist groups, criminal organizations and communal conflicts continues to affect civilians in several parts of Nigeria.",
+    actors: ["Nigerian security forces", "Boko Haram", "Islamic State West Africa Province", "Other armed groups"],
+    humanitarianImpact: "Violence has displaced large numbers of people while food insecurity and limited access to health care, education and livelihoods remain serious concerns in affected areas.",
     timeline: [
-        {date: "2009", event: "The Boko Haram insurgency intensifies in northeastern Nigeria."},
-        {date: "2010s–2020s", event: "Conflict, communal violence and disasters repeatedly drive displacement."},
-        {date: "2026", event: "Millions remain internally displaced."}
+        {date: "2009", event: "Boko Haram insurgency intensifies in northeastern Nigeria."},
+        {date: "2015–2020", event: "Conflict causes extensive displacement across northeastern Nigeria and the Lake Chad region."},
+        {date: "2021–2025", event: "Multiple armed groups and criminal networks continue attacks in different parts of Nigeria."},
+        {date: "2026", event: "Violence, displacement and humanitarian needs continue."}
     ],
-    sources: [{name: "UNHCR — Nigeria", url: "https://www.unhcr.org/where-we-work/countries/nigeria"}],
-    aid: [{name: "UNHCR — Nigeria", url: "https://www.unhcr.org/where-we-work/countries/nigeria"}]
+    sources: [
+        {name: "UNHCR — Nigeria", url: "https://www.unhcr.org/where-we-work/countries/nigeria"},
+        {name: "UN OCHA — Nigeria", url: "https://www.unocha.org/nigeria"}
+    ],
+    aid: [
+        {name: "UNHCR — Nigeria", url: "https://www.unhcr.org/where-we-work/countries/nigeria"},
+        {name: "ICRC — Nigeria", url: "https://www.icrc.org/en/where-we-work/nigeria"}
+    ]
 },
 
 {
     id: "rohingya-bangladesh",
-    name: "Rohingya Refugee Crisis in Bangladesh",
+    name: "Rohingya Refugee Crisis",
     primaryCategory: "displacement",
     categories: ["humanitarian", "displacement"],
-    coordinates: [21.4, 92.0],
+    coordinates: [21.2, 92.2],
     lastUpdated: "September 30, 2026",
     overview: "Bangladesh hosts a large population of Rohingya refugees who fled persecution and violence in Myanmar, particularly during the mass displacement of 2017.",
-    currentSituation: "Most refugees live in densely populated camps in Cox's Bazar, with additional refugees on Bhasan Char. Humanitarian assistance remains essential.",
-    actors: ["Rohingya refugees", "Government of Bangladesh", "UNHCR and humanitarian partners"],
-    humanitarianImpact: "Government of Bangladesh and UNHCR data recorded 1,200,171 Rohingya refugees as of June 30, 2026.",
+    currentSituation: "Rohingya refugees remain concentrated in camps around Cox's Bazar while insecurity in Myanmar prevents safe, voluntary and sustainable large-scale returns.",
+    actors: ["Rohingya refugees", "Government of Bangladesh", "Myanmar authorities", "Humanitarian organizations"],
+    humanitarianImpact: "Refugees remain dependent on humanitarian assistance for food, shelter, health care, education and protection while funding shortages threaten services.",
     timeline: [
-        {date: "2017", event: "Hundreds of thousands of Rohingya flee Myanmar for Bangladesh."},
-        {date: "2021–2026", event: "Bangladesh continues hosting a large, protracted refugee population."},
-        {date: "June 30, 2026", event: "Government and UNHCR data record approximately 1.2 million Rohingya refugees."}
+        {date: "August 2017", event: "Violence in Myanmar's Rakhine State drives a massive Rohingya refugee movement into Bangladesh."},
+        {date: "2018–2023", event: "Large refugee camps remain established around Cox's Bazar."},
+        {date: "2024–2026", event: "Conflict in Myanmar and funding shortages complicate prospects for safe return and humanitarian assistance."}
     ],
-    sources: [{name: "UNHCR — Bangladesh", url: "https://data.unhcr.org/en/country/bgd"}],
-    aid: [{name: "UNHCR — Rohingya Emergency", url: "https://www.unhcr.org/emergencies/rohingya-emergency"}]
+    sources: [
+        {name: "UNHCR — Rohingya Emergency", url: "https://www.unhcr.org/emergencies/rohingya-emergency"},
+        {name: "WFP — Rohingya Refugee Response", url: "https://www.wfp.org/emergencies/rohingya-refugee-crisis"}
+    ],
+    aid: [
+        {name: "UNHCR — Rohingya Emergency", url: "https://www.unhcr.org/emergencies/rohingya-emergency"},
+        {name: "WFP — Rohingya Response", url: "https://www.wfp.org/emergencies/rohingya-refugee-crisis"}
+    ]
 },
 
 {
     id: "venezuela-earthquake-2026",
-    name: "Venezuela Earthquake",
+    name: "Venezuela Earthquake — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [10.5, -66.9],
+    categories: ["disaster", "humanitarian"],
+    coordinates: [8.0, -66.0],
     lastUpdated: "September 30, 2026",
-    overview: "Powerful earthquakes struck Venezuela in June 2026, severely affecting Gran Caracas, La Guaira and surrounding areas.",
-    currentSituation: "The Venezuelan Red Cross and humanitarian partners continue emergency response and recovery assistance.",
-    actors: ["Venezuelan authorities", "Venezuelan Red Cross", "IFRC"],
-    humanitarianImpact: "The earthquakes caused deaths, injuries, displacement and extensive damage to homes and essential infrastructure. IFRC launched a major emergency appeal.",
+    overview: "An earthquake affected parts of Venezuela in 2026, prompting authorities to assess possible damage and impacts.",
+    currentSituation: "Authorities and emergency organizations have monitored affected communities and infrastructure following the earthquake.",
+    actors: ["Venezuelan authorities", "Emergency responders", "Affected communities"],
+    humanitarianImpact: "Earthquakes can damage homes and infrastructure and temporarily disrupt transportation and essential services.",
     timeline: [
-        {date: "June 2026", event: "Powerful earthquakes strike Venezuela."},
-        {date: "June 26, 2026", event: "IFRC launches an emergency appeal."},
-        {date: "September 2026", event: "Response and recovery operations continue."}
+        {date: "2026", event: "An earthquake affects Venezuela."},
+        {date: "2026", event: "Authorities assess affected areas and infrastructure."}
     ],
-    sources: [{name: "IFRC — Venezuela Earthquake 2026", url: "https://www.ifrc.org/emergency/venezuela-earthquake-2026"}],
-    aid: [{name: "IFRC — Venezuela Earthquake Response", url: "https://www.ifrc.org/emergency/venezuela-earthquake-2026"}]
+    sources: [
+        {name: "USGS — Earthquake Hazards Program", url: "https://earthquake.usgs.gov/"},
+        {name: "ReliefWeb — Venezuela", url: "https://reliefweb.int/country/ven"}
+    ],
+    aid: [
+        {name: "IFRC — Venezuela", url: "https://www.ifrc.org/national-societies-directory/venezuelan-red-cross"},
+        {name: "UNICEF — Venezuela", url: "https://www.unicef.org/venezuela/"}
+    ]
 },
 
 {
     id: "vietnam-floods-2026",
-    name: "Viet Nam Floods",
+    name: "Vietnam Floods — 2026",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [20.5, 105.8],
+    categories: ["disaster", "humanitarian", "displacement"],
+    coordinates: [16.0, 107.5],
     lastUpdated: "September 30, 2026",
-    overview: "Heavy rainfall caused flooding across northern and north-central Viet Nam in September 2026, damaging homes, crops and aquaculture areas.",
-    currentSituation: "Authorities continue assessing damage while flood, flash-flood and landslide risks remain important in affected areas.",
-    actors: ["Vietnamese authorities", "Viet Nam Red Cross Society", "Humanitarian responders"],
-    humanitarianImpact: "IFRC reported deaths, collapsed and damaged homes, thousands of flooded houses and extensive agricultural impacts during September.",
+    overview: "Severe rainfall and flooding have affected communities in Vietnam during 2026.",
+    currentSituation: "Flood-affected communities have faced damage to homes, infrastructure and agriculture while emergency response and recovery operations continue.",
+    actors: ["Government of Vietnam", "Local authorities", "Emergency responders", "Affected communities"],
+    humanitarianImpact: "Flooding can force evacuations, damage homes and crops and interrupt transportation and essential services.",
     timeline: [
-        {date: "September 2026", event: "Heavy rainfall causes flooding across northern and north-central Viet Nam."},
-        {date: "September 21–25, 2026", event: "Authorities report continued flooding and issue additional flash-flood and landslide warnings."}
+        {date: "2026", event: "Heavy rainfall causes flooding in parts of Vietnam."},
+        {date: "2026", event: "Authorities and humanitarian organizations respond to affected communities."}
     ],
-    sources: [{name: "IFRC GO — Viet Nam Floods", url: "https://go.ifrc.org/emergencies/8093/overview"}],
-    aid: [{name: "IFRC", url: "https://www.ifrc.org/"}]
+    sources: [
+        {name: "ReliefWeb — Vietnam", url: "https://reliefweb.int/country/vnm"},
+        {name: "IFRC — Vietnam", url: "https://www.ifrc.org/national-societies-directory/viet-nam-red-cross-society"}
+    ],
+    aid: [
+        {name: "Viet Nam Red Cross Society", url: "https://www.ifrc.org/national-societies-directory/viet-nam-red-cross-society"},
+        {name: "UNICEF — Vietnam", url: "https://www.unicef.org/vietnam/"}
+    ]
 },
 
 {
     id: "libya-floods-2026",
-    name: "Libya Flash Floods",
+    name: "Libya Flood and Recovery Crisis",
     primaryCategory: "disaster",
-    categories: ["disaster"],
-    coordinates: [29.1, 15.9],
+    categories: ["disaster", "humanitarian", "displacement"],
+    coordinates: [32.7, 22.6],
     lastUpdated: "September 30, 2026",
-    overview: "Flash flooding affected the Sokna area of Libya in September 2026 following heavy rainfall.",
-    currentSituation: "The event is being tracked through the IFRC emergency system while local responders assess impacts and needs.",
-    actors: ["Libyan authorities", "Libyan Red Crescent Society", "Humanitarian responders"],
-    humanitarianImpact: "Initial assessments were still developing when the emergency was recorded, so Conflict Atlas does not display an unverified affected-population estimate.",
+    overview: "Communities in Libya continue facing flood risks and long-term recovery challenges following destructive flooding, including the catastrophic 2023 disaster in Derna.",
+    currentSituation: "Recovery and reconstruction remain important concerns while political fragmentation and damaged infrastructure complicate disaster preparedness and humanitarian response.",
+    actors: ["Libyan authorities", "Local authorities", "Emergency responders", "Humanitarian organizations"],
+    humanitarianImpact: "Flooding and infrastructure damage have caused deaths, displacement, housing loss and long-term recovery needs.",
     timeline: [
-        {date: "September 22, 2026", event: "The Sokna flash-flood emergency is recorded in the IFRC emergency system."},
-        {date: "September 2026", event: "Damage and humanitarian needs continue to be assessed."}
+        {date: "September 2023", event: "Storm Daniel causes catastrophic flooding in Derna after dam failures."},
+        {date: "2024–2025", event: "Recovery and reconstruction continue in affected areas."},
+        {date: "2026", event: "Flood preparedness and long-term recovery remain humanitarian concerns."}
     ],
-    sources: [{name: "IFRC GO — Current Emergencies", url: "https://go.ifrc.org/emergencies"}],
-    aid: [{name: "IFRC", url: "https://www.ifrc.org/"}]
+    sources: [
+        {name: "ReliefWeb — Libya", url: "https://reliefweb.int/country/lby"},
+        {name: "UN OCHA — Libya", url: "https://www.unocha.org/libya"}
+    ],
+    aid: [
+        {name: "Libyan Red Crescent", url: "https://www.ifrc.org/national-societies-directory/libyan-red-crescent"},
+        {name: "UNHCR — Libya", url: "https://www.unhcr.org/where-we-work/countries/libya"}
+    ]
+},
+
+// =====================================================
+// NEW HUMANITARIAN / DISPLACEMENT ENTRIES — OCTOBER 2026
+// =====================================================
+
+{
+    id: "burundi-refugee-crisis",
+    name: "Burundi Refugee and Humanitarian Crisis",
+    primaryCategory: "displacement",
+    categories: ["humanitarian", "displacement"],
+    coordinates: [-3.4, 29.9],
+    lastUpdated: "October 12, 2026",
+    overview: "Burundi is affected by regional displacement pressures and hosts people fleeing conflict in neighboring Democratic Republic of the Congo while Burundian refugees also remain in other countries.",
+    currentSituation: "Instability in eastern Democratic Republic of the Congo has contributed to refugee movements into Burundi, increasing pressure on reception facilities, host communities and humanitarian services.",
+    actors: ["Government of Burundi", "Refugees and asylum seekers", "Host communities", "Humanitarian organizations"],
+    humanitarianImpact: "New refugee arrivals require shelter, food, clean water, health care and protection while host communities face additional pressure on limited resources.",
+    timeline: [
+        {date: "2015", event: "Political unrest in Burundi causes large-scale refugee movements into neighboring countries."},
+        {date: "2022–2025", event: "Regional displacement continues as conflict intensifies in eastern Democratic Republic of the Congo."},
+        {date: "2026", event: "Burundi continues receiving people fleeing regional conflict while humanitarian agencies support refugees and host communities."}
+    ],
+    sources: [
+        {name: "UNHCR — Burundi", url: "https://www.unhcr.org/where-we-work/countries/burundi"},
+        {name: "UNHCR — DR Congo Situation", url: "https://data.unhcr.org/en/situations/drc"}
+    ],
+    aid: [
+        {name: "UNHCR — Burundi", url: "https://www.unhcr.org/where-we-work/countries/burundi"},
+        {name: "WFP — Burundi", url: "https://www.wfp.org/countries/burundi"}
+    ]
+},
+
+{
+    id: "uganda-refugee-crisis",
+    name: "Uganda Regional Refugee Crisis",
+    primaryCategory: "displacement",
+    categories: ["humanitarian", "displacement"],
+    coordinates: [1.4, 32.3],
+    lastUpdated: "October 12, 2026",
+    overview: "Uganda hosts one of the world's largest refugee populations, including people displaced by conflicts in South Sudan, Democratic Republic of the Congo and Sudan.",
+    currentSituation: "Refugees continue arriving from regional conflicts while humanitarian agencies and Ugandan host communities face significant funding and resource pressures.",
+    actors: ["Government of Uganda", "Refugees and asylum seekers", "Host communities", "Humanitarian organizations"],
+    humanitarianImpact: "Refugees require food, shelter, education, health care and protection while funding shortages place pressure on services available to refugees and host communities.",
+    timeline: [
+        {date: "2013–2016", event: "Conflict in South Sudan drives large refugee movements into Uganda."},
+        {date: "2017–2022", event: "Uganda continues receiving refugees from South Sudan and Democratic Republic of the Congo."},
+        {date: "2023–2026", event: "Regional conflicts continue generating new displacement while humanitarian funding remains strained."}
+    ],
+    sources: [
+        {name: "UNHCR — Uganda", url: "https://www.unhcr.org/where-we-work/countries/uganda"},
+        {name: "UNHCR — Uganda Operational Data", url: "https://data.unhcr.org/en/country/uga"}
+    ],
+    aid: [
+        {name: "UNHCR — Uganda", url: "https://www.unhcr.org/where-we-work/countries/uganda"},
+        {name: "WFP — Uganda", url: "https://www.wfp.org/countries/uganda"}
+    ]
+},
+
+{
+    id: "sahrawi-refugees-algeria",
+    name: "Sahrawi Refugee Crisis in Algeria",
+    primaryCategory: "displacement",
+    categories: ["humanitarian", "displacement"],
+    coordinates: [27.7, -8.1],
+    lastUpdated: "October 12, 2026",
+    overview: "Sahrawi refugees have lived for decades in camps near Tindouf in southwestern Algeria as the Western Sahara dispute remains unresolved.",
+    currentSituation: "The refugee population remains dependent on humanitarian assistance in a harsh desert environment while the political dispute over Western Sahara continues.",
+    actors: ["Sahrawi refugees", "Algerian authorities", "Polisario Front", "Humanitarian organizations"],
+    humanitarianImpact: "Refugees depend heavily on international assistance for food, water, health care, shelter and other essential services.",
+    timeline: [
+        {date: "1975–1976", event: "Conflict over Western Sahara causes large numbers of Sahrawis to flee into Algeria."},
+        {date: "1991", event: "A UN-backed ceasefire takes effect in Western Sahara."},
+        {date: "2020", event: "Tensions and armed confrontation resume between Morocco and the Polisario Front."},
+        {date: "2026", event: "Sahrawi refugees remain in camps near Tindouf while humanitarian needs continue."}
+    ],
+    sources: [
+        {name: "UNHCR — Algeria", url: "https://www.unhcr.org/where-we-work/countries/algeria"},
+        {name: "WFP — Algeria", url: "https://www.wfp.org/countries/algeria"}
+    ],
+    aid: [
+        {name: "UNHCR — Algeria", url: "https://www.unhcr.org/where-we-work/countries/algeria"},
+        {name: "WFP — Algeria", url: "https://www.wfp.org/countries/algeria"}
+    ]
+},
+
+{
+    id: "jordan-refugee-crisis",
+    name: "Jordan Syrian Refugee Situation",
+    primaryCategory: "displacement",
+    categories: ["humanitarian", "displacement"],
+    coordinates: [31.2, 36.5],
+    lastUpdated: "October 12, 2026",
+    overview: "Jordan has hosted large numbers of Syrian refugees since the Syrian conflict began in 2011, creating a long-term humanitarian and development challenge.",
+    currentSituation: "Syrian refugees remain in Jordan even as political changes in Syria affect discussions about voluntary return. Humanitarian agencies continue supporting refugees and vulnerable host communities.",
+    actors: ["Government of Jordan", "Syrian refugees", "Host communities", "Humanitarian organizations"],
+    humanitarianImpact: "Many refugees continue to require support involving livelihoods, health care, education, housing and protection while funding constraints affect humanitarian programs.",
+    timeline: [
+        {date: "2011", event: "Conflict begins in Syria and refugees start arriving in Jordan."},
+        {date: "2012", event: "Za'atari refugee camp opens in Jordan."},
+        {date: "2013–2025", event: "Jordan continues hosting a large Syrian refugee population."},
+        {date: "2026", event: "Humanitarian assistance and discussions about voluntary refugee returns continue."}
+    ],
+    sources: [
+        {name: "UNHCR — Jordan", url: "https://www.unhcr.org/where-we-work/countries/jordan"},
+        {name: "UNHCR — Syria Situation", url: "https://data.unhcr.org/en/situations/syria"}
+    ],
+    aid: [
+        {name: "UNHCR — Jordan", url: "https://www.unhcr.org/where-we-work/countries/jordan"},
+        {name: "WFP — Jordan", url: "https://www.wfp.org/countries/jordan"}
+    ]
+},
+// =====================================================
+// CIVIL UNREST — 2026
+// =====================================================
+
+{
+    id: "france-civil-unrest-2026",
+    name: "France Student and Labor Protests — 2026",
+    primaryCategory: "unrest",
+    categories: ["unrest"],
+    coordinates: [48.8566, 2.3522],
+    lastUpdated: "October 12, 2026",
+    overview: "France has experienced demonstrations and strikes during 2026 involving students, workers and other groups protesting government policies and economic concerns.",
+    currentSituation: "Demonstrations have continued in France, including student-led actions and labor protests. Some demonstrations have involved clashes or disruptions, while authorities have deployed police around protest sites.",
+    actors: ["Student protesters", "Labor unions", "French government", "French police"],
+    humanitarianImpact: "The unrest has caused transportation and education disruptions in affected areas, while clashes at some demonstrations have created public-safety concerns.",
+    timeline: [
+        {date: "2026", event: "Demonstrations and strikes take place over government policies and economic concerns."},
+        {date: "September–October 2026", event: "Student and labor mobilization continues in several French cities."},
+        {date: "October 2026", event: "Student protests and related disruptions remain active."}
+    ],
+    sources: [
+        {name: "Associated Press — France", url: "https://apnews.com/hub/france"},
+        {name: "Le Monde — France", url: "https://www.lemonde.fr/en/france/"}
+    ],
+    aid: []
+},
+
+{
+    id: "belgium-civil-unrest-2026",
+    name: "Belgium Anti-Austerity Protests — 2026",
+    primaryCategory: "unrest",
+    categories: ["unrest"],
+    coordinates: [50.8503, 4.3517],
+    lastUpdated: "October 12, 2026",
+    overview: "Belgium has experienced demonstrations and strike actions opposing government economic and social policies, including proposed changes affecting pensions, public spending and working conditions.",
+    currentSituation: "Labor unions and demonstrators continue organizing protests and strikes. Actions have affected transportation and other services, particularly around Brussels and other major cities.",
+    actors: ["Belgian labor unions", "Protesters", "Belgian government", "Police"],
+    humanitarianImpact: "The protests have primarily caused transportation, workplace and public-service disruptions rather than a large-scale humanitarian emergency.",
+    timeline: [
+        {date: "2025–2026", event: "Labor organizations organize demonstrations against proposed government reforms."},
+        {date: "2026", event: "Strike actions disrupt transportation and public services."},
+        {date: "October 2026", event: "Anti-austerity demonstrations and labor actions continue."}
+    ],
+    sources: [
+        {name: "Reuters — Europe", url: "https://www.reuters.com/world/europe/"},
+        {name: "Associated Press — Europe", url: "https://apnews.com/hub/europe"}
+    ],
+    aid: []
+},
+
+{
+    id: "india-civil-unrest-2026",
+    name: "India Political and Electoral Protests — 2026",
+    primaryCategory: "unrest",
+    categories: ["unrest"],
+    coordinates: [28.6139, 77.2090],
+    lastUpdated: "October 12, 2026",
+    overview: "India has experienced political demonstrations during 2026 involving opposition parties, activists and other groups raising concerns about elections, government policy and political accountability.",
+    currentSituation: "Political demonstrations continue to occur in parts of India. Protest activity varies by state and issue, and demonstrations have included marches, rallies and confrontations with police.",
+    actors: ["Political opposition groups", "Civil society protesters", "Indian authorities", "Police"],
+    humanitarianImpact: "Demonstrations have caused localized disruptions and, in some cases, confrontations between protesters and security forces. The situation does not constitute a nationwide humanitarian emergency.",
+    timeline: [
+        {date: "2026", event: "Political groups and activists organize demonstrations over electoral and government issues."},
+        {date: "2026", event: "Protests and rallies take place in multiple locations."},
+        {date: "October 2026", event: "Political protest activity continues."}
+    ],
+    sources: [
+        {name: "Reuters — India", url: "https://www.reuters.com/world/india/"},
+        {name: "Associated Press — India", url: "https://apnews.com/hub/india"}
+    ],
+    aid: []
+},
+
+{
+    id: "south-africa-civil-unrest-2026",
+    name: "South Africa Anti-Migrant Protests — 2026",
+    primaryCategory: "unrest",
+    categories: ["unrest", "humanitarian"],
+    coordinates: [-26.2041, 28.0473],
+    lastUpdated: "October 12, 2026",
+    overview: "South Africa has experienced demonstrations and organized actions targeting immigration and the presence of foreign nationals, raising concerns about xenophobia and the safety of migrant and refugee communities.",
+    currentSituation: "Anti-migrant mobilization has affected some communities and public services. Human-rights and humanitarian organizations have raised concerns about intimidation, discrimination and the potential for violence against migrants.",
+    actors: ["Anti-migrant groups", "Migrant and refugee communities", "South African authorities", "Civil society organizations"],
+    humanitarianImpact: "Migrants and refugees can face intimidation, discrimination and barriers to services during periods of anti-migrant unrest. Previous episodes of xenophobic violence in South Africa increase concern about escalation.",
+    timeline: [
+        {date: "2008–2019", event: "South Africa experiences several major episodes of xenophobic violence and anti-migrant unrest."},
+        {date: "2020–2025", event: "Immigration remains a prominent political and social issue."},
+        {date: "2026", event: "Anti-migrant demonstrations and organized actions continue in some communities."},
+        {date: "October 2026", event: "Concerns continue over anti-migrant mobilization and its effects on foreign nationals."}
+    ],
+    sources: [
+        {name: "UNHCR — South Africa", url: "https://www.unhcr.org/where-we-work/countries/south-africa"},
+        {name: "Human Rights Watch — South Africa", url: "https://www.hrw.org/africa/south-africa"}
+    ],
+    aid: [
+        {name: "UNHCR — South Africa", url: "https://www.unhcr.org/where-we-work/countries/south-africa"}
+    ]
+},
+
+{
+    id: "iran-civil-unrest-2026",
+    name: "Iran Political Protests and Crackdown — 2026",
+    primaryCategory: "unrest",
+    categories: ["unrest", "humanitarian"],
+    coordinates: [35.6892, 51.3890],
+    lastUpdated: "October 12, 2026",
+    overview: "Iran continues to experience political and social tensions involving opposition to government policies, restrictions on civil liberties and demands for political and social change.",
+    currentSituation: "Political dissent and protest-related activity continue amid restrictions on assembly and expression. Human-rights organizations continue reporting arrests and other measures directed at activists and critics of the government.",
+    actors: ["Iranian protesters and activists", "Government of Iran", "Iranian security forces", "Civil society organizations"],
+    humanitarianImpact: "Arrests, restrictions on expression and assembly, and reported abuses against activists and protesters remain human-rights concerns.",
+    timeline: [
+        {date: "September 2022", event: "Nationwide protests begin following the death of Mahsa Jina Amini in morality-police custody."},
+        {date: "2022–2023", event: "Authorities carry out a broad crackdown as demonstrations spread across Iran."},
+        {date: "2024–2025", event: "Political dissent and enforcement of restrictions on civil liberties continue."},
+        {date: "2026", event: "Political tensions, protest-related activity and government restrictions continue."}
+    ],
+    sources: [
+        {name: "UN Human Rights — Iran", url: "https://www.ohchr.org/en/countries/iran-islamic-republic"},
+        {name: "Amnesty International — Iran", url: "https://www.amnesty.org/en/location/middle-east-and-north-africa/middle-east/iran/"}
+    ],
+    aid: []
 }
 
 ];
