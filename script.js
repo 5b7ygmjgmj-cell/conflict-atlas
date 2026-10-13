@@ -1,7 +1,7 @@
 // ============================================================
 // ONE WORLD, ONE LIFE
 // CRISIS + COUNTRY + EXPLORE + ABOUT VIEWS
-// VERSION 9
+// VERSION 10
 // ============================================================
 
 
@@ -33,7 +33,8 @@ const categoryColors = {
     conflict: "#dc3545",
     humanitarian: "#f28c28",
     displacement: "#e6c229",
-    disaster: "#3282d8"
+    disaster: "#3282d8",
+    unrest: "#9b59b6"
 };
 
 
@@ -41,7 +42,8 @@ const categoryNames = {
     conflict: "Armed Conflict",
     humanitarian: "Humanitarian Crisis",
     displacement: "Displacement Crisis",
-    disaster: "Natural Disaster"
+    disaster: "Natural Disaster",
+    unrest: "Civil Unrest"
 };
 
 
@@ -247,7 +249,7 @@ exploreView.innerHTML = `
             <h3>Crisis Categories</h3>
 
             <p>
-                Crises are organized into four broad categories.
+                Crises are organized into five broad categories.
                 A single crisis may appear in more than one category.
             </p>
 
@@ -346,6 +348,31 @@ exploreView.innerHTML = `
 
                         <span>
                             <b id="explore-disaster-count">0</b>
+                            documented crises
+                        </span>
+
+                    </span>
+                </button>
+
+
+                <button
+                    class="explore-category-card"
+                    data-explore-category="unrest"
+                    type="button"
+                >
+                    <span
+                        class="explore-category-dot"
+                        style="background:#9b59b6"
+                    ></span>
+
+                    <span class="explore-category-content">
+
+                        <strong>
+                            Civil Unrest
+                        </strong>
+
+                        <span>
+                            <b id="explore-unrest-count">0</b>
                             documented crises
                         </span>
 
@@ -653,7 +680,6 @@ exploreStyle.textContent = `
     .explore-category-content b {
         color: #ffffff;
     }
-
     .explore-region-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -663,14 +689,19 @@ exploreStyle.textContent = `
     .explore-region-button {
         appearance: none;
         width: 100%;
-        padding: 15px;
+        padding: 14px 15px;
         border: 1px solid rgba(255,255,255,0.11);
         border-radius: 9px;
         background: rgba(255,255,255,0.025);
         color: #ffffff;
         text-align: left;
         font: inherit;
+        font-size: 13px;
+        font-weight: 650;
         cursor: pointer;
+        transition:
+            background 0.15s ease,
+            border-color 0.15s ease;
     }
 
     .explore-region-button:hover,
@@ -679,23 +710,10 @@ exploreStyle.textContent = `
         border-color: rgba(255,255,255,0.22);
     }
 
-    .explore-region-name {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    .explore-region-count {
-        display: block;
-        color: #9eabb7;
-        font-size: 12px;
-    }
-
     .explore-region-results {
         display: none;
         margin-top: 14px;
-        padding: 17px;
+        padding: 15px;
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 10px;
         background: rgba(255,255,255,0.02);
@@ -705,32 +723,28 @@ exploreStyle.textContent = `
         display: block;
     }
 
-    .explore-region-results h4 {
-        margin: 0 0 13px;
-        color: #ffffff;
-        font-size: 16px;
+    .explore-region-country-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
     }
 
-    .explore-country-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-    }
-
-    .explore-country-chip {
+    .explore-country-button {
         appearance: none;
-        padding: 8px 10px;
+        width: 100%;
+        padding: 10px 11px;
         border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 7px;
-        background: #151e28;
-        color: #d6dee6;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.025);
+        color: #dce4eb;
+        text-align: left;
         font: inherit;
         font-size: 12px;
         cursor: pointer;
     }
 
-    .explore-country-chip:hover {
-        background: #1d2935;
+    .explore-country-button:hover {
+        background: rgba(255,255,255,0.07);
         color: #ffffff;
     }
 
@@ -743,23 +757,25 @@ exploreStyle.textContent = `
 
     .compare-select-group label {
         display: block;
-        margin-bottom: 7px;
+        margin-bottom: 6px;
         color: #aeb9c4;
-        font-size: 12px;
-        font-weight: 650;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
     .compare-select-group select {
         width: 100%;
-        min-height: 44px;
+        min-height: 42px;
         padding: 0 12px;
-        border: 1px solid rgba(255,255,255,0.14);
+        border: 1px solid rgba(255,255,255,0.13);
         border-radius: 8px;
         outline: none;
         background: #111923;
         color: #ffffff;
         font: inherit;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .country-comparison {
@@ -767,12 +783,13 @@ exploreStyle.textContent = `
     }
 
     .comparison-placeholder {
-        padding: 22px;
-        border: 1px dashed rgba(255,255,255,0.14);
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,0.1);
         border-radius: 9px;
-        color: #8996a3;
-        text-align: center;
+        background: rgba(255,255,255,0.02);
+        color: #8f9ba8;
         font-size: 13px;
+        text-align: center;
     }
 
     .comparison-grid {
@@ -783,47 +800,40 @@ exploreStyle.textContent = `
 
     .comparison-country {
         min-width: 0;
-        padding: 19px;
+        padding: 18px;
         border: 1px solid rgba(255,255,255,0.11);
-        border-radius: 11px;
+        border-radius: 10px;
         background: rgba(255,255,255,0.025);
     }
 
-    .comparison-country-title {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 16px;
-    }
-
-    .comparison-country-flag {
-        font-size: 27px;
-    }
-
-    .comparison-country-title h4 {
-        margin: 0;
+    .comparison-country h4 {
+        margin: 0 0 13px;
         color: #ffffff;
-        font-size: 19px;
+        font-size: 18px;
     }
 
-    .comparison-row {
-        padding: 10px 0;
+    .comparison-fact {
+        padding: 9px 0;
         border-top: 1px solid rgba(255,255,255,0.08);
     }
 
-    .comparison-label {
+    .comparison-fact:first-of-type {
+        border-top: 0;
+    }
+
+    .comparison-fact-label {
         display: block;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
         color: #8f9ba8;
         font-size: 10px;
-        font-weight: 750;
-        letter-spacing: 0.6px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
     }
 
-    .comparison-value {
+    .comparison-fact-value {
         display: block;
-        color: #e6ebf0;
+        color: #e4e9ee;
         font-size: 13px;
         line-height: 1.45;
         overflow-wrap: anywhere;
@@ -836,8 +846,9 @@ exploreStyle.textContent = `
     }
 
     .explore-organization-card {
+        display: block;
         min-width: 0;
-        padding: 16px;
+        padding: 15px;
         border: 1px solid rgba(255,255,255,0.11);
         border-radius: 9px;
         background: rgba(255,255,255,0.025);
@@ -845,9 +856,9 @@ exploreStyle.textContent = `
 
     .explore-organization-card strong {
         display: block;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .explore-organization-card span {
@@ -859,8 +870,8 @@ exploreStyle.textContent = `
 
     .explore-notice {
         margin-top: 18px;
-        padding: 17px 18px;
-        border: 1px solid rgba(255,255,255,0.12);
+        padding: 16px 17px;
+        border: 1px solid rgba(255,255,255,0.11);
         border-left: 3px solid #a8bacb;
         border-radius: 9px;
         background: rgba(255,255,255,0.035);
@@ -870,14 +881,14 @@ exploreStyle.textContent = `
         display: block;
         margin-bottom: 7px;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .explore-notice p {
         margin: 0;
-        color: #bcc7d1;
+        color: #b8c3cd;
         font-size: 13px;
-        line-height: 1.6;
+        line-height: 1.55;
     }
 
     @media (max-width: 900px) {
@@ -892,6 +903,7 @@ exploreStyle.textContent = `
         }
 
         .explore-region-grid,
+        .explore-region-country-grid,
         .explore-organization-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -916,17 +928,18 @@ exploreStyle.textContent = `
             font-size: 16px;
         }
 
+        .explore-section {
+            padding: 25px 0;
+        }
+
         .explore-stat-grid,
         .explore-category-grid,
         .explore-region-grid,
+        .explore-region-country-grid,
         .compare-controls,
         .comparison-grid,
         .explore-organization-grid {
             grid-template-columns: 1fr;
-        }
-
-        .explore-section {
-            padding: 25px 0;
         }
 
     }
@@ -935,6 +948,511 @@ exploreStyle.textContent = `
 
 document.head.appendChild(
     exploreStyle
+);
+
+
+// ============================================================
+// DATABASE HELPERS
+// ============================================================
+
+function getCrisisDatabase() {
+
+    if (
+        typeof conflicts !== "undefined" &&
+        Array.isArray(conflicts)
+    ) {
+        return conflicts;
+    }
+
+    if (
+        typeof crisisData !== "undefined" &&
+        Array.isArray(crisisData)
+    ) {
+        return crisisData;
+    }
+
+    if (
+        typeof window !== "undefined" &&
+        Array.isArray(window.conflicts)
+    ) {
+        return window.conflicts;
+    }
+
+    return [];
+}
+
+
+function getCountryDatabase() {
+
+    if (
+        typeof countries !== "undefined" &&
+        Array.isArray(countries)
+    ) {
+        return countries;
+    }
+
+    if (
+        typeof countryData !== "undefined" &&
+        Array.isArray(countryData)
+    ) {
+        return countryData;
+    }
+
+    if (
+        typeof window !== "undefined" &&
+        Array.isArray(window.countries)
+    ) {
+        return window.countries;
+    }
+
+    return [];
+}
+
+
+function getCountryFactsDatabase() {
+
+    if (
+        typeof countryFacts !== "undefined" &&
+        countryFacts &&
+        typeof countryFacts === "object"
+    ) {
+        return countryFacts;
+    }
+
+    if (
+        typeof window !== "undefined" &&
+        window.countryFacts &&
+        typeof window.countryFacts === "object"
+    ) {
+        return window.countryFacts;
+    }
+
+    return {};
+}
+
+
+function normalizeText(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
+        .trim()
+        .toLowerCase();
+}
+
+
+function escapeHtml(value) {
+
+    return String(
+        value === null ||
+        value === undefined
+            ? ""
+            : value
+    )
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function valueOrDash(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+    return value;
+}
+
+
+// ============================================================
+// CRISIS HELPERS
+// ============================================================
+
+function getCrisisCategories(crisis) {
+
+    if (!crisis) {
+        return [];
+    }
+
+    if (
+        Array.isArray(crisis.categories) &&
+        crisis.categories.length
+    ) {
+
+        return crisis.categories
+            .map(category => normalizeText(category))
+            .filter(Boolean);
+
+    }
+
+    if (crisis.primaryCategory) {
+
+        return [
+            normalizeText(
+                crisis.primaryCategory
+            )
+        ];
+
+    }
+
+    if (crisis.category) {
+
+        return [
+            normalizeText(
+                crisis.category
+            )
+        ];
+
+    }
+
+    return [];
+}
+
+
+function crisisHasCategory(
+    crisis,
+    category
+) {
+
+    const normalizedCategory =
+        normalizeText(category);
+
+    if (
+        !normalizedCategory ||
+        normalizedCategory === "all"
+    ) {
+        return true;
+    }
+
+    return getCrisisCategories(crisis)
+        .includes(normalizedCategory);
+}
+
+
+function getPrimaryCategory(crisis) {
+
+    if (!crisis) {
+        return "";
+    }
+
+    if (crisis.primaryCategory) {
+        return normalizeText(
+            crisis.primaryCategory
+        );
+    }
+
+    const categories =
+        getCrisisCategories(crisis);
+
+    if (categories.length) {
+        return categories[0];
+    }
+
+    return "";
+}
+
+
+function getCategoryName(category) {
+
+    const normalizedCategory =
+        normalizeText(category);
+
+    return (
+        categoryNames[normalizedCategory] ||
+        category ||
+        "Crisis"
+    );
+}
+
+
+function getCategoryColor(category) {
+
+    const normalizedCategory =
+        normalizeText(category);
+
+    return (
+        categoryColors[normalizedCategory] ||
+        "#ffffff"
+    );
+}
+
+
+// ============================================================
+// CRISIS MARKER STORAGE
+// ============================================================
+
+const crisisMarkers = [];
+
+let activeCrisisFilter = "all";
+
+
+// ============================================================
+// CREATE CRISIS MARKER
+// ============================================================
+
+function createCrisisMarker(crisis) {
+
+    if (
+        !crisis ||
+        !Array.isArray(crisis.coordinates) ||
+        crisis.coordinates.length < 2
+    ) {
+        return null;
+    }
+
+
+    const latitude =
+        Number(crisis.coordinates[0]);
+
+    const longitude =
+        Number(crisis.coordinates[1]);
+
+
+    if (
+        !Number.isFinite(latitude) ||
+        !Number.isFinite(longitude)
+    ) {
+        return null;
+    }
+
+
+    const primaryCategory =
+        getPrimaryCategory(crisis);
+
+    const markerColor =
+        getCategoryColor(primaryCategory);
+
+
+    const marker =
+        L.circleMarker(
+            [latitude, longitude],
+            {
+                radius: 7,
+                color: "#0b1118",
+                weight: 1.5,
+                fillColor: markerColor,
+                fillOpacity: 0.95
+            }
+        );
+
+
+    marker.crisisData =
+        crisis;
+
+
+    marker.on(
+        "click",
+        function () {
+
+            openCrisisPanel(
+                crisis
+            );
+
+        }
+    );
+
+
+    marker.bindTooltip(
+        escapeHtml(
+            crisis.name ||
+            "Crisis"
+        ),
+        {
+            direction: "top",
+            offset: [0, -5]
+        }
+    );
+
+
+    marker.addTo(map);
+
+
+    crisisMarkers.push({
+        crisis: crisis,
+        marker: marker
+    });
+
+
+    return marker;
+}
+
+
+// ============================================================
+// BUILD ALL CRISIS MARKERS
+// ============================================================
+
+function buildCrisisMarkers() {
+
+    crisisMarkers.forEach(
+        item => {
+
+            if (
+                item.marker &&
+                map.hasLayer(item.marker)
+            ) {
+                map.removeLayer(
+                    item.marker
+                );
+            }
+
+        }
+    );
+
+
+    crisisMarkers.length = 0;
+
+
+    getCrisisDatabase().forEach(
+        crisis => {
+
+            createCrisisMarker(
+                crisis
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// CRISIS FILTERING
+// ============================================================
+
+function applyCrisisFilter(
+    category = activeCrisisFilter
+) {
+
+    activeCrisisFilter =
+        normalizeText(category) ||
+        "all";
+
+
+    let visibleCount = 0;
+
+
+    crisisMarkers.forEach(
+        item => {
+
+            const shouldShow =
+                crisisHasCategory(
+                    item.crisis,
+                    activeCrisisFilter
+                );
+
+
+            if (shouldShow) {
+
+                if (
+                    !map.hasLayer(
+                        item.marker
+                    )
+                ) {
+                    item.marker.addTo(
+                        map
+                    );
+                }
+
+                visibleCount += 1;
+
+            } else {
+
+                if (
+                    map.hasLayer(
+                        item.marker
+                    )
+                ) {
+                    map.removeLayer(
+                        item.marker
+                    );
+                }
+
+            }
+
+        }
+    );
+
+
+    filterButtons.forEach(
+        button => {
+
+            const buttonCategory =
+                normalizeText(
+                    button.dataset.category
+                );
+
+            button.classList.toggle(
+                "active",
+                buttonCategory ===
+                    activeCrisisFilter
+            );
+
+        }
+    );
+
+
+    if (crisisCount) {
+
+        crisisCount.textContent =
+            String(visibleCount);
+
+    }
+
+
+    if (counterLabel) {
+
+        counterLabel.textContent =
+            visibleCount === 1
+                ? "crisis"
+                : "crises";
+
+    }
+
+}
+
+
+// ============================================================
+// FILTER BUTTON EVENTS
+// ============================================================
+
+filterButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const category =
+                    normalizeText(
+                        button.dataset.category
+                    ) || "all";
+
+
+                switchView(
+                    "crises"
+                );
+
+
+                applyCrisisFilter(
+                    category
+                );
+
+            }
+        );
+
+    }
 );
 
 
@@ -948,19 +1466,19 @@ const infoPanel =
 const closePanelButton =
     document.getElementById("close-panel");
 
-const crisisCategory =
+const crisisCategoryElement =
     document.getElementById("crisis-category");
 
-const crisisName =
+const crisisNameElement =
     document.getElementById("crisis-name");
 
-const lastUpdated =
+const lastUpdatedElement =
     document.getElementById("last-updated");
 
-const crisisOverview =
+const crisisOverviewElement =
     document.getElementById("crisis-overview");
 
-const crisisCurrentSituation =
+const crisisCurrentSituationElement =
     document.getElementById(
         "crisis-current-situation"
     );
@@ -970,23 +1488,746 @@ const currentSituationSection =
         "current-situation-section"
     );
 
-const crisisActors =
+const crisisActorsElement =
     document.getElementById("crisis-actors");
 
-const crisisImpact =
+const crisisImpactElement =
     document.getElementById("crisis-impact");
 
-const crisisTimeline =
+const crisisTimelineElement =
     document.getElementById("crisis-timeline");
 
 const timelineSection =
     document.getElementById("timeline-section");
 
-const crisisSources =
+const crisisSourcesElement =
     document.getElementById("crisis-sources");
 
-const crisisAid =
+const crisisAidElement =
     document.getElementById("crisis-aid");
+
+
+// ============================================================
+// PANEL VALUE HELPERS
+// ============================================================
+
+function setText(
+    element,
+    value,
+    fallback = "—"
+) {
+
+    if (!element) {
+        return;
+    }
+
+    const finalValue =
+        value === null ||
+        value === undefined ||
+        value === ""
+            ? fallback
+            : value;
+
+    element.textContent =
+        finalValue;
+}
+
+
+function arrayToListHtml(values) {
+
+    if (
+        !Array.isArray(values) ||
+        !values.length
+    ) {
+        return "";
+    }
+
+
+    return `
+        <ul>
+            ${values
+                .map(
+                    value => `
+                        <li>
+                            ${escapeHtml(value)}
+                        </li>
+                    `
+                )
+                .join("")}
+        </ul>
+    `;
+}
+
+
+// ============================================================
+// FORMAT GENERAL CONTENT
+// ============================================================
+
+function formatContent(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "";
+    }
+
+
+    if (Array.isArray(value)) {
+
+        return arrayToListHtml(
+            value.map(item => {
+
+                if (
+                    item &&
+                    typeof item === "object"
+                ) {
+
+                    if (item.text) {
+                        return item.text;
+                    }
+
+                    if (item.event) {
+                        return item.event;
+                    }
+
+                    if (item.name) {
+                        return item.name;
+                    }
+
+                    return JSON.stringify(
+                        item
+                    );
+                }
+
+                return item;
+
+            })
+        );
+
+    }
+
+
+    if (
+        typeof value === "object"
+    ) {
+
+        return `
+            <ul>
+                ${Object.entries(value)
+                    .map(
+                        ([key, itemValue]) => `
+                            <li>
+                                <strong>
+                                    ${escapeHtml(key)}
+                                </strong>:
+                                ${escapeHtml(
+                                    Array.isArray(itemValue)
+                                        ? itemValue.join(", ")
+                                        : itemValue
+                                )}
+                            </li>
+                        `
+                    )
+                    .join("")}
+            </ul>
+        `;
+
+    }
+
+
+    return `
+        <p>
+            ${escapeHtml(value)}
+        </p>
+    `;
+}
+// ============================================================
+// FORMAT TIMELINE
+// ============================================================
+
+function formatTimeline(timeline) {
+
+    if (
+        !Array.isArray(timeline) ||
+        !timeline.length
+    ) {
+        return "";
+    }
+
+
+    return `
+        <ul>
+            ${timeline
+                .map(item => {
+
+                    if (
+                        item &&
+                        typeof item === "object"
+                    ) {
+
+                        const date =
+                            item.date ||
+                            item.year ||
+                            item.time ||
+                            "";
+
+                        const event =
+                            item.event ||
+                            item.text ||
+                            item.description ||
+                            "";
+
+
+                        return `
+                            <li>
+                                ${
+                                    date
+                                        ? `<strong>${escapeHtml(date)}</strong> — `
+                                        : ""
+                                }
+                                ${escapeHtml(event)}
+                            </li>
+                        `;
+
+                    }
+
+
+                    return `
+                        <li>
+                            ${escapeHtml(item)}
+                        </li>
+                    `;
+
+                })
+                .join("")}
+        </ul>
+    `;
+}
+
+
+// ============================================================
+// FORMAT SOURCES
+// ============================================================
+
+function formatSources(sources) {
+
+    if (
+        !Array.isArray(sources) ||
+        !sources.length
+    ) {
+        return "";
+    }
+
+
+    return sources
+        .map(source => {
+
+            if (
+                typeof source === "string"
+            ) {
+
+                if (
+                    source.startsWith("http://") ||
+                    source.startsWith("https://")
+                ) {
+
+                    return `
+                        <a
+                            href="${escapeHtml(source)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ${escapeHtml(source)}
+                        </a>
+                    `;
+
+                }
+
+
+                return `
+                    <div>
+                        ${escapeHtml(source)}
+                    </div>
+                `;
+
+            }
+
+
+            if (
+                source &&
+                typeof source === "object"
+            ) {
+
+                const label =
+                    source.name ||
+                    source.title ||
+                    source.label ||
+                    source.organization ||
+                    source.url ||
+                    source.link ||
+                    "Source";
+
+
+                const url =
+                    source.url ||
+                    source.link ||
+                    source.href ||
+                    "";
+
+
+                if (url) {
+
+                    return `
+                        <a
+                            href="${escapeHtml(url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ${escapeHtml(label)}
+                        </a>
+                    `;
+
+                }
+
+
+                return `
+                    <div>
+                        ${escapeHtml(label)}
+                    </div>
+                `;
+
+            }
+
+
+            return "";
+
+        })
+        .join("");
+}
+
+
+// ============================================================
+// FORMAT HUMANITARIAN AID
+// ============================================================
+
+function formatAid(aid) {
+
+    if (
+        !Array.isArray(aid) ||
+        !aid.length
+    ) {
+        return "";
+    }
+
+
+    return aid
+        .map(item => {
+
+            if (
+                typeof item === "string"
+            ) {
+
+                if (
+                    item.startsWith("http://") ||
+                    item.startsWith("https://")
+                ) {
+
+                    return `
+                        <a
+                            href="${escapeHtml(item)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ${escapeHtml(item)}
+                        </a>
+                    `;
+
+                }
+
+
+                return `
+                    <div>
+                        ${escapeHtml(item)}
+                    </div>
+                `;
+
+            }
+
+
+            if (
+                item &&
+                typeof item === "object"
+            ) {
+
+                const name =
+                    item.name ||
+                    item.organization ||
+                    item.title ||
+                    item.label ||
+                    "Humanitarian Organization";
+
+
+                const description =
+                    item.description ||
+                    item.role ||
+                    item.text ||
+                    "";
+
+
+                const url =
+                    item.url ||
+                    item.link ||
+                    item.href ||
+                    "";
+
+
+                if (url) {
+
+                    return `
+                        <a
+                            href="${escapeHtml(url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <strong>
+                                ${escapeHtml(name)}
+                            </strong>
+
+                            ${
+                                description
+                                    ? `<br><span>${escapeHtml(description)}</span>`
+                                    : ""
+                            }
+                        </a>
+                    `;
+
+                }
+
+
+                return `
+                    <div>
+                        <strong>
+                            ${escapeHtml(name)}
+                        </strong>
+
+                        ${
+                            description
+                                ? `<br><span>${escapeHtml(description)}</span>`
+                                : ""
+                        }
+                    </div>
+                `;
+
+            }
+
+
+            return "";
+
+        })
+        .join("");
+}
+
+
+// ============================================================
+// OPEN CRISIS PANEL
+// ============================================================
+
+function openCrisisPanel(crisis) {
+
+    if (
+        !crisis ||
+        !infoPanel
+    ) {
+        return;
+    }
+
+
+    closeCountryPanel();
+
+
+    const primaryCategory =
+        getPrimaryCategory(crisis);
+
+    const categories =
+        getCrisisCategories(crisis);
+
+
+    if (crisisCategoryElement) {
+
+        crisisCategoryElement.innerHTML =
+            categories
+                .map(category => {
+
+                    const color =
+                        getCategoryColor(
+                            category
+                        );
+
+                    const name =
+                        getCategoryName(
+                            category
+                        );
+
+
+                    return `
+                        <span
+                            style="
+                                display:inline-flex;
+                                align-items:center;
+                                gap:6px;
+                                margin-right:10px;
+                                margin-bottom:5px;
+                            "
+                        >
+                            <span
+                                style="
+                                    width:8px;
+                                    height:8px;
+                                    border-radius:50%;
+                                    background:${color};
+                                    display:inline-block;
+                                "
+                            ></span>
+
+                            ${escapeHtml(name)}
+                        </span>
+                    `;
+
+                })
+                .join("");
+
+
+        if (
+            !categories.length &&
+            primaryCategory
+        ) {
+
+            crisisCategoryElement.textContent =
+                getCategoryName(
+                    primaryCategory
+                );
+
+        }
+
+    }
+
+
+    setText(
+        crisisNameElement,
+        crisis.name,
+        "Crisis"
+    );
+
+
+    setText(
+        lastUpdatedElement,
+        crisis.lastUpdated
+            ? `Last verified: ${crisis.lastUpdated}`
+            : "Last verified: —"
+    );
+
+
+    if (crisisOverviewElement) {
+
+        crisisOverviewElement.innerHTML =
+            formatContent(
+                crisis.overview ||
+                crisis.summary ||
+                crisis.description
+            );
+
+    }
+
+
+    const currentSituation =
+        crisis.currentSituation ||
+        crisis.current ||
+        crisis.status ||
+        "";
+
+
+    if (
+        currentSituationSection &&
+        crisisCurrentSituationElement
+    ) {
+
+        if (currentSituation) {
+
+            currentSituationSection.style.display =
+                "";
+
+            crisisCurrentSituationElement.innerHTML =
+                formatContent(
+                    currentSituation
+                );
+
+        } else {
+
+            currentSituationSection.style.display =
+                "none";
+
+            crisisCurrentSituationElement.innerHTML =
+                "";
+
+        }
+
+    }
+
+
+    if (crisisActorsElement) {
+
+        crisisActorsElement.innerHTML =
+            formatContent(
+                crisis.actors ||
+                crisis.keyActors ||
+                crisis.parties
+            );
+
+    }
+
+
+    if (crisisImpactElement) {
+
+        crisisImpactElement.innerHTML =
+            formatContent(
+                crisis.impact ||
+                crisis.humanitarianImpact ||
+                crisis.humanitarian
+            );
+
+    }
+
+
+    const timeline =
+        crisis.timeline ||
+        crisis.history ||
+        [];
+
+
+    if (
+        timelineSection &&
+        crisisTimelineElement
+    ) {
+
+        const timelineHtml =
+            formatTimeline(
+                timeline
+            );
+
+
+        if (timelineHtml) {
+
+            timelineSection.style.display =
+                "";
+
+            crisisTimelineElement.innerHTML =
+                timelineHtml;
+
+        } else {
+
+            timelineSection.style.display =
+                "none";
+
+            crisisTimelineElement.innerHTML =
+                "";
+
+        }
+
+    }
+
+
+    if (crisisSourcesElement) {
+
+        crisisSourcesElement.innerHTML =
+            formatSources(
+                crisis.sources ||
+                crisis.sourceLinks ||
+                []
+            );
+
+    }
+
+
+    if (crisisAidElement) {
+
+        crisisAidElement.innerHTML =
+            formatAid(
+                crisis.aid ||
+                crisis.humanitarianAid ||
+                crisis.organizations ||
+                []
+            );
+
+    }
+
+
+    infoPanel.classList.add(
+        "open"
+    );
+
+    infoPanel.classList.add(
+        "active"
+    );
+
+    infoPanel.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    const panelScroll =
+        infoPanel.querySelector(
+            ".panel-scroll"
+        );
+
+
+    if (panelScroll) {
+
+        panelScroll.scrollTop =
+            0;
+
+    }
+
+}
+
+
+// ============================================================
+// CLOSE CRISIS PANEL
+// ============================================================
+
+function closeCrisisPanel() {
+
+    if (!infoPanel) {
+        return;
+    }
+
+
+    infoPanel.classList.remove(
+        "open"
+    );
+
+    infoPanel.classList.remove(
+        "active"
+    );
+
+    infoPanel.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+if (closePanelButton) {
+
+    closePanelButton.addEventListener(
+        "click",
+        closeCrisisPanel
+    );
+
+}
 
 
 // ============================================================
@@ -994,7 +2235,9 @@ const crisisAid =
 // ============================================================
 
 const countryPanel =
-    document.getElementById("country-panel");
+    document.getElementById(
+        "country-panel"
+    );
 
 const closeCountryPanelButton =
     document.getElementById(
@@ -1002,109 +2245,121 @@ const closeCountryPanelButton =
     );
 
 const countryFlagElement =
-    document.getElementById("country-flag");
+    document.getElementById(
+        "country-flag"
+    );
 
 const countryNameElement =
-    document.getElementById("country-name");
+    document.getElementById(
+        "country-name"
+    );
 
-const countryLastUpdated =
+const countryLastUpdatedElement =
     document.getElementById(
         "country-last-updated"
     );
 
-const countryCapital =
-    document.getElementById(
-        "country-capital"
-    );
-
-const countryRegion =
-    document.getElementById(
-        "country-region"
-    );
-
-const countrySubregion =
-    document.getElementById(
-        "country-subregion"
-    );
-
-const countryCode =
-    document.getElementById(
-        "country-code"
-    );
-
-const countryPopulation =
+const countryPopulationElement =
     document.getElementById(
         "country-population"
     );
 
-const countryArea =
+const countryCapitalElement =
+    document.getElementById(
+        "country-capital"
+    );
+
+const countryRegionElement =
+    document.getElementById(
+        "country-region"
+    );
+
+const countrySubregionElement =
+    document.getElementById(
+        "country-subregion"
+    );
+
+const countryCodeElement =
+    document.getElementById(
+        "country-code"
+    );
+
+const countryAreaElement =
     document.getElementById(
         "country-area"
     );
 
-const countryLanguages =
+const countryLanguagesElement =
     document.getElementById(
         "country-languages"
     );
 
-const countryCurrency =
+const countryCurrencyElement =
     document.getElementById(
         "country-currency"
     );
 
-const countryCrisisCount =
+const countryCrisisCountElement =
     document.getElementById(
         "country-crisis-count"
     );
 
-const countryGovernmentSection =
-    document.getElementById(
-        "country-government-section"
-    );
-
-const countryGovernmentType =
-    document.getElementById(
-        "country-government-type"
-    );
-
-const countryHeadOfState =
-    document.getElementById(
-        "country-head-of-state"
-    );
-
-const countryHeadOfGovernment =
-    document.getElementById(
-        "country-head-of-government"
-    );
-
-const countryUnStatus =
-    document.getElementById(
-        "country-un-status"
-    );
-
-const countryInternationalOrganizations =
-    document.getElementById(
-        "country-international-organizations"
-    );
-
-const countryNote =
+const countryNoteElement =
     document.getElementById(
         "country-note"
     );
 
-const countryOverview =
+const countryOverviewElement =
     document.getElementById(
         "country-overview"
+    );
+
+const countryGovernmentTypeElement =
+    document.getElementById(
+        "country-government-type"
+    );
+
+const countryHeadOfStateElement =
+    document.getElementById(
+        "country-head-of-state"
+    );
+
+const countryHeadOfGovernmentElement =
+    document.getElementById(
+        "country-head-of-government"
+    );
+
+
+// Support either the older or newer HTML field name.
+
+const countryUNStatusElement =
+    document.getElementById(
+        "country-un-status"
+    ) ||
+    document.getElementById(
+        "country-un-member"
+    );
+
+
+const countryInternationalOrganizationsElement =
+    document.getElementById(
+        "country-international-organizations"
     );
 
 const countryCrisesSection =
     document.getElementById(
         "country-crises-section"
+    ) ||
+    document.getElementById(
+        "country-related-crises-section"
     );
 
-const countryCrises =
+const countryCrisesElement =
     document.getElementById(
         "country-crises"
+    ) ||
+    document.getElementById(
+        "country-related-crises"
     );
 
 const countryHumanitarianSection =
@@ -1112,7 +2367,7 @@ const countryHumanitarianSection =
         "country-humanitarian-section"
     );
 
-const countryHumanitarian =
+const countryHumanitarianElement =
     document.getElementById(
         "country-humanitarian"
     );
@@ -1122,1388 +2377,803 @@ const countryDisplacementSection =
         "country-displacement-section"
     );
 
-const countryDisplacement =
+const countryDisplacementElement =
     document.getElementById(
         "country-displacement"
     );
 
+
+// Support either Recent History element naming convention.
+
 const countryTimelineSection =
     document.getElementById(
         "country-timeline-section"
+    ) ||
+    document.getElementById(
+        "country-history-section"
     );
 
-const countryTimeline =
+const countryTimelineElement =
     document.getElementById(
         "country-timeline"
+    ) ||
+    document.getElementById(
+        "country-history"
     );
+
 
 const countryOrganizationsSection =
     document.getElementById(
         "country-organizations-section"
     );
 
-const countryOrganizations =
+const countryOrganizationsElement =
     document.getElementById(
         "country-organizations"
     );
 
-const countrySources =
+const countrySourcesElement =
     document.getElementById(
         "country-sources"
     );
 
 
 // ============================================================
-// CRISIS MARKERS
+// COUNTRY LOOKUP HELPERS
 // ============================================================
 
-const conflictMarkers = [];
+function getCountryName(country) {
 
-
-conflicts.forEach(
-    conflict => {
-
-        const primaryCategory =
-            conflict.primaryCategory ||
-            conflict.categories[0];
-
-        const color =
-            categoryColors[
-                primaryCategory
-            ] ||
-            "#dc3545";
-
-        const marker =
-            L.circleMarker(
-                conflict.coordinates,
-                {
-                    radius: 9,
-                    color: "#ffffff",
-                    weight: 1.5,
-                    fillColor: color,
-                    fillOpacity: 0.9
-                }
-            );
-
-        marker.bindTooltip(
-            conflict.name,
-            {
-                direction: "top",
-                offset: [0, -8]
-            }
-        );
-
-        marker.on(
-            "click",
-            function () {
-
-                openConflictPanel(
-                    conflict
-                );
-
-            }
-        );
-
-        marker.addTo(map);
-
-        conflictMarkers.push({
-            marker: marker,
-            conflict: conflict
-        });
-
-    }
-);
-
-
-// ============================================================
-// COUNTRY BORDER SYSTEM
-// ============================================================
-
-let countryGeoJsonLayer = null;
-
-let selectedCountryLayer = null;
-
-const countryLayersByIso3 =
-    new Map();
-
-const fallbackCountryMarkers = [];
-
-
-// ============================================================
-// COUNTRY BORDER STYLES
-// ============================================================
-
-function countryStyle() {
-
-    return {
-        color: "#8fa3b8",
-        weight: 0.8,
-        opacity: 0.9,
-        fillColor: "#233447",
-        fillOpacity: 0.28
-    };
-
-}
-
-
-function countryHoverStyle() {
-
-    return {
-        color: "#ffffff",
-        weight: 1.6,
-        opacity: 1,
-        fillColor: "#496b8f",
-        fillOpacity: 0.5
-    };
-
-}
-
-
-function countrySelectedStyle() {
-
-    return {
-        color: "#ffffff",
-        weight: 2.2,
-        opacity: 1,
-        fillColor: "#5f86ad",
-        fillOpacity: 0.65
-    };
-
-}
-
-
-// ============================================================
-// NORMALIZE COUNTRY NAMES
-// ============================================================
-
-function normalizeCountryName(
-    name
-) {
-
-    return (name || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
-        .replace(
-            /[^a-z0-9]/g,
-            ""
-        );
-
-}
-
-
-// ============================================================
-// NATURAL EARTH NAME ALIASES
-// ============================================================
-
-const countryNameAliases = {
-
-    unitedstatesofamerica: "USA",
-    unitedstates: "USA",
-
-    russianfederation: "RUS",
-    russia: "RUS",
-
-    demrepcongo: "COD",
-    democraticrepublicofthecongo: "COD",
-    congodemrep: "COD",
-
-    republicofthecongo: "COG",
-    congo: "COG",
-
-    ivorycoast: "CIV",
-    cotedivoire: "CIV",
-
-    southkorea: "KOR",
-    republicofkorea: "KOR",
-
-    northkorea: "PRK",
-    democraticpeoplesrepublicofkorea: "PRK",
-
-    laos: "LAO",
-    laopeoplesdemocraticrepublic: "LAO",
-
-    vietnam: "VNM",
-
-    czechia: "CZE",
-    czechrepublic: "CZE",
-
-    eswatini: "SWZ",
-    swaziland: "SWZ",
-
-    tanzania: "TZA",
-    unitedrepublicoftanzania: "TZA",
-
-    moldova: "MDA",
-    republicofmoldova: "MDA",
-
-    brunei: "BRN",
-    bruneidarussalam: "BRN",
-
-    capeverde: "CPV",
-    caboverde: "CPV",
-
-    easttimor: "TLS",
-    timorleste: "TLS",
-
-    palestine: "PSE",
-    stateofpalestine: "PSE",
-
-    thebahamas: "BHS",
-    bahamas: "BHS",
-
-    gambia: "GMB",
-    thegambia: "GMB"
-
-};
-
-
-// ============================================================
-// MATCH GEOJSON FEATURE TO COUNTRY PROFILE
-// ============================================================
-
-function findCountryForFeature(
-    feature
-) {
-
-    const properties =
-        feature.properties || {};
-
-    const possibleCodes = [
-        properties.ADM0_A3,
-        properties.ISO_A3,
-        properties.ISO_A3_EH,
-        properties.SOV_A3,
-        properties.GU_A3
-    ]
-        .filter(Boolean)
-        .map(
-            code =>
-                String(code)
-                    .toUpperCase()
-        );
-
-    const codeMatch =
-        countries.find(
-            country =>
-                possibleCodes.includes(
-                    country.iso3
-                        .toUpperCase()
-                )
-        );
-
-    if (codeMatch) {
-
-        return codeMatch;
-
+    if (!country) {
+        return "";
     }
 
-    const possibleNames = [
-        properties.NAME,
-        properties.NAME_LONG,
-        properties.ADMIN,
-        properties.SOVEREIGNT,
-        properties.BRK_NAME,
-        properties.FORMAL_EN
-    ]
-        .filter(Boolean);
-
-    for (
-        const possibleName
-        of possibleNames
-    ) {
-
-        const normalizedName =
-            normalizeCountryName(
-                possibleName
-            );
-
-        const aliasCode =
-            countryNameAliases[
-                normalizedName
-            ];
-
-        if (aliasCode) {
-
-            const aliasMatch =
-                countries.find(
-                    country =>
-                        country.iso3 ===
-                        aliasCode
-                );
-
-            if (aliasMatch) {
-
-                return aliasMatch;
-
-            }
-
-        }
-
-        const nameMatch =
-            countries.find(
-                country =>
-                    normalizeCountryName(
-                        country.name
-                    ) ===
-                    normalizedName
-            );
-
-        if (nameMatch) {
-
-            return nameMatch;
-
-        }
-
-    }
-
-    return null;
-
-}
-
-
-// ============================================================
-// RESTORE COUNTRY STYLE AFTER HOVER
-// ============================================================
-
-function restoreCountryLayerStyle(
-    layer
-) {
 
     if (
-        selectedCountryLayer ===
-        layer
+        typeof country.name === "string"
     ) {
-
-        layer.setStyle(
-            countrySelectedStyle()
-        );
-
-    } else {
-
-        layer.setStyle(
-            countryStyle()
-        );
-
-    }
-
-}
-
-
-// ============================================================
-// SELECT COUNTRY POLYGON
-// ============================================================
-
-function selectCountryLayer(
-    country,
-    layer,
-    zoomToCountry = true
-) {
-
-    if (
-        selectedCountryLayer &&
-        selectedCountryLayer !==
-        layer
-    ) {
-
-        selectedCountryLayer.setStyle(
-            countryStyle()
-        );
-
-    }
-
-    selectedCountryLayer =
-        layer;
-
-    layer.setStyle(
-        countrySelectedStyle()
-    );
-
-    if (
-        layer.bringToFront
-    ) {
-
-        layer.bringToFront();
-
-    }
-
-    if (
-        zoomToCountry
-    ) {
-
-        const bounds =
-            layer.getBounds();
-
-        if (
-            bounds.isValid()
-        ) {
-
-            map.flyToBounds(
-                bounds,
-                {
-                    padding: [
-                        35,
-                        35
-                    ],
-                    maxZoom: 6,
-                    animate: true,
-                    duration: 1.1
-                }
-            );
-
-        }
-
-    }
-
-    openCountryPanel(
-        country
-    );
-
-}
-
-
-// ============================================================
-// FALLBACK MARKERS FOR VERY SMALL COUNTRIES
-// ============================================================
-
-function createFallbackCountryMarker(
-    country
-) {
-
-    const marker =
-        L.circleMarker(
-            country.coordinates,
-            {
-                radius: 5,
-                color: "#ffffff",
-                weight: 1.2,
-                fillColor: "#5f86ad",
-                fillOpacity: 0.9
-            }
-        );
-
-    marker.bindTooltip(
-        country.name,
-        {
-            direction: "top"
-        }
-    );
-
-    marker.on(
-        "click",
-        function () {
-
-            map.flyTo(
-                country.coordinates,
-                6,
-                {
-                    animate: true,
-                    duration: 1.1
-                }
-            );
-
-            openCountryPanel(
-                country
-            );
-
-        }
-    );
-
-    fallbackCountryMarkers.push({
-        marker: marker,
-        country: country
-    });
-
-}
-
-
-// ============================================================
-// LOAD COUNTRY GEOJSON
-// ============================================================
-
-fetch(
-    "countries.geojson?v=1"
-)
-    .then(
-        response => {
-
-            if (
-                !response.ok
-            ) {
-
-                throw new Error(
-                    "Could not load countries.geojson."
-                );
-
-            }
-
-            return response.json();
-
-        }
-    )
-    .then(
-        geojsonData => {
-
-            const matchedIso3 =
-                new Set();
-
-            countryGeoJsonLayer =
-                L.geoJSON(
-                    geojsonData,
-                    {
-
-                        style:
-                            countryStyle,
-
-                        onEachFeature:
-                            function (
-                                feature,
-                                layer
-                            ) {
-
-                                const country =
-                                    findCountryForFeature(
-                                        feature
-                                    );
-
-                                if (
-                                    !country
-                                ) {
-
-                                    layer.setStyle({
-                                        color: "#596979",
-                                        weight: 0.6,
-                                        opacity: 0.7,
-                                        fillColor: "#1b2836",
-                                        fillOpacity: 0.16
-                                    });
-
-                                    layer.bindTooltip(
-                                        feature.properties.NAME ||
-                                        feature.properties.ADMIN ||
-                                        "Geographic area",
-                                        {
-                                            direction: "top"
-                                        }
-                                    );
-
-                                    return;
-
-                                }
-
-                                matchedIso3.add(
-                                    country.iso3
-                                );
-
-                                countryLayersByIso3.set(
-                                    country.iso3,
-                                    layer
-                                );
-
-                                layer.bindTooltip(
-                                    country.name,
-                                    {
-                                        direction: "top",
-                                        sticky: true
-                                    }
-                                );
-
-                                layer.on({
-
-                                    mouseover:
-                                        function () {
-
-                                            if (
-                                                selectedCountryLayer !==
-                                                layer
-                                            ) {
-
-                                                layer.setStyle(
-                                                    countryHoverStyle()
-                                                );
-
-                                            }
-
-                                            if (
-                                                layer.bringToFront
-                                            ) {
-
-                                                layer.bringToFront();
-
-                                            }
-
-                                        },
-
-                                    mouseout:
-                                        function () {
-
-                                            restoreCountryLayerStyle(
-                                                layer
-                                            );
-
-                                        },
-
-                                    click:
-                                        function () {
-
-                                            selectCountryLayer(
-                                                country,
-                                                layer,
-                                                true
-                                            );
-
-                                        }
-
-                                });
-
-                            }
-
-                    }
-                );
-
-            countries.forEach(
-                country => {
-
-                    if (
-                        !matchedIso3.has(
-                            country.iso3
-                        )
-                    ) {
-
-                        createFallbackCountryMarker(
-                            country
-                        );
-
-                    }
-
-                }
-            );
-
-            if (
-                currentView ===
-                "countries"
-            ) {
-
-                countryGeoJsonLayer.addTo(
-                    map
-                );
-
-                fallbackCountryMarkers.forEach(
-                    item => {
-
-                        item.marker.addTo(
-                            map
-                        );
-
-                    }
-                );
-
-            }
-
-            console.log(
-                `One World, One Life loaded country borders for ${matchedIso3.size} profiles.`
-            );
-
-        }
-    )
-    .catch(
-        error => {
-
-            console.error(
-                "Country borders failed to load:",
-                error
-            );
-
-            countries.forEach(
-                country => {
-
-                    createFallbackCountryMarker(
-                        country
-                    );
-
-                }
-            );
-
-            if (
-                currentView ===
-                "countries"
-            ) {
-
-                fallbackCountryMarkers.forEach(
-                    item => {
-
-                        item.marker.addTo(
-                            map
-                        );
-
-                    }
-                );
-
-            }
-
-        }
-    );
-// ============================================================
-// SAFE EXTERNAL LINK
-// ============================================================
-
-function createExternalLink(
-    name,
-    url
-) {
-
-    if (
-        !name ||
-        !url
-    ) {
-
-        return null;
-
-    }
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-    link.textContent =
-        name;
-
-    link.href =
-        url;
-
-    link.target =
-        "_blank";
-
-    link.rel =
-        "noopener noreferrer";
-
-    return link;
-
-}
-
-
-// ============================================================
-// OPEN CRISIS PANEL
-// ============================================================
-
-function openConflictPanel(
-    conflict
-) {
-
-    countryPanel.classList.remove(
-        "open"
-    );
-
-    const readableCategories =
-        conflict.categories
-            .map(
-                category =>
-                    categoryNames[
-                        category
-                    ] ||
-                    category
-            )
-            .join(" • ");
-
-    crisisCategory.textContent =
-        readableCategories;
-
-    crisisName.textContent =
-        conflict.name;
-
-    lastUpdated.textContent =
-        "Last verified: " +
-        conflict.lastUpdated;
-
-    crisisOverview.textContent =
-        conflict.overview ||
-        "Information not yet available.";
-
-    if (
-        conflict.currentSituation
-    ) {
-
-        crisisCurrentSituation.textContent =
-            conflict.currentSituation;
-
-        currentSituationSection.style.display =
-            "block";
-
-    } else {
-
-        crisisCurrentSituation.textContent =
-            "";
-
-        currentSituationSection.style.display =
-            "none";
-
-    }
-
-    crisisActors.innerHTML =
-        "";
-
-    if (
-        conflict.actors &&
-        conflict.actors.length > 0
-    ) {
-
-        conflict.actors.forEach(
-            actorName => {
-
-                const actor =
-                    document.createElement(
-                        "span"
-                    );
-
-                actor.className =
-                    "actor";
-
-                actor.textContent =
-                    actorName;
-
-                crisisActors.appendChild(
-                    actor
-                );
-
-            }
-        );
-
-    } else {
-
-        crisisActors.textContent =
-            "Actor information not yet available.";
-
-    }
-
-    crisisImpact.textContent =
-        conflict.humanitarianImpact ||
-        "Humanitarian information not yet available.";
-
-    crisisTimeline.innerHTML =
-        "";
-
-    if (
-        conflict.timeline &&
-        conflict.timeline.length > 0
-    ) {
-
-        timelineSection.style.display =
-            "block";
-
-        conflict.timeline.forEach(
-            item => {
-
-                const timelineItem =
-                    document.createElement(
-                        "div"
-                    );
-
-                timelineItem.className =
-                    "timeline-item";
-
-                const timelineDate =
-                    document.createElement(
-                        "div"
-                    );
-
-                timelineDate.className =
-                    "timeline-date";
-
-                timelineDate.textContent =
-                    item.date;
-
-                const timelineEvent =
-                    document.createElement(
-                        "p"
-                    );
-
-                timelineEvent.className =
-                    "timeline-event";
-
-                timelineEvent.textContent =
-                    item.event;
-
-                timelineItem.appendChild(
-                    timelineDate
-                );
-
-                timelineItem.appendChild(
-                    timelineEvent
-                );
-
-                crisisTimeline.appendChild(
-                    timelineItem
-                );
-
-            }
-        );
-
-    } else {
-
-        timelineSection.style.display =
-            "none";
-
+        return country.name;
     }
 
 
-    // ========================================================
-    // SOURCES
-    // ========================================================
-
-    crisisSources.innerHTML =
-        "";
-
     if (
-        conflict.sources &&
-        conflict.sources.length > 0
-    ) {
-
-        conflict.sources.forEach(
-            source => {
-
-                const link =
-                    createExternalLink(
-                        source.name,
-                        source.url
-                    );
-
-                if (link) {
-
-                    crisisSources.appendChild(
-                        link
-                    );
-
-                }
-
-            }
-        );
-
-    } else {
-
-        crisisSources.textContent =
-            "Sources have not yet been added.";
-
-    }
-
-
-    // ========================================================
-    // HUMANITARIAN AID
-    // ========================================================
-
-    crisisAid.innerHTML =
-        "";
-
-    if (
-        conflict.aid &&
-        conflict.aid.length > 0
-    ) {
-
-        conflict.aid.forEach(
-            organization => {
-
-                const organizationName =
-                    organization.name ||
-                    organization.label ||
-                    organization.title ||
-                    "Humanitarian organization";
-
-                const organizationUrl =
-                    organization.url ||
-                    organization.link ||
-                    "";
-
-                const link =
-                    createExternalLink(
-                        organizationName,
-                        organizationUrl
-                    );
-
-                if (link) {
-
-                    crisisAid.appendChild(
-                        link
-                    );
-
-                } else {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.textContent =
-                        organizationName;
-
-                    crisisAid.appendChild(
-                        item
-                    );
-
-                }
-
-            }
-        );
-
-    } else {
-
-        crisisAid.textContent =
-            "Humanitarian organizations have not yet been added.";
-
-    }
-
-    infoPanel.classList.add(
-        "open"
-    );
-
-}
-
-
-// ============================================================
-// COUNTRY PROFILE HELPERS
-// ============================================================
-
-function displayValue(
-    value,
-    fallback = "—"
-) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-
-        return fallback;
-
-    }
-
-    return String(value);
-
-}
-
-
-function formatPopulation(
-    value
-) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-
-        return "—";
-
-    }
-
-    if (
-        typeof formatCountryPopulation ===
-        "function"
-    ) {
-
-        return formatCountryPopulation(
-            value
-        );
-
-    }
-
-    const number =
-        Number(value);
-
-    if (
-        Number.isFinite(number)
-    ) {
-
-        return number.toLocaleString(
-            "en-US"
-        );
-
-    }
-
-    return String(value);
-
-}
-
-
-function formatArea(
-    value
-) {
-
-    const number =
-        Number(value);
-
-    if (
-        !Number.isFinite(number) ||
-        number <= 0
-    ) {
-
-        return "—";
-
-    }
-
-    return (
-        number.toLocaleString(
-            "en-US"
-        ) +
-        " km²"
-    );
-
-}
-
-
-function formatList(
-    value
-) {
-
-    if (
-        !Array.isArray(value) ||
-        value.length === 0
-    ) {
-
-        return "—";
-
-    }
-
-    return value
-        .map(
-            item => {
-
-                if (
-                    typeof item ===
-                    "string"
-                ) {
-
-                    return item;
-
-                }
-
-                return (
-                    item.name ||
-                    item.label ||
-                    item.title ||
-                    ""
-                );
-
-            }
-        )
-        .filter(Boolean)
-        .join(", ") ||
-        "—";
-
-}
-
-
-function formatPerson(
-    person
-) {
-
-    if (
-        !person ||
-        !person.name
-    ) {
-
-        return "—";
-
-    }
-
-    if (
-        person.title
+        country.name &&
+        typeof country.name === "object"
     ) {
 
         return (
-            person.name +
-            " — " +
-            person.title
+            country.name.common ||
+            country.name.official ||
+            ""
         );
 
     }
 
-    return person.name;
-
-}
-
-
-function formatUnStatus(
-    status
-) {
-
-    if (!status) {
-
-        return "—";
-
-    }
-
-    if (
-        typeof status ===
-        "string"
-    ) {
-
-        const normalized =
-            status
-                .trim()
-                .toLowerCase();
-
-        if (
-            normalized ===
-            "member"
-        ) {
-
-            return "UN Member State";
-
-        }
-
-        if (
-            normalized ===
-                "observer" ||
-            normalized ===
-                "observer state"
-        ) {
-
-            return "UN Observer State";
-
-        }
-
-        return status;
-
-    }
 
     return (
-        status.label ||
-        status.name ||
-        status.status ||
-        "—"
+        country.country ||
+        country.title ||
+        ""
     );
+}
 
+
+function getCountryCode(country) {
+
+    if (!country) {
+        return "";
+    }
+
+
+    return (
+        country.code ||
+        country.iso3 ||
+        country.cca3 ||
+        country.iso ||
+        ""
+    );
+}
+
+
+function findCountryByName(
+    name
+) {
+
+    const normalizedName =
+        normalizeText(name);
+
+
+    return getCountryDatabase()
+        .find(country => {
+
+            const countryName =
+                normalizeText(
+                    getCountryName(
+                        country
+                    )
+                );
+
+
+            return (
+                countryName ===
+                normalizedName
+            );
+
+        }) || null;
+}
+
+
+function findCountryByCode(
+    code
+) {
+
+    const normalizedCode =
+        normalizeText(code);
+
+
+    return getCountryDatabase()
+        .find(country => {
+
+            const countryCode =
+                normalizeText(
+                    getCountryCode(
+                        country
+                    )
+                );
+
+
+            return (
+                countryCode ===
+                normalizedCode
+            );
+
+        }) || null;
 }
 
 
 // ============================================================
-// COUNTRY / CRISIS RELATIONSHIPS
+// COUNTRY FACT LOOKUP
 // ============================================================
 
-function getCountryCrisisRelationships(
+function getExtraCountryFacts(
+    country
+) {
+
+    const factsDatabase =
+        getCountryFactsDatabase();
+
+
+    const code =
+        getCountryCode(
+            country
+        );
+
+
+    const name =
+        getCountryName(
+            country
+        );
+
+
+    const possibleKeys = [
+        code,
+        normalizeText(code),
+        name,
+        normalizeText(name)
+    ].filter(Boolean);
+
+
+    for (
+        const key of possibleKeys
+    ) {
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                factsDatabase,
+                key
+            )
+        ) {
+
+            return (
+                factsDatabase[key] ||
+                {}
+            );
+
+        }
+
+    }
+
+
+    return {};
+}
+// ============================================================
+// COUNTRY VALUE HELPERS
+// ============================================================
+
+function firstAvailableValue(
+    ...values
+) {
+
+    for (
+        const value of values
+    ) {
+
+        if (
+            value !== null &&
+            value !== undefined &&
+            value !== ""
+        ) {
+            return value;
+        }
+
+    }
+
+    return "";
+}
+
+
+function formatArrayValue(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "—";
+    }
+
+
+    if (Array.isArray(value)) {
+
+        if (!value.length) {
+            return "—";
+        }
+
+        return value.join(", ");
+
+    }
+
+
+    if (
+        typeof value === "object"
+    ) {
+
+        const objectValues =
+            Object.values(value)
+                .filter(
+                    item =>
+                        item !== null &&
+                        item !== undefined &&
+                        item !== ""
+                );
+
+
+        if (!objectValues.length) {
+            return "—";
+        }
+
+
+        return objectValues
+            .map(item => {
+
+                if (
+                    item &&
+                    typeof item === "object"
+                ) {
+
+                    return (
+                        item.name ||
+                        item.common ||
+                        item.official ||
+                        JSON.stringify(item)
+                    );
+
+                }
+
+                return item;
+
+            })
+            .join(", ");
+
+    }
+
+
+    return String(value);
+}
+
+
+// ============================================================
+// COUNTRY / CRISIS CONNECTION HELPERS
+// ============================================================
+
+function getCrisisCountryReferences(
+    crisis
+) {
+
+    if (!crisis) {
+        return [];
+    }
+
+
+    const references = [];
+
+
+    const possibleFields = [
+        crisis.countries,
+        crisis.country,
+        crisis.relatedCountries,
+        crisis.affectedCountries,
+        crisis.locations,
+        crisis.location
+    ];
+
+
+    possibleFields.forEach(
+        field => {
+
+            if (
+                field === null ||
+                field === undefined
+            ) {
+                return;
+            }
+
+
+            if (Array.isArray(field)) {
+
+                field.forEach(
+                    value => {
+
+                        if (
+                            value &&
+                            typeof value === "object"
+                        ) {
+
+                            references.push(
+                                value.name ||
+                                value.country ||
+                                value.code ||
+                                value.iso3 ||
+                                ""
+                            );
+
+                        } else {
+
+                            references.push(
+                                value
+                            );
+
+                        }
+
+                    }
+                );
+
+                return;
+            }
+
+
+            if (
+                typeof field === "object"
+            ) {
+
+                references.push(
+                    field.name ||
+                    field.country ||
+                    field.code ||
+                    field.iso3 ||
+                    ""
+                );
+
+                return;
+            }
+
+
+            references.push(
+                field
+            );
+
+        }
+    );
+
+
+    return references
+        .map(reference =>
+            String(reference).trim()
+        )
+        .filter(Boolean);
+}
+
+
+function crisisMatchesCountry(
+    crisis,
     country
 ) {
 
     if (
-        Array.isArray(
-            country.relatedCrises
-        ) &&
-        country.relatedCrises.length > 0
+        !crisis ||
+        !country
     ) {
-
-        return country.relatedCrises
-            .map(
-                relationship => {
-
-                    const conflict =
-                        conflicts.find(
-                            item =>
-                                item.id ===
-                                relationship.crisisId
-                        );
-
-                    if (!conflict) {
-
-                        return null;
-
-                    }
-
-                    return {
-                        conflict: conflict,
-                        relationship:
-                            relationship
-                    };
-
-                }
-            )
-            .filter(Boolean);
-
+        return false;
     }
+
+
+    const countryName =
+        normalizeText(
+            getCountryName(
+                country
+            )
+        );
+
+
+    const countryCode =
+        normalizeText(
+            getCountryCode(
+                country
+            )
+        );
+
+
+    const references =
+        getCrisisCountryReferences(
+            crisis
+        )
+        .map(
+            reference =>
+                normalizeText(reference)
+        );
+
 
     if (
-        Array.isArray(
-            country.crisisIds
-        ) &&
-        country.crisisIds.length > 0
+        countryName &&
+        references.includes(
+            countryName
+        )
     ) {
-
-        return country.crisisIds
-            .map(
-                crisisId => {
-
-                    const conflict =
-                        conflicts.find(
-                            item =>
-                                item.id ===
-                                crisisId
-                        );
-
-                    if (!conflict) {
-
-                        return null;
-
-                    }
-
-                    return {
-                        conflict: conflict,
-                        relationship: null
-                    };
-
-                }
-            )
-            .filter(Boolean);
-
+        return true;
     }
 
-    return [];
 
+    if (
+        countryCode &&
+        references.includes(
+            countryCode
+        )
+    ) {
+        return true;
+    }
+
+
+    const crisisCountryCodes =
+        Array.isArray(
+            crisis.countryCodes
+        )
+            ? crisis.countryCodes
+                .map(code =>
+                    normalizeText(code)
+                )
+            : [];
+
+
+    if (
+        countryCode &&
+        crisisCountryCodes.includes(
+            countryCode
+        )
+    ) {
+        return true;
+    }
+
+
+    return false;
 }
 
 
-function getRelationshipLabel(
-    relationship
+function getCrisesForCountry(
+    country
+) {
+
+    return getCrisisDatabase()
+        .filter(
+            crisis =>
+                crisisMatchesCountry(
+                    crisis,
+                    country
+                )
+        );
+}
+
+
+// ============================================================
+// COUNTRY ORGANIZATION FORMATTER
+// ============================================================
+
+function formatOrganizations(
+    organizations
 ) {
 
     if (
-        !relationship ||
-        !Array.isArray(
-            relationship.relationships
-        ) ||
-        relationship.relationships.length ===
-            0
+        !organizations ||
+        (
+            Array.isArray(
+                organizations
+            ) &&
+            !organizations.length
+        )
     ) {
-
         return "";
+    }
+
+
+    const list =
+        Array.isArray(
+            organizations
+        )
+            ? organizations
+            : [organizations];
+
+
+    return `
+        <ul>
+            ${list
+                .map(item => {
+
+                    if (
+                        item &&
+                        typeof item === "object"
+                    ) {
+
+                        const name =
+                            item.name ||
+                            item.organization ||
+                            item.title ||
+                            item.label ||
+                            "";
+
+
+                        const description =
+                            item.description ||
+                            item.role ||
+                            item.text ||
+                            "";
+
+
+                        const url =
+                            item.url ||
+                            item.link ||
+                            item.href ||
+                            "";
+
+
+                        if (url) {
+
+                            return `
+                                <li>
+                                    <a
+                                        href="${escapeHtml(url)}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        ${escapeHtml(name || url)}
+                                    </a>
+
+                                    ${
+                                        description
+                                            ? `<br><span>${escapeHtml(description)}</span>`
+                                            : ""
+                                    }
+                                </li>
+                            `;
+
+                        }
+
+
+                        return `
+                            <li>
+                                ${
+                                    name
+                                        ? `<strong>${escapeHtml(name)}</strong>`
+                                        : ""
+                                }
+
+                                ${
+                                    description
+                                        ? `${name ? "<br>" : ""}${escapeHtml(description)}`
+                                        : ""
+                                }
+                            </li>
+                        `;
+
+                    }
+
+
+                    return `
+                        <li>
+                            ${escapeHtml(item)}
+                        </li>
+                    `;
+
+                })
+                .join("")}
+        </ul>
+    `;
+}
+
+
+// ============================================================
+// COUNTRY RELATED CRISIS FORMATTER
+// ============================================================
+
+function renderCountryCrises(
+    country
+) {
+
+    if (!countryCrisesElement) {
+        return;
+    }
+
+
+    const relatedCrises =
+        getCrisesForCountry(
+            country
+        );
+
+
+    if (countryCrisisCountElement) {
+
+        countryCrisisCountElement.textContent =
+            String(
+                relatedCrises.length
+            );
 
     }
 
-    return relationship.relationships
-        .map(
-            relationshipId => {
 
-                if (
-                    typeof crisisRelationshipTypes !==
-                        "undefined" &&
-                    crisisRelationshipTypes[
-                        relationshipId
-                    ]
-                ) {
+    if (
+        !relatedCrises.length
+    ) {
 
-                    return crisisRelationshipTypes[
-                        relationshipId
-                    ].label;
+        countryCrisesElement.innerHTML =
+            `
+                <p>
+                    No crisis entries are currently
+                    connected to this country profile.
+                </p>
+            `;
 
-                }
 
-                return relationshipId;
+        if (countryCrisesSection) {
+            countryCrisesSection.style.display =
+                "";
+        }
+
+
+        return;
+    }
+
+
+    countryCrisesElement.innerHTML =
+        relatedCrises
+            .map(crisis => {
+
+                const category =
+                    getPrimaryCategory(
+                        crisis
+                    );
+
+
+                const color =
+                    getCategoryColor(
+                        category
+                    );
+
+
+                return `
+                    <button
+                        class="country-crisis-item"
+                        type="button"
+                        data-country-crisis-id="${escapeHtml(crisis.id || "")}"
+                    >
+
+                        <div
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:8px;
+                            "
+                        >
+
+                            <span
+                                style="
+                                    display:inline-block;
+                                    width:9px;
+                                    height:9px;
+                                    border-radius:50%;
+                                    flex-shrink:0;
+                                    background:${color};
+                                "
+                            ></span>
+
+                            <strong>
+                                ${escapeHtml(crisis.name || "Crisis")}
+                            </strong>
+
+                        </div>
+
+                        ${
+                            crisis.overview
+                                ? `
+                                    <div class="country-crisis-explanation">
+                                        ${escapeHtml(crisis.overview)}
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                    </button>
+                `;
+
+            })
+            .join("");
+
+
+    if (countryCrisesSection) {
+
+        countryCrisesSection.style.display =
+            "";
+
+    }
+
+
+    countryCrisesElement
+        .querySelectorAll(
+            "[data-country-crisis-id]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const crisisId =
+                            button.dataset
+                                .countryCrisisId;
+
+
+                        const crisis =
+                            getCrisisDatabase()
+                                .find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(
+                                            crisisId
+                                        )
+                                );
+
+
+                        if (crisis) {
+
+                            closeCountryPanel();
+
+                            switchView(
+                                "crises"
+                            );
+
+                            openCrisisPanel(
+                                crisis
+                            );
+
+                        }
+
+                    }
+                );
 
             }
-        )
-        .join(" • ");
+        );
 
 }
 
@@ -2516,956 +3186,948 @@ function openCountryPanel(
     country
 ) {
 
-    infoPanel.classList.remove(
-        "open"
-    );
-
-    const atAGlance =
-        country.atAGlance ||
-        {};
-
-    const government =
-        country.government ||
-        {};
-
-    countryFlagElement.textContent =
-        country.flag;
-
-    countryNameElement.textContent =
-        country.name;
-
-    countryLastUpdated.textContent =
-        "Last verified: " +
-        displayValue(
-            country.lastVerified,
-            "Not yet verified"
-        );
-
-    countryCapital.textContent =
-        displayValue(
-            atAGlance.capital ||
-            country.capital
-        );
-
-    countryRegion.textContent =
-        displayValue(
-            atAGlance.region ||
-            country.region
-        );
-
-    countrySubregion.textContent =
-        displayValue(
-            atAGlance.subregion ||
-            country.subregion
-        );
-
-    countryCode.textContent =
-        country.iso3;
-
-    countryPopulation.textContent =
-        formatPopulation(
-            atAGlance.population
-        );
-
-    countryArea.textContent =
-        formatArea(
-            atAGlance.areaKm2
-        );
-
-    countryLanguages.textContent =
-        formatList(
-            atAGlance.languages
-        );
-
-    countryCurrency.textContent =
-        displayValue(
-            atAGlance.currency
-        );
-
-    countryOverview.textContent =
-        displayValue(
-            country.overview,
-            "Country overview not yet available."
-        );
-
-
-    // ========================================================
-    // COUNTRY NOTE
-    // ========================================================
-
     if (
-        country.countryNote
+        !country ||
+        !countryPanel
     ) {
-
-        countryNote.textContent =
-            country.countryNote;
-
-        countryNote.style.display =
-            "block";
-
-    } else {
-
-        countryNote.textContent =
-            "";
-
-        countryNote.style.display =
-            "none";
-
+        return;
     }
 
 
-    // ========================================================
-    // GOVERNMENT & INTERNATIONAL RELATIONS
-    // ========================================================
-
-    countryGovernmentType.textContent =
-        displayValue(
-            government.governmentType
-        );
-
-    countryHeadOfState.textContent =
-        formatPerson(
-            government.headOfState
-        );
-
-    countryHeadOfGovernment.textContent =
-        formatPerson(
-            government.headOfGovernment
-        );
-
-    countryUnStatus.textContent =
-        formatUnStatus(
-            government.unStatus
-        );
-
-    countryInternationalOrganizations.innerHTML =
-        "";
-
-    const internationalOrganizations =
-        Array.isArray(
-            government.internationalOrganizations
-        )
-            ? government.internationalOrganizations
-            : [];
-
-    if (
-        internationalOrganizations.length > 0
-    ) {
-
-        const organizationHeading =
-            document.createElement(
-                "p"
-            );
-
-        organizationHeading.className =
-            "section-description";
-
-        organizationHeading.textContent =
-            "International & regional organizations";
-
-        countryInternationalOrganizations.appendChild(
-            organizationHeading
-        );
-
-        internationalOrganizations.forEach(
-            organization => {
-
-                if (
-                    organization.url
-                ) {
-
-                    const link =
-                        createExternalLink(
-                            organization.name,
-                            organization.url
-                        );
-
-                    if (link) {
-
-                        countryInternationalOrganizations.appendChild(
-                            link
-                        );
-
-                    }
-
-                } else {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.textContent =
-                        organization.name ||
-                        organization;
-
-                    countryInternationalOrganizations.appendChild(
-                        item
-                    );
-
-                }
-
-            }
-        );
-
-    }
+    closeCrisisPanel();
 
 
-    // ========================================================
-    // RELATED CRISES
-    // ========================================================
-
-    countryCrises.innerHTML =
-        "";
-
-    const relationships =
-        getCountryCrisisRelationships(
+    const extraFacts =
+        getExtraCountryFacts(
             country
         );
 
-    countryCrisisCount.textContent =
-        relationships.length;
 
-    if (
-        relationships.length > 0
-    ) {
-
-        countryCrisesSection.style.display =
-            "block";
-
-        relationships.forEach(
-            item => {
-
-                const crisisButton =
-                    document.createElement(
-                        "button"
-                    );
-
-                crisisButton.type =
-                    "button";
-
-                crisisButton.className =
-                    "country-crisis-item";
-
-                const crisisTitle =
-                    document.createElement(
-                        "strong"
-                    );
-
-                crisisTitle.textContent =
-                    item.conflict.name;
-
-                crisisButton.appendChild(
-                    crisisTitle
-                );
-
-                const relationshipLabel =
-                    getRelationshipLabel(
-                        item.relationship
-                    );
-
-                if (
-                    relationshipLabel
-                ) {
-
-                    const explanation =
-                        document.createElement(
-                            "div"
-                        );
-
-                    explanation.className =
-                        "country-crisis-explanation";
-
-                    explanation.textContent =
-                        relationshipLabel;
-
-                    crisisButton.appendChild(
-                        explanation
-                    );
-
-                }
-
-                if (
-                    item.relationship &&
-                    item.relationship.note
-                ) {
-
-                    const note =
-                        document.createElement(
-                            "div"
-                        );
-
-                    note.className =
-                        "country-crisis-explanation";
-
-                    note.textContent =
-                        item.relationship.note;
-
-                    crisisButton.appendChild(
-                        note
-                    );
-
-                }
-
-                crisisButton.addEventListener(
-                    "click",
-                    function () {
-
-                        switchToCrisisView();
-
-                        map.flyTo(
-                            item.conflict.coordinates,
-                            5,
-                            {
-                                animate: true,
-                                duration: 1.1
-                            }
-                        );
-
-                        openConflictPanel(
-                            item.conflict
-                        );
-
-                    }
-                );
-
-                countryCrises.appendChild(
-                    crisisButton
-                );
-
-            }
+    const countryName =
+        getCountryName(
+            country
         );
 
-    } else {
 
-        countryCrisesSection.style.display =
-            "block";
+    const countryCode =
+        getCountryCode(
+            country
+        );
 
-        const noCrisisMessage =
-            document.createElement(
-                "p"
+
+    const flag =
+        firstAvailableValue(
+            extraFacts.flag,
+            country.flag,
+            country.emoji,
+            ""
+        );
+
+
+    const population =
+        firstAvailableValue(
+            extraFacts.population,
+            country.population
+        );
+
+
+    const capital =
+        firstAvailableValue(
+            extraFacts.capital,
+            country.capital
+        );
+
+
+    const region =
+        firstAvailableValue(
+            extraFacts.region,
+            country.region
+        );
+
+
+    const subregion =
+        firstAvailableValue(
+            extraFacts.subregion,
+            country.subregion
+        );
+
+
+    const area =
+        firstAvailableValue(
+            extraFacts.area,
+            country.area
+        );
+
+
+    const languages =
+        firstAvailableValue(
+            extraFacts.languages,
+            country.languages
+        );
+
+
+    const currency =
+        firstAvailableValue(
+            extraFacts.currency,
+            extraFacts.currencies,
+            country.currency,
+            country.currencies
+        );
+
+
+    const overview =
+        firstAvailableValue(
+            extraFacts.overview,
+            country.overview,
+            country.description,
+            country.summary
+        );
+
+
+    const note =
+        firstAvailableValue(
+            extraFacts.note,
+            country.note
+        );
+
+
+    const lastUpdated =
+        firstAvailableValue(
+            extraFacts.lastUpdated,
+            country.lastUpdated
+        );
+
+
+    setText(
+        countryFlagElement,
+        flag,
+        ""
+    );
+
+
+    setText(
+        countryNameElement,
+        countryName,
+        "Country"
+    );
+
+
+    setText(
+        countryLastUpdatedElement,
+        lastUpdated
+            ? `Last verified: ${lastUpdated}`
+            : "Last verified: —"
+    );
+
+
+    setText(
+        countryPopulationElement,
+        formatArrayValue(
+            population
+        )
+    );
+
+
+    setText(
+        countryCapitalElement,
+        formatArrayValue(
+            capital
+        )
+    );
+
+
+    setText(
+        countryRegionElement,
+        formatArrayValue(
+            region
+        )
+    );
+
+
+    setText(
+        countrySubregionElement,
+        formatArrayValue(
+            subregion
+        )
+    );
+
+
+    setText(
+        countryCodeElement,
+        countryCode ||
+        "—"
+    );
+
+
+    setText(
+        countryAreaElement,
+        formatArrayValue(
+            area
+        )
+    );
+
+
+    setText(
+        countryLanguagesElement,
+        formatArrayValue(
+            languages
+        )
+    );
+
+
+    setText(
+        countryCurrencyElement,
+        formatArrayValue(
+            currency
+        )
+    );
+
+
+    if (countryOverviewElement) {
+
+        countryOverviewElement.innerHTML =
+            formatContent(
+                overview
             );
 
-        noCrisisMessage.textContent =
-            "No related crisis entries are currently documented for this country.";
+    }
 
-        countryCrises.appendChild(
-            noCrisisMessage
-        );
+
+    if (countryNoteElement) {
+
+        if (note) {
+
+            countryNoteElement.style.display =
+                "block";
+
+            countryNoteElement.innerHTML =
+                formatContent(
+                    note
+                );
+
+        } else {
+
+            countryNoteElement.style.display =
+                "none";
+
+            countryNoteElement.innerHTML =
+                "";
+
+        }
 
     }
 
 
-    // ========================================================
-    // HUMANITARIAN SNAPSHOT
-    // ========================================================
+// ============================================================
+// COUNTRY GOVERNMENT INFORMATION
+// ============================================================
 
-    countryHumanitarian.innerHTML =
-        "";
+    const governmentType =
+        firstAvailableValue(
+            extraFacts.governmentType,
+            extraFacts.government,
+            country.governmentType,
+            country.government
+        );
+
+
+    const headOfState =
+        firstAvailableValue(
+            extraFacts.headOfState,
+            country.headOfState
+        );
+
+
+    const headOfGovernment =
+        firstAvailableValue(
+            extraFacts.headOfGovernment,
+            country.headOfGovernment
+        );
+
+
+    const unStatus =
+        firstAvailableValue(
+            extraFacts.unStatus,
+            extraFacts.unMember,
+            country.unStatus,
+            country.unMember
+        );
+
+
+    setText(
+        countryGovernmentTypeElement,
+        formatArrayValue(
+            governmentType
+        )
+    );
+
+
+    setText(
+        countryHeadOfStateElement,
+        formatArrayValue(
+            headOfState
+        )
+    );
+
+
+    setText(
+        countryHeadOfGovernmentElement,
+        formatArrayValue(
+            headOfGovernment
+        )
+    );
+
+
+    setText(
+        countryUNStatusElement,
+        formatArrayValue(
+            unStatus
+        )
+    );
+
+
+// ============================================================
+// INTERNATIONAL ORGANIZATIONS
+// ============================================================
+
+    const internationalOrganizations =
+        firstAvailableValue(
+            extraFacts.internationalOrganizations,
+            country.internationalOrganizations,
+            extraFacts.organizations,
+            country.organizations
+        );
+
+
+    if (
+        countryInternationalOrganizationsElement
+    ) {
+
+        countryInternationalOrganizationsElement.innerHTML =
+            formatOrganizations(
+                internationalOrganizations
+            );
+
+    }
+
+
+// ============================================================
+// HUMANITARIAN CONTEXT
+// ============================================================
 
     const humanitarian =
-        country.humanitarian ||
-        country.humanitarianSnapshot ||
-        null;
+        firstAvailableValue(
+            extraFacts.humanitarian,
+            extraFacts.humanitarianContext,
+            country.humanitarian,
+            country.humanitarianContext
+        );
+
 
     if (
-        humanitarian
+        countryHumanitarianSection &&
+        countryHumanitarianElement
     ) {
 
-        countryHumanitarianSection.style.display =
-            "block";
+        if (humanitarian) {
 
-        if (
-            typeof humanitarian ===
-            "string"
-        ) {
+            countryHumanitarianSection.style.display =
+                "";
 
-            countryHumanitarian.textContent =
-                humanitarian;
+            countryHumanitarianElement.innerHTML =
+                formatContent(
+                    humanitarian
+                );
 
         } else {
 
-            const humanitarianText =
-                humanitarian.summary ||
-                humanitarian.overview ||
-                humanitarian.text ||
+            countryHumanitarianSection.style.display =
+                "none";
+
+            countryHumanitarianElement.innerHTML =
                 "";
 
-            if (
-                humanitarianText
-            ) {
-
-                const paragraph =
-                    document.createElement(
-                        "p"
-                    );
-
-                paragraph.textContent =
-                    humanitarianText;
-
-                countryHumanitarian.appendChild(
-                    paragraph
-                );
-
-            }
-
-            const humanitarianStats =
-                humanitarian.stats ||
-                humanitarian.figures ||
-                [];
-
-            if (
-                Array.isArray(
-                    humanitarianStats
-                )
-            ) {
-
-                humanitarianStats.forEach(
-                    stat => {
-
-                        const item =
-                            document.createElement(
-                                "div"
-                            );
-
-                        item.className =
-                            "humanitarian-stat";
-
-                        if (
-                            typeof stat ===
-                            "string"
-                        ) {
-
-                            item.textContent =
-                                stat;
-
-                        } else {
-
-                            item.textContent =
-                                (
-                                    stat.label ||
-                                    stat.name ||
-                                    ""
-                                ) +
-                                (
-                                    stat.value
-                                        ? ": " +
-                                          stat.value
-                                        : ""
-                                );
-
-                        }
-
-                        countryHumanitarian.appendChild(
-                            item
-                        );
-
-                    }
-                );
-
-            }
-
         }
-
-    } else {
-
-        countryHumanitarianSection.style.display =
-            "none";
 
     }
 
 
-    // ========================================================
-    // DISPLACEMENT
-    // ========================================================
-
-    countryDisplacement.innerHTML =
-        "";
+// ============================================================
+// DISPLACEMENT
+// ============================================================
 
     const displacement =
-        country.displacement ||
-        null;
+        firstAvailableValue(
+            extraFacts.displacement,
+            country.displacement
+        );
+
 
     if (
-        displacement
+        countryDisplacementSection &&
+        countryDisplacementElement
     ) {
 
-        countryDisplacementSection.style.display =
-            "block";
+        if (displacement) {
 
-        if (
-            typeof displacement ===
-            "string"
-        ) {
+            countryDisplacementSection.style.display =
+                "";
 
-            countryDisplacement.textContent =
-                displacement;
+            countryDisplacementElement.innerHTML =
+                formatContent(
+                    displacement
+                );
 
         } else {
 
-            const displacementText =
-                displacement.summary ||
-                displacement.overview ||
-                displacement.text ||
+            countryDisplacementSection.style.display =
+                "none";
+
+            countryDisplacementElement.innerHTML =
                 "";
-
-            if (
-                displacementText
-            ) {
-
-                const paragraph =
-                    document.createElement(
-                        "p"
-                    );
-
-                paragraph.textContent =
-                    displacementText;
-
-                countryDisplacement.appendChild(
-                    paragraph
-                );
-
-            }
-
-            const displacementStats =
-                displacement.stats ||
-                displacement.figures ||
-                [];
-
-            if (
-                Array.isArray(
-                    displacementStats
-                )
-            ) {
-
-                displacementStats.forEach(
-                    stat => {
-
-                        const item =
-                            document.createElement(
-                                "div"
-                            );
-
-                        item.className =
-                            "humanitarian-stat";
-
-                        if (
-                            typeof stat ===
-                            "string"
-                        ) {
-
-                            item.textContent =
-                                stat;
-
-                        } else {
-
-                            item.textContent =
-                                (
-                                    stat.label ||
-                                    stat.name ||
-                                    ""
-                                ) +
-                                (
-                                    stat.value
-                                        ? ": " +
-                                          stat.value
-                                        : ""
-                                );
-
-                        }
-
-                        countryDisplacement.appendChild(
-                            item
-                        );
-
-                    }
-                );
-
-            }
 
         }
 
-    } else {
-
-        countryDisplacementSection.style.display =
-            "none";
-
     }
 
 
-    // ========================================================
-    // RECENT HISTORY
-    // ========================================================
+// ============================================================
+// RECENT HISTORY
+// ============================================================
 
-    countryTimeline.innerHTML =
-        "";
-
-    const countryHistory =
-        country.timeline ||
-        country.recentHistory ||
-        [];
-
-    if (
-        Array.isArray(
-            countryHistory
-        ) &&
-        countryHistory.length > 0
-    ) {
-
-        countryTimelineSection.style.display =
-            "block";
-
-        countryHistory.forEach(
-            item => {
-
-                const timelineItem =
-                    document.createElement(
-                        "div"
-                    );
-
-                timelineItem.className =
-                    "timeline-item";
-
-                const timelineDate =
-                    document.createElement(
-                        "div"
-                    );
-
-                timelineDate.className =
-                    "timeline-date";
-
-                timelineDate.textContent =
-                    item.date ||
-                    item.year ||
-                    "";
-
-                const timelineEvent =
-                    document.createElement(
-                        "p"
-                    );
-
-                timelineEvent.className =
-                    "timeline-event";
-
-                timelineEvent.textContent =
-                    item.event ||
-                    item.description ||
-                    item.text ||
-                    "";
-
-                timelineItem.appendChild(
-                    timelineDate
-                );
-
-                timelineItem.appendChild(
-                    timelineEvent
-                );
-
-                countryTimeline.appendChild(
-                    timelineItem
-                );
-
-            }
+    const history =
+        firstAvailableValue(
+            extraFacts.timeline,
+            extraFacts.history,
+            extraFacts.recentHistory,
+            country.timeline,
+            country.history,
+            country.recentHistory
         );
 
-    } else {
-
-        countryTimelineSection.style.display =
-            "none";
-
-    }
-
-
-    // ========================================================
-    // HUMANITARIAN ORGANIZATIONS
-    // ========================================================
-
-    countryOrganizations.innerHTML =
-        "";
-
-    const organizations =
-        country.humanitarianOrganizations ||
-        country.organizations ||
-        [];
 
     if (
-        Array.isArray(
-            organizations
-        ) &&
-        organizations.length > 0
+        countryTimelineSection &&
+        countryTimelineElement
     ) {
 
-        countryOrganizationsSection.style.display =
-            "block";
+        let historyHtml = "";
 
-        organizations.forEach(
-            organization => {
 
-                const organizationName =
-                    typeof organization ===
-                    "string"
-                        ? organization
-                        : (
-                            organization.name ||
-                            organization.label ||
-                            organization.title ||
-                            "Humanitarian organization"
-                        );
+        if (Array.isArray(history)) {
 
-                const organizationUrl =
-                    typeof organization ===
-                    "object"
-                        ? (
-                            organization.url ||
-                            organization.link ||
-                            ""
-                        )
-                        : "";
+            historyHtml =
+                formatTimeline(
+                    history
+                );
 
-                const link =
-                    createExternalLink(
-                        organizationName,
-                        organizationUrl
-                    );
+        } else {
 
-                if (
-                    link
-                ) {
+            historyHtml =
+                formatContent(
+                    history
+                );
 
-                    countryOrganizations.appendChild(
-                        link
-                    );
+        }
 
-                } else {
 
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
+        if (historyHtml) {
 
-                    item.textContent =
-                        organizationName;
+            countryTimelineSection.style.display =
+                "";
 
-                    countryOrganizations.appendChild(
-                        item
-                    );
+            countryTimelineElement.innerHTML =
+                historyHtml;
 
-                }
+        } else {
 
-            }
-        );
+            countryTimelineSection.style.display =
+                "none";
 
-    } else {
+            countryTimelineElement.innerHTML =
+                "";
 
-        countryOrganizationsSection.style.display =
-            "none";
+        }
 
     }
 
 
-    // ========================================================
-    // SOURCES
-    // ========================================================
+// ============================================================
+// HUMANITARIAN ORGANIZATIONS
+// ============================================================
 
-    countrySources.innerHTML =
-        "";
+    const humanitarianOrganizations =
+        firstAvailableValue(
+            extraFacts.humanitarianOrganizations,
+            country.humanitarianOrganizations,
+            extraFacts.aidOrganizations,
+            country.aidOrganizations
+        );
 
-    const sources =
-        Array.isArray(
-            country.sources
-        )
-            ? country.sources
-            : [];
 
     if (
-        sources.length > 0
+        countryOrganizationsSection &&
+        countryOrganizationsElement
     ) {
 
-        sources.forEach(
-            source => {
+        const organizationsHtml =
+            formatOrganizations(
+                humanitarianOrganizations
+            );
 
-                const sourceName =
-                    typeof source ===
-                    "string"
-                        ? source
-                        : (
-                            source.name ||
-                            source.label ||
-                            source.title ||
-                            "Source"
-                        );
 
-                const sourceUrl =
-                    typeof source ===
-                    "object"
-                        ? (
-                            source.url ||
-                            source.link ||
-                            ""
-                        )
-                        : "";
+        if (organizationsHtml) {
 
-                const link =
-                    createExternalLink(
-                        sourceName,
-                        sourceUrl
-                    );
+            countryOrganizationsSection.style.display =
+                "";
 
-                if (
-                    link
-                ) {
+            countryOrganizationsElement.innerHTML =
+                organizationsHtml;
 
-                    countrySources.appendChild(
-                        link
-                    );
+        } else {
 
-                } else {
+            countryOrganizationsSection.style.display =
+                "none";
 
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
+            countryOrganizationsElement.innerHTML =
+                "";
 
-                    item.textContent =
-                        sourceName;
-
-                    countrySources.appendChild(
-                        item
-                    );
-
-                }
-
-            }
-        );
-
-    } else {
-
-        countrySources.textContent =
-            "Sources have not yet been added.";
+        }
 
     }
 
+
+// ============================================================
+// COUNTRY SOURCES
+// ============================================================
+
+    if (countrySourcesElement) {
+
+        countrySourcesElement.innerHTML =
+            formatSources(
+                firstAvailableValue(
+                    extraFacts.sources,
+                    country.sources,
+                    []
+                )
+            );
+
+    }
+
+
+// ============================================================
+// RELATED CRISES
+// ============================================================
+
+    renderCountryCrises(
+        country
+    );
+
+
+// ============================================================
+// SHOW COUNTRY PANEL
+// ============================================================
 
     countryPanel.classList.add(
         "open"
+    );
+
+    countryPanel.classList.add(
+        "active"
+    );
+
+    countryPanel.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    const panelScroll =
+        countryPanel.querySelector(
+            ".panel-scroll"
+        );
+
+
+    if (panelScroll) {
+
+        panelScroll.scrollTop =
+            0;
+
+    }
+
+}
+
+
+// ============================================================
+// CLOSE COUNTRY PANEL
+// ============================================================
+
+function closeCountryPanel() {
+
+    if (!countryPanel) {
+        return;
+    }
+
+
+    countryPanel.classList.remove(
+        "open"
+    );
+
+    countryPanel.classList.remove(
+        "active"
+    );
+
+    countryPanel.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+if (closeCountryPanelButton) {
+
+    closeCountryPanelButton.addEventListener(
+        "click",
+        closeCountryPanel
     );
 
 }
 
 
 // ============================================================
-// CLOSE PANELS
+// COUNTRY MAP LAYER
 // ============================================================
 
-closePanelButton.addEventListener(
-    "click",
-    function () {
+let countryGeoJsonLayer = null;
 
-        infoPanel.classList.remove(
-            "open"
-        );
+let selectedCountryLayer = null;
+
+
+// ============================================================
+// COUNTRY MAP STYLE
+// ============================================================
+
+function getCountryMapStyle() {
+
+    return {
+        color: "#ffffff",
+        weight: 0.7,
+        opacity: 0.75,
+        fillColor: "#17232e",
+        fillOpacity: 0.48
+    };
+
+}
+
+
+function getCountryHoverStyle() {
+
+    return {
+        color: "#ffffff",
+        weight: 1.2,
+        opacity: 1,
+        fillColor: "#263746",
+        fillOpacity: 0.72
+    };
+
+}
+
+
+function getCountrySelectedStyle() {
+
+    return {
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 1,
+        fillColor: "#41586d",
+        fillOpacity: 0.82
+    };
+
+}
+
+
+// ============================================================
+// FIND COUNTRY FOR GEOJSON FEATURE
+// ============================================================
+
+function findCountryForFeature(
+    feature
+) {
+
+    if (
+        !feature ||
+        !feature.properties
+    ) {
+        return null;
+    }
+
+
+    const properties =
+        feature.properties;
+
+
+    const possibleCodes = [
+        properties.ISO_A3,
+        properties.ADM0_A3,
+        properties.iso_a3,
+        properties.cca3
+    ]
+        .filter(Boolean);
+
+
+    for (
+        const code of possibleCodes
+    ) {
+
+        const country =
+            findCountryByCode(
+                code
+            );
+
+
+        if (country) {
+            return country;
+        }
 
     }
-);
 
 
-closeCountryPanelButton.addEventListener(
-    "click",
-    function () {
+    const possibleNames = [
+        properties.ADMIN,
+        properties.NAME,
+        properties.name,
+        properties.NAME_LONG
+    ]
+        .filter(Boolean);
 
-        countryPanel.classList.remove(
-            "open"
-        );
+
+    for (
+        const name of possibleNames
+    ) {
+
+        const country =
+            findCountryByName(
+                name
+            );
+
+
+        if (country) {
+            return country;
+        }
 
     }
-);
 
 
+    return null;
+}
 // ============================================================
-// CRISIS FILTERS
+// COUNTRY GEOJSON FEATURE INTERACTIONS
 // ============================================================
 
-filterButtons.forEach(
-    button => {
+function onEachCountryFeature(
+    feature,
+    layer
+) {
 
-        button.addEventListener(
-            "click",
-            function () {
+    const country =
+        findCountryForFeature(
+            feature
+        );
 
-                const filter =
-                    button.dataset.filter;
 
-                filterButtons.forEach(
-                    item => {
+    const properties =
+        feature &&
+        feature.properties
+            ? feature.properties
+            : {};
 
-                        item.classList.remove(
-                            "active"
-                        );
 
-                    }
-                );
+    const fallbackName =
+        properties.ADMIN ||
+        properties.NAME ||
+        properties.name ||
+        "Country";
 
-                button.classList.add(
-                    "active"
-                );
 
-                conflictMarkers.forEach(
-                    item => {
+    const displayName =
+        country
+            ? getCountryName(country)
+            : fallbackName;
 
-                        const shouldShow =
-                            filter ===
-                                "all" ||
-                            item.conflict.categories.includes(
-                                filter
-                            );
 
-                        if (
-                            shouldShow
-                        ) {
+    layer.bindTooltip(
+        escapeHtml(
+            displayName
+        ),
+        {
+            direction: "top",
+            sticky: true
+        }
+    );
 
-                            if (
-                                !map.hasLayer(
-                                    item.marker
-                                )
-                            ) {
 
-                                item.marker.addTo(
-                                    map
-                                );
+    layer.on({
 
-                            }
+        mouseover: function () {
 
-                        } else {
+            if (
+                layer !==
+                selectedCountryLayer
+            ) {
 
-                            if (
-                                map.hasLayer(
-                                    item.marker
-                                )
-                            ) {
-
-                                map.removeLayer(
-                                    item.marker
-                                );
-
-                            }
-
-                        }
-
-                    }
+                layer.setStyle(
+                    getCountryHoverStyle()
                 );
 
             }
+
+        },
+
+
+        mouseout: function () {
+
+            if (
+                layer !==
+                selectedCountryLayer
+            ) {
+
+                layer.setStyle(
+                    getCountryMapStyle()
+                );
+
+            }
+
+        },
+
+
+        click: function () {
+
+            if (
+                selectedCountryLayer &&
+                selectedCountryLayer !== layer
+            ) {
+
+                selectedCountryLayer.setStyle(
+                    getCountryMapStyle()
+                );
+
+            }
+
+
+            selectedCountryLayer =
+                layer;
+
+
+            layer.setStyle(
+                getCountrySelectedStyle()
+            );
+
+
+            if (country) {
+
+                openCountryPanel(
+                    country
+                );
+
+            }
+
+        }
+
+    });
+
+}
+
+
+// ============================================================
+// LOAD COUNTRY BOUNDARIES
+// ============================================================
+
+function loadCountryBoundaries() {
+
+    const boundaryUrl =
+        "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson";
+
+
+    fetch(boundaryUrl)
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Country boundary request failed."
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            countryGeoJsonLayer =
+                L.geoJSON(
+                    data,
+                    {
+                        style:
+                            getCountryMapStyle,
+
+                        onEachFeature:
+                            onEachCountryFeature
+                    }
+                );
+
+
+            if (
+                currentView ===
+                "countries"
+            ) {
+
+                countryGeoJsonLayer.addTo(
+                    map
+                );
+
+            }
+
+        })
+
+        .catch(error => {
+
+            console.warn(
+                "Country boundaries could not be loaded:",
+                error
+            );
+
+        });
+
+}
+
+
+// ============================================================
+// SHOW / HIDE COUNTRY LAYER
+// ============================================================
+
+function showCountryLayer() {
+
+    if (
+        countryGeoJsonLayer &&
+        !map.hasLayer(
+            countryGeoJsonLayer
+        )
+    ) {
+
+        countryGeoJsonLayer.addTo(
+            map
         );
 
     }
-);
+
+}
 
 
-// ============================================================
-// REMOVE COUNTRY LAYERS
-// ============================================================
-
-function removeCountryLayers() {
+function hideCountryLayer() {
 
     if (
         countryGeoJsonLayer &&
@@ -3480,165 +4142,28 @@ function removeCountryLayers() {
 
     }
 
-    fallbackCountryMarkers.forEach(
+
+    selectedCountryLayer =
+        null;
+
+}
+
+
+// ============================================================
+// SHOW / HIDE CRISIS MARKERS
+// ============================================================
+
+function showCrisisMarkers() {
+
+    crisisMarkers.forEach(
         item => {
-
-            if (
-                map.hasLayer(
-                    item.marker
-                )
-            ) {
-
-                map.removeLayer(
-                    item.marker
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// REMOVE CRISIS LAYERS
-// ============================================================
-
-function removeCrisisLayers() {
-
-    conflictMarkers.forEach(
-        item => {
-
-            if (
-                map.hasLayer(
-                    item.marker
-                )
-            ) {
-
-                map.removeLayer(
-                    item.marker
-                );
-
-            }
-
-        }
-    );
-
-}
-// ============================================================
-// RESET VIEW BUTTONS
-// ============================================================
-
-function resetViewButtons() {
-
-    crisisViewButton.classList.remove(
-        "active"
-    );
-
-    countryViewButton.classList.remove(
-        "active"
-    );
-
-    exploreViewButton.classList.remove(
-        "active"
-    );
-
-    aboutViewButton.classList.remove(
-        "active"
-    );
-
-}
-
-
-// ============================================================
-// HIDE EXPLORE VIEW
-// ============================================================
-
-function hideExploreView() {
-
-    exploreView.classList.remove(
-        "active"
-    );
-
-    exploreView.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-}
-
-
-// ============================================================
-// SWITCH TO CRISIS VIEW
-// ============================================================
-
-function switchToCrisisView() {
-
-    currentView =
-        "crises";
-
-    resetViewButtons();
-
-    crisisViewButton.classList.add(
-        "active"
-    );
-
-    atlasMain.style.display =
-        "block";
-
-    hideExploreView();
-
-    aboutView.classList.remove(
-        "active"
-    );
-
-    aboutView.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    crisisFilters.style.display =
-        "flex";
-
-    searchArea.style.display =
-        "flex";
-
-    crisisLegend.style.display =
-        "block";
-
-    countryLegend.style.display =
-        "none";
-
-    countryPanel.classList.remove(
-        "open"
-    );
-
-    removeCountryLayers();
-
-    const activeFilter =
-        document.querySelector(
-            ".filter.active"
-        );
-
-    const selectedFilter =
-        activeFilter
-            ? activeFilter.dataset.filter
-            : "all";
-
-    conflictMarkers.forEach(
-        item => {
-
-            const categories =
-                item.conflict.categories ||
-                [];
 
             const shouldShow =
-                selectedFilter ===
-                    "all" ||
-                categories.includes(
-                    selectedFilter
+                crisisHasCategory(
+                    item.crisis,
+                    activeCrisisFilter
                 );
+
 
             if (
                 shouldShow &&
@@ -3656,105 +4181,22 @@ function switchToCrisisView() {
         }
     );
 
-    crisisSearch.placeholder =
-        "Search for a crisis...";
-
-    crisisSearch.setAttribute(
-        "aria-label",
-        "Search crises"
-    );
-
-    crisisCount.textContent =
-        conflicts.length;
-
-    counterLabel.textContent =
-        "crises currently documented";
-
-    clearSearch();
-
-    window.setTimeout(
-        function () {
-
-            map.invalidateSize();
-
-        },
-        50
-    );
-
 }
 
 
-// ============================================================
-// SWITCH TO COUNTRY VIEW
-// ============================================================
+function hideCrisisMarkers() {
 
-function switchToCountryView() {
-
-    currentView =
-        "countries";
-
-    resetViewButtons();
-
-    countryViewButton.classList.add(
-        "active"
-    );
-
-    atlasMain.style.display =
-        "block";
-
-    hideExploreView();
-
-    aboutView.classList.remove(
-        "active"
-    );
-
-    aboutView.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    crisisFilters.style.display =
-        "none";
-
-    searchArea.style.display =
-        "flex";
-
-    crisisLegend.style.display =
-        "none";
-
-    countryLegend.style.display =
-        "block";
-
-    infoPanel.classList.remove(
-        "open"
-    );
-
-    removeCrisisLayers();
-
-    if (
-        countryGeoJsonLayer &&
-        !map.hasLayer(
-            countryGeoJsonLayer
-        )
-    ) {
-
-        countryGeoJsonLayer.addTo(
-            map
-        );
-
-    }
-
-    fallbackCountryMarkers.forEach(
+    crisisMarkers.forEach(
         item => {
 
             if (
-                !map.hasLayer(
+                map.hasLayer(
                     item.marker
                 )
             ) {
 
-                item.marker.addTo(
-                    map
+                map.removeLayer(
+                    item.marker
                 );
 
             }
@@ -3762,136 +4204,1183 @@ function switchToCountryView() {
         }
     );
 
-    crisisSearch.placeholder =
-        "Search for a country...";
-
-    crisisSearch.setAttribute(
-        "aria-label",
-        "Search country profiles"
-    );
-
-    crisisCount.textContent =
-        countries.length;
-
-    counterLabel.textContent =
-        "country profiles";
-
-    clearSearch();
-
-    window.setTimeout(
-        function () {
-
-            map.invalidateSize();
-
-        },
-        50
-    );
-
 }
 
 
 // ============================================================
-// EXPLORE DATA HELPERS
+// VIEW BUTTON STATE
 // ============================================================
 
-function getExploreRegion(
-    country
+function setViewButtonState(
+    activeButton
 ) {
 
-    const region =
-        (
-            (
-                country.atAGlance &&
-                country.atAGlance.region
-            ) ||
-            country.region ||
-            ""
-        )
-            .toLowerCase();
+    [
+        crisisViewButton,
+        countryViewButton,
+        exploreViewButton,
+        aboutViewButton
+    ]
+        .filter(Boolean)
+        .forEach(
+            button => {
 
-    const subregion =
-        (
-            (
-                country.atAGlance &&
-                country.atAGlance.subregion
-            ) ||
-            country.subregion ||
-            ""
-        )
-            .toLowerCase();
+                button.classList.toggle(
+                    "active",
+                    button ===
+                        activeButton
+                );
 
-
-    if (
-        region.includes(
-            "africa"
-        )
-    ) {
-
-        return "Africa";
-
-    }
-
-
-    if (
-        subregion.includes(
-            "western asia"
-        ) ||
-        subregion.includes(
-            "middle east"
-        )
-    ) {
-
-        return "Middle East";
-
-    }
-
-
-    if (
-        region.includes(
-            "europe"
-        )
-    ) {
-
-        return "Europe";
-
-    }
-
-
-    if (
-        region.includes(
-            "asia"
-        ) ||
-        region.includes(
-            "oceania"
-        )
-    ) {
-
-        return "Asia-Pacific";
-
-    }
-
-
-    if (
-        region.includes(
-            "america"
-        )
-    ) {
-
-        return "Americas";
-
-    }
-
-
-    return "Other";
+            }
+        );
 
 }
 
 
 // ============================================================
-// UPDATE EXPLORE STATISTICS
+// SWITCH VIEW
+// ============================================================
+
+function switchView(
+    view
+) {
+
+    currentView =
+        view;
+
+
+    closeCrisisPanel();
+
+    closeCountryPanel();
+
+
+    if (aboutView) {
+
+        aboutView.classList.remove(
+            "active"
+        );
+
+        aboutView.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    if (exploreView) {
+
+        exploreView.classList.remove(
+            "active"
+        );
+
+        exploreView.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    if (atlasMain) {
+
+        atlasMain.style.display =
+            "";
+
+    }
+
+
+    if (crisisFilters) {
+
+        crisisFilters.style.display =
+            "";
+
+    }
+
+
+    if (searchArea) {
+
+        searchArea.style.display =
+            "";
+
+    }
+
+
+// ------------------------------------------------------------
+// CRISES
+// ------------------------------------------------------------
+
+    if (view === "crises") {
+
+        setViewButtonState(
+            crisisViewButton
+        );
+
+
+        showCrisisMarkers();
+
+        hideCountryLayer();
+
+
+        if (crisisFilters) {
+
+            crisisFilters.style.display =
+                "";
+
+        }
+
+
+        if (crisisLegend) {
+
+            crisisLegend.style.display =
+                "";
+
+        }
+
+
+        if (countryLegend) {
+
+            countryLegend.style.display =
+                "none";
+
+        }
+
+
+        if (crisisSearch) {
+
+            crisisSearch.placeholder =
+                "Search crises...";
+
+        }
+
+
+        applyCrisisFilter(
+            activeCrisisFilter
+        );
+
+
+        window.setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+            50
+        );
+
+
+        return;
+    }
+
+
+// ------------------------------------------------------------
+// COUNTRIES
+// ------------------------------------------------------------
+
+    if (view === "countries") {
+
+        setViewButtonState(
+            countryViewButton
+        );
+
+
+        hideCrisisMarkers();
+
+        showCountryLayer();
+
+
+        if (crisisFilters) {
+
+            crisisFilters.style.display =
+                "none";
+
+        }
+
+
+        if (crisisLegend) {
+
+            crisisLegend.style.display =
+                "none";
+
+        }
+
+
+        if (countryLegend) {
+
+            countryLegend.style.display =
+                "";
+
+        }
+
+
+        if (crisisSearch) {
+
+            crisisSearch.placeholder =
+                "Search countries...";
+
+        }
+
+
+        if (crisisCount) {
+
+            crisisCount.textContent =
+                String(
+                    getCountryDatabase()
+                        .length
+                );
+
+        }
+
+
+        if (counterLabel) {
+
+            counterLabel.textContent =
+                getCountryDatabase()
+                    .length === 1
+                    ? "country"
+                    : "countries";
+
+        }
+
+
+        window.setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+            50
+        );
+
+
+        return;
+    }
+
+
+// ------------------------------------------------------------
+// EXPLORE
+// ------------------------------------------------------------
+
+    if (view === "explore") {
+
+        setViewButtonState(
+            exploreViewButton
+        );
+
+
+        hideCrisisMarkers();
+
+        hideCountryLayer();
+
+
+        if (atlasMain) {
+
+            atlasMain.style.display =
+                "none";
+
+        }
+
+
+        if (crisisFilters) {
+
+            crisisFilters.style.display =
+                "none";
+
+        }
+
+
+        if (searchArea) {
+
+            searchArea.style.display =
+                "none";
+
+        }
+
+
+        if (crisisLegend) {
+
+            crisisLegend.style.display =
+                "none";
+
+        }
+
+
+        if (countryLegend) {
+
+            countryLegend.style.display =
+                "none";
+
+        }
+
+
+        exploreView.classList.add(
+            "active"
+        );
+
+        exploreView.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        updateExploreView();
+
+
+        return;
+    }
+
+
+// ------------------------------------------------------------
+// ABOUT
+// ------------------------------------------------------------
+
+    if (view === "about") {
+
+        setViewButtonState(
+            aboutViewButton
+        );
+
+
+        hideCrisisMarkers();
+
+        hideCountryLayer();
+
+
+        if (atlasMain) {
+
+            atlasMain.style.display =
+                "none";
+
+        }
+
+
+        if (crisisFilters) {
+
+            crisisFilters.style.display =
+                "none";
+
+        }
+
+
+        if (searchArea) {
+
+            searchArea.style.display =
+                "none";
+
+        }
+
+
+        if (crisisLegend) {
+
+            crisisLegend.style.display =
+                "none";
+
+        }
+
+
+        if (countryLegend) {
+
+            countryLegend.style.display =
+                "none";
+
+        }
+
+
+        if (aboutView) {
+
+            aboutView.classList.add(
+                "active"
+            );
+
+            aboutView.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// VIEW BUTTON EVENTS
+// ============================================================
+
+if (crisisViewButton) {
+
+    crisisViewButton.addEventListener(
+        "click",
+        function () {
+
+            switchView(
+                "crises"
+            );
+
+        }
+    );
+
+}
+
+
+if (countryViewButton) {
+
+    countryViewButton.addEventListener(
+        "click",
+        function () {
+
+            switchView(
+                "countries"
+            );
+
+        }
+    );
+
+}
+
+
+if (exploreViewButton) {
+
+    exploreViewButton.addEventListener(
+        "click",
+        function () {
+
+            switchView(
+                "explore"
+            );
+
+        }
+    );
+
+}
+
+
+if (aboutViewButton) {
+
+    aboutViewButton.addEventListener(
+        "click",
+        function () {
+
+            switchView(
+                "about"
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// SEARCH HELPERS
+// ============================================================
+
+function clearSearchResults() {
+
+    if (!searchResults) {
+        return;
+    }
+
+
+    searchResults.innerHTML =
+        "";
+
+    searchResults.classList.remove(
+        "active"
+    );
+
+    searchResults.classList.remove(
+        "show"
+    );
+
+}
+
+
+function showSearchResults() {
+
+    if (!searchResults) {
+        return;
+    }
+
+
+    searchResults.classList.add(
+        "active"
+    );
+
+    searchResults.classList.add(
+        "show"
+    );
+
+}
+
+
+// ============================================================
+// SEARCH CRISES
+// ============================================================
+
+function searchCrises(
+    query
+) {
+
+    const normalizedQuery =
+        normalizeText(
+            query
+        );
+
+
+    if (!normalizedQuery) {
+        return [];
+    }
+
+
+    return getCrisisDatabase()
+        .filter(crisis => {
+
+            const searchableValues = [
+                crisis.name,
+                crisis.overview,
+                crisis.summary,
+                crisis.description,
+                crisis.currentSituation,
+                ...getCrisisCategories(
+                    crisis
+                ),
+                ...getCrisisCountryReferences(
+                    crisis
+                )
+            ];
+
+
+            const searchableText =
+                searchableValues
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+            return searchableText
+                .includes(
+                    normalizedQuery
+                );
+
+        })
+        .slice(
+            0,
+            20
+        );
+
+}
+
+
+// ============================================================
+// SEARCH COUNTRIES
+// ============================================================
+
+function searchCountries(
+    query
+) {
+
+    const normalizedQuery =
+        normalizeText(
+            query
+        );
+
+
+    if (!normalizedQuery) {
+        return [];
+    }
+
+
+    return getCountryDatabase()
+        .filter(country => {
+
+            const extraFacts =
+                getExtraCountryFacts(
+                    country
+                );
+
+
+            const searchableValues = [
+                getCountryName(
+                    country
+                ),
+                getCountryCode(
+                    country
+                ),
+                country.region,
+                country.subregion,
+                extraFacts.region,
+                extraFacts.subregion,
+                extraFacts.capital,
+                country.capital
+            ];
+
+
+            const searchableText =
+                searchableValues
+                    .map(value =>
+                        formatArrayValue(
+                            value
+                        )
+                    )
+                    .join(" ")
+                    .toLowerCase();
+
+
+            return searchableText
+                .includes(
+                    normalizedQuery
+                );
+
+        })
+        .slice(
+            0,
+            20
+        );
+
+}
+
+
+// ============================================================
+// RENDER CRISIS SEARCH RESULTS
+// ============================================================
+
+function renderCrisisSearchResults(
+    results
+) {
+
+    if (!searchResults) {
+        return;
+    }
+
+
+    if (!results.length) {
+
+        searchResults.innerHTML =
+            `
+                <div class="search-result-item">
+                    No matching crises found.
+                </div>
+            `;
+
+        showSearchResults();
+
+        return;
+    }
+
+
+    searchResults.innerHTML =
+        results
+            .map(crisis => {
+
+                const category =
+                    getPrimaryCategory(
+                        crisis
+                    );
+
+
+                return `
+                    <button
+                        class="search-result-item"
+                        type="button"
+                        data-search-crisis-id="${escapeHtml(crisis.id || "")}"
+                    >
+
+                        <strong>
+                            ${escapeHtml(crisis.name || "Crisis")}
+                        </strong>
+
+                        <div
+                            style="
+                                margin-top:3px;
+                                color:#8f9ba8;
+                                font-size:11px;
+                            "
+                        >
+                            ${escapeHtml(
+                                getCategoryName(
+                                    category
+                                )
+                            )}
+                        </div>
+
+                    </button>
+                `;
+
+            })
+            .join("");
+
+
+    showSearchResults();
+
+
+    searchResults
+        .querySelectorAll(
+            "[data-search-crisis-id]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const crisis =
+                            getCrisisDatabase()
+                                .find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(
+                                            button.dataset
+                                                .searchCrisisId
+                                        )
+                                );
+
+
+                        if (!crisis) {
+                            return;
+                        }
+
+
+                        if (crisisSearch) {
+
+                            crisisSearch.value =
+                                crisis.name ||
+                                "";
+
+                        }
+
+
+                        clearSearchResults();
+
+
+                        openCrisisPanel(
+                            crisis
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+// ============================================================
+// RENDER COUNTRY SEARCH RESULTS
+// ============================================================
+
+function renderCountrySearchResults(
+    results
+) {
+
+    if (!searchResults) {
+        return;
+    }
+
+
+    if (!results.length) {
+
+        searchResults.innerHTML =
+            `
+                <div class="search-result-item">
+                    No matching countries found.
+                </div>
+            `;
+
+        showSearchResults();
+
+        return;
+    }
+
+
+    searchResults.innerHTML =
+        results
+            .map(country => {
+
+                const name =
+                    getCountryName(
+                        country
+                    );
+
+
+                const facts =
+                    getExtraCountryFacts(
+                        country
+                    );
+
+
+                const region =
+                    firstAvailableValue(
+                        facts.region,
+                        country.region
+                    );
+
+
+                return `
+                    <button
+                        class="search-result-item"
+                        type="button"
+                        data-search-country-code="${escapeHtml(getCountryCode(country))}"
+                        data-search-country-name="${escapeHtml(name)}"
+                    >
+
+                        <strong>
+                            ${escapeHtml(name)}
+                        </strong>
+
+                        <div
+                            style="
+                                margin-top:3px;
+                                color:#8f9ba8;
+                                font-size:11px;
+                            "
+                        >
+                            ${escapeHtml(formatArrayValue(region))}
+                        </div>
+
+                    </button>
+                `;
+
+            })
+            .join("");
+
+
+    showSearchResults();
+
+
+    searchResults
+        .querySelectorAll(
+            "[data-search-country-name]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const code =
+                            button.dataset
+                                .searchCountryCode;
+
+
+                        const name =
+                            button.dataset
+                                .searchCountryName;
+
+
+                        const country =
+                            (
+                                code
+                                    ? findCountryByCode(
+                                        code
+                                    )
+                                    : null
+                            ) ||
+                            findCountryByName(
+                                name
+                            );
+
+
+                        if (!country) {
+                            return;
+                        }
+
+
+                        if (crisisSearch) {
+
+                            crisisSearch.value =
+                                getCountryName(
+                                    country
+                                );
+
+                        }
+
+
+                        clearSearchResults();
+
+
+                        openCountryPanel(
+                            country
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+// ============================================================
+// SEARCH INPUT EVENT
+// ============================================================
+
+if (crisisSearch) {
+
+    crisisSearch.addEventListener(
+        "input",
+        function () {
+
+            const query =
+                crisisSearch.value;
+
+
+            if (
+                !query ||
+                !query.trim()
+            ) {
+
+                clearSearchResults();
+
+                return;
+            }
+
+
+            if (
+                currentView ===
+                "countries"
+            ) {
+
+                renderCountrySearchResults(
+                    searchCountries(
+                        query
+                    )
+                );
+
+            } else {
+
+                renderCrisisSearchResults(
+                    searchCrises(
+                        query
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+    crisisSearch.addEventListener(
+        "focus",
+        function () {
+
+            if (
+                crisisSearch.value &&
+                crisisSearch.value.trim()
+            ) {
+
+                crisisSearch.dispatchEvent(
+                    new Event(
+                        "input"
+                    )
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// CLOSE SEARCH RESULTS WHEN CLICKING ELSEWHERE
+// ============================================================
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            !searchResults ||
+            !crisisSearch
+        ) {
+            return;
+        }
+
+
+        const clickedSearch =
+            crisisSearch.contains(
+                event.target
+            );
+
+
+        const clickedResults =
+            searchResults.contains(
+                event.target
+            );
+
+
+        if (
+            !clickedSearch &&
+            !clickedResults
+        ) {
+
+            clearSearchResults();
+
+        }
+
+    }
+);
+// ============================================================
+// EXPLORE — CATEGORY COUNT
+// ============================================================
+
+function countCrisesByCategory(
+    category
+) {
+
+    return getCrisisDatabase()
+        .filter(
+            crisis =>
+                crisisHasCategory(
+                    crisis,
+                    category
+                )
+        )
+        .length;
+
+}
+
+
+// ============================================================
+// EXPLORE — RELATED COUNTRIES
+// ============================================================
+
+function getRelatedCountries() {
+
+    const relatedCountries =
+        new Set();
+
+
+    getCrisisDatabase()
+        .forEach(
+            crisis => {
+
+                getCrisisCountryReferences(
+                    crisis
+                )
+                    .forEach(
+                        reference => {
+
+                            const normalized =
+                                normalizeText(
+                                    reference
+                                );
+
+
+                            if (normalized) {
+
+                                relatedCountries.add(
+                                    normalized
+                                );
+
+                            }
+
+                        }
+                    );
+
+            }
+        );
+
+
+    return relatedCountries;
+
+}
+
+
+// ============================================================
+// EXPLORE — REGIONS
+// ============================================================
+
+function getExploreRegions() {
+
+    const regions =
+        new Map();
+
+
+    getCountryDatabase()
+        .forEach(
+            country => {
+
+                const extraFacts =
+                    getExtraCountryFacts(
+                        country
+                    );
+
+
+                const region =
+                    firstAvailableValue(
+                        extraFacts.region,
+                        country.region
+                    );
+
+
+                const regionName =
+                    formatArrayValue(
+                        region
+                    );
+
+
+                if (
+                    !regionName ||
+                    regionName === "—"
+                ) {
+                    return;
+                }
+
+
+                if (
+                    !regions.has(
+                        regionName
+                    )
+                ) {
+
+                    regions.set(
+                        regionName,
+                        []
+                    );
+
+                }
+
+
+                regions
+                    .get(
+                        regionName
+                    )
+                    .push(
+                        country
+                    );
+
+            }
+        );
+
+
+    return regions;
+
+}
+
+
+// ============================================================
+// EXPLORE — UPDATE OVERVIEW STATISTICS
 // ============================================================
 
 function updateExploreStatistics() {
+
+    const crises =
+        getCrisisDatabase();
+
+    const countries =
+        getCountryDatabase();
+
 
     const crisisTotal =
         document.getElementById(
@@ -3914,78 +5403,179 @@ function updateExploreStatistics() {
         );
 
 
-    crisisTotal.textContent =
-        conflicts.length;
+    if (crisisTotal) {
 
-    countryTotal.textContent =
-        countries.length;
+        crisisTotal.textContent =
+            String(
+                crises.length
+            );
 
-
-    const relatedCountries =
-        countries.filter(
-            country =>
-                getCountryCrisisRelationships(
-                    country
-                ).length > 0
-        );
-
-    relatedCountryTotal.textContent =
-        relatedCountries.length;
+    }
 
 
-    const regions =
-        new Set(
-            countries
-                .map(
-                    country =>
-                        getExploreRegion(
-                            country
-                        )
-                )
-                .filter(
-                    region =>
-                        region !==
-                        "Other"
-                )
-        );
+    if (countryTotal) {
 
-    regionTotal.textContent =
-        regions.size;
+        countryTotal.textContent =
+            String(
+                countries.length
+            );
+
+    }
 
 
-    Object.keys(
-        categoryNames
-    ).forEach(
-        category => {
+    if (relatedCountryTotal) {
 
-            const element =
-                document.getElementById(
-                    "explore-" +
-                    category +
-                    "-count"
-                );
+        relatedCountryTotal.textContent =
+            String(
+                getRelatedCountries()
+                    .size
+            );
 
-            if (
-                !element
-            ) {
+    }
 
-                return;
 
-            }
+    if (regionTotal) {
 
-            const total =
-                conflicts.filter(
-                    conflict =>
-                        (
-                            conflict.categories ||
-                            []
-                        ).includes(
+        regionTotal.textContent =
+            String(
+                getExploreRegions()
+                    .size
+            );
+
+    }
+
+}
+
+
+// ============================================================
+// EXPLORE — UPDATE CATEGORY COUNTS
+// ============================================================
+
+function updateExploreCategoryCounts() {
+
+    const categoryCountElements = {
+
+        conflict:
+            document.getElementById(
+                "explore-conflict-count"
+            ),
+
+        humanitarian:
+            document.getElementById(
+                "explore-humanitarian-count"
+            ),
+
+        displacement:
+            document.getElementById(
+                "explore-displacement-count"
+            ),
+
+        disaster:
+            document.getElementById(
+                "explore-disaster-count"
+            ),
+
+        unrest:
+            document.getElementById(
+                "explore-unrest-count"
+            )
+
+    };
+
+
+    Object.entries(
+        categoryCountElements
+    )
+        .forEach(
+            ([
+                category,
+                element
+            ]) => {
+
+                if (!element) {
+                    return;
+                }
+
+
+                element.textContent =
+                    String(
+                        countCrisesByCategory(
                             category
                         )
-                ).length;
+                    );
 
-            element.textContent =
-                total;
+            }
+        );
+
+}
+
+
+// ============================================================
+// EXPLORE — CATEGORY CARD EVENTS
+// ============================================================
+
+function initializeExploreCategoryCards() {
+
+    const categoryCards =
+        exploreView.querySelectorAll(
+            "[data-explore-category]"
+        );
+
+
+    categoryCards.forEach(
+        card => {
+
+            if (
+                card.dataset
+                    .exploreInitialized ===
+                "true"
+            ) {
+                return;
+            }
+
+
+            card.dataset
+                .exploreInitialized =
+                "true";
+
+
+            card.addEventListener(
+                "click",
+                function () {
+
+                    const category =
+                        normalizeText(
+                            card.dataset
+                                .exploreCategory
+                        );
+
+
+                    if (!category) {
+                        return;
+                    }
+
+
+                    activeCrisisFilter =
+                        category;
+
+
+                    switchView(
+                        "crises"
+                    );
+
+
+                    applyCrisisFilter(
+                        category
+                    );
+
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
 
         }
     );
@@ -3994,259 +5584,236 @@ function updateExploreStatistics() {
 
 
 // ============================================================
-// BUILD EXPLORE REGIONS
+// EXPLORE — RENDER REGION BUTTONS
 // ============================================================
 
-function buildExploreRegions() {
+function renderExploreRegions() {
 
     const regionGrid =
         document.getElementById(
             "explore-region-grid"
         );
 
-    if (
-        !regionGrid
-    ) {
 
-        return;
-
-    }
-
-    regionGrid.innerHTML =
-        "";
-
-
-    const regionOrder = [
-        "Africa",
-        "Middle East",
-        "Europe",
-        "Asia-Pacific",
-        "Americas"
-    ];
-
-
-    regionOrder.forEach(
-        regionName => {
-
-            const matchingCountries =
-                countries
-                    .filter(
-                        country =>
-                            getExploreRegion(
-                                country
-                            ) ===
-                            regionName
-                    )
-                    .sort(
-                        (
-                            countryA,
-                            countryB
-                        ) =>
-                            countryA.name.localeCompare(
-                                countryB.name
-                            )
-                    );
-
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "explore-region-button";
-
-
-            const name =
-                document.createElement(
-                    "span"
-                );
-
-            name.className =
-                "explore-region-name";
-
-            name.textContent =
-                regionName;
-
-
-            const count =
-                document.createElement(
-                    "span"
-                );
-
-            count.className =
-                "explore-region-count";
-
-            count.textContent =
-                matchingCountries.length +
-                (
-                    matchingCountries.length ===
-                    1
-                        ? " country"
-                        : " countries"
-                );
-
-
-            button.appendChild(
-                name
-            );
-
-            button.appendChild(
-                count
-            );
-
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    document
-                        .querySelectorAll(
-                            ".explore-region-button"
-                        )
-                        .forEach(
-                            item =>
-                                item.classList.remove(
-                                    "active"
-                                )
-                        );
-
-                    button.classList.add(
-                        "active"
-                    );
-
-                    showExploreRegionCountries(
-                        regionName,
-                        matchingCountries
-                    );
-
-                }
-            );
-
-
-            regionGrid.appendChild(
-                button
-            );
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// SHOW COUNTRIES IN EXPLORE REGION
-// ============================================================
-
-function showExploreRegionCountries(
-    regionName,
-    regionCountries
-) {
-
-    const results =
+    const regionResults =
         document.getElementById(
             "explore-region-results"
         );
 
-    results.innerHTML =
-        "";
+
+    if (
+        !regionGrid ||
+        !regionResults
+    ) {
+        return;
+    }
 
 
-    const heading =
-        document.createElement(
-            "h4"
-        );
-
-    heading.textContent =
-        regionName +
-        " — " +
-        regionCountries.length +
-        (
-            regionCountries.length ===
-            1
-                ? " country"
-                : " countries"
-        );
+    const regions =
+        getExploreRegions();
 
 
-    const list =
-        document.createElement(
-            "div"
-        );
-
-    list.className =
-        "explore-country-list";
-
-
-    regionCountries.forEach(
-        country => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "explore-country-chip";
-
-            button.textContent =
+    const sortedRegions =
+        Array.from(
+            regions.entries()
+        )
+            .sort(
                 (
-                    country.flag
-                        ? country.flag +
-                          " "
-                        : ""
-                ) +
-                country.name;
+                    [regionA],
+                    [regionB]
+                ) =>
+                    regionA.localeCompare(
+                        regionB
+                    )
+            );
 
 
-            button.addEventListener(
-                "click",
-                function () {
+    regionGrid.innerHTML =
+        sortedRegions
+            .map(
+                ([
+                    regionName,
+                    regionCountries
+                ]) => {
 
-                    switchToCountryView();
-
-                    selectCountrySearchResult(
-                        country
-                    );
+                    return `
+                        <button
+                            class="explore-region-button"
+                            type="button"
+                            data-explore-region="${escapeHtml(regionName)}"
+                        >
+                            ${escapeHtml(regionName)}
+                            (${regionCountries.length})
+                        </button>
+                    `;
 
                 }
-            );
+            )
+            .join("");
 
 
-            list.appendChild(
-                button
-            );
+// ------------------------------------------------------------
+// REGION BUTTON EVENTS
+// ------------------------------------------------------------
 
-        }
-    );
+    regionGrid
+        .querySelectorAll(
+            "[data-explore-region]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const selectedRegion =
+                            button.dataset
+                                .exploreRegion;
 
 
-    results.appendChild(
-        heading
-    );
+                        regionGrid
+                            .querySelectorAll(
+                                "[data-explore-region]"
+                            )
+                            .forEach(
+                                otherButton => {
 
-    results.appendChild(
-        list
-    );
+                                    otherButton.classList
+                                        .toggle(
+                                            "active",
+                                            otherButton ===
+                                                button
+                                        );
 
-    results.classList.add(
-        "active"
-    );
+                                }
+                            );
+
+
+                        const countries =
+                            regions.get(
+                                selectedRegion
+                            ) || [];
+
+
+                        const sortedCountries =
+                            [...countries]
+                                .sort(
+                                    (
+                                        countryA,
+                                        countryB
+                                    ) =>
+                                        getCountryName(
+                                            countryA
+                                        )
+                                            .localeCompare(
+                                                getCountryName(
+                                                    countryB
+                                                )
+                                            )
+                                );
+
+
+                        regionResults.innerHTML =
+                            `
+                                <div
+                                    class="explore-region-country-grid"
+                                >
+
+                                    ${sortedCountries
+                                        .map(
+                                            country => `
+                                                <button
+                                                    class="explore-country-button"
+                                                    type="button"
+                                                    data-explore-country-code="${escapeHtml(getCountryCode(country))}"
+                                                    data-explore-country-name="${escapeHtml(getCountryName(country))}"
+                                                >
+                                                    ${escapeHtml(getCountryName(country))}
+                                                </button>
+                                            `
+                                        )
+                                        .join("")}
+
+                                </div>
+                            `;
+
+
+                        regionResults.classList.add(
+                            "active"
+                        );
+
+
+                        regionResults
+                            .querySelectorAll(
+                                "[data-explore-country-name]"
+                            )
+                            .forEach(
+                                countryButton => {
+
+                                    countryButton.addEventListener(
+                                        "click",
+                                        function () {
+
+                                            const code =
+                                                countryButton
+                                                    .dataset
+                                                    .exploreCountryCode;
+
+
+                                            const name =
+                                                countryButton
+                                                    .dataset
+                                                    .exploreCountryName;
+
+
+                                            const country =
+                                                (
+                                                    code
+                                                        ? findCountryByCode(
+                                                            code
+                                                        )
+                                                        : null
+                                                ) ||
+                                                findCountryByName(
+                                                    name
+                                                );
+
+
+                                            if (!country) {
+                                                return;
+                                            }
+
+
+                                            switchView(
+                                                "countries"
+                                            );
+
+
+                                            openCountryPanel(
+                                                country
+                                            );
+
+                                        }
+                                    );
+
+                                }
+                            );
+
+                    }
+                );
+
+            }
+        );
 
 }
 
 
 // ============================================================
-// COUNTRY COMPARISON SELECTORS
+// EXPLORE — COUNTRY COMPARISON SELECTS
 // ============================================================
 
-function buildCountryComparisonSelectors() {
+function populateCountryComparisonSelectors() {
 
     const firstSelect =
         document.getElementById(
@@ -4263,338 +5830,337 @@ function buildCountryComparisonSelectors() {
         !firstSelect ||
         !secondSelect
     ) {
-
         return;
-
     }
 
 
-    const sortedCountries =
-        [...countries]
+    const countries =
+        [...getCountryDatabase()]
             .sort(
                 (
                     countryA,
                     countryB
                 ) =>
-                    countryA.name.localeCompare(
-                        countryB.name
+                    getCountryName(
+                        countryA
                     )
+                        .localeCompare(
+                            getCountryName(
+                                countryB
+                            )
+                        )
             );
 
 
-    sortedCountries.forEach(
-        country => {
+    const currentFirst =
+        firstSelect.value;
 
-            const firstOption =
-                document.createElement(
-                    "option"
-                );
-
-            firstOption.value =
-                country.iso3;
-
-            firstOption.textContent =
-                (
-                    country.flag
-                        ? country.flag +
-                          " "
-                        : ""
-                ) +
-                country.name;
+    const currentSecond =
+        secondSelect.value;
 
 
-            const secondOption =
-                firstOption.cloneNode(
-                    true
-                );
+    const options =
+        countries
+            .map(
+                country => {
+
+                    const code =
+                        getCountryCode(
+                            country
+                        );
 
 
-            firstSelect.appendChild(
-                firstOption
-            );
-
-            secondSelect.appendChild(
-                secondOption
-            );
-
-        }
-    );
+                    const name =
+                        getCountryName(
+                            country
+                        );
 
 
-    firstSelect.addEventListener(
-        "change",
-        updateCountryComparison
-    );
+                    const value =
+                        code ||
+                        name;
 
-    secondSelect.addEventListener(
-        "change",
-        updateCountryComparison
+
+                    return `
+                        <option
+                            value="${escapeHtml(value)}"
+                        >
+                            ${escapeHtml(name)}
+                        </option>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    firstSelect.innerHTML =
+        `
+            <option value="">
+                Select a country
+            </option>
+
+            ${options}
+        `;
+
+
+    secondSelect.innerHTML =
+        `
+            <option value="">
+                Select a country
+            </option>
+
+            ${options}
+        `;
+
+
+    if (
+        Array.from(
+            firstSelect.options
+        )
+            .some(
+                option =>
+                    option.value ===
+                    currentFirst
+            )
+    ) {
+
+        firstSelect.value =
+            currentFirst;
+
+    }
+
+
+    if (
+        Array.from(
+            secondSelect.options
+        )
+            .some(
+                option =>
+                    option.value ===
+                    currentSecond
+            )
+    ) {
+
+        secondSelect.value =
+            currentSecond;
+
+    }
+
+}
+
+
+// ============================================================
+// EXPLORE — GET COUNTRY FROM COMPARISON VALUE
+// ============================================================
+
+function getComparisonCountry(
+    value
+) {
+
+    if (!value) {
+        return null;
+    }
+
+
+    return (
+        findCountryByCode(
+            value
+        ) ||
+        findCountryByName(
+            value
+        )
     );
 
 }
 
 
 // ============================================================
-// COMPARISON VALUE
+// EXPLORE — COUNTRY COMPARISON FACT
 // ============================================================
 
-function createComparisonRow(
+function comparisonFact(
     label,
     value
 ) {
 
-    const row =
-        document.createElement(
-            "div"
-        );
+    return `
+        <div class="comparison-fact">
 
-    row.className =
-        "comparison-row";
+            <span class="comparison-fact-label">
+                ${escapeHtml(label)}
+            </span>
 
+            <span class="comparison-fact-value">
+                ${escapeHtml(
+                    formatArrayValue(
+                        value
+                    )
+                )}
+            </span>
 
-    const rowLabel =
-        document.createElement(
-            "span"
-        );
-
-    rowLabel.className =
-        "comparison-label";
-
-    rowLabel.textContent =
-        label;
-
-
-    const rowValue =
-        document.createElement(
-            "span"
-        );
-
-    rowValue.className =
-        "comparison-value";
-
-    rowValue.textContent =
-        value;
-
-
-    row.appendChild(
-        rowLabel
-    );
-
-    row.appendChild(
-        rowValue
-    );
-
-
-    return row;
+        </div>
+    `;
 
 }
 
 
 // ============================================================
-// BUILD ONE COUNTRY COMPARISON CARD
+// EXPLORE — COUNTRY COMPARISON CARD
 // ============================================================
 
-function buildComparisonCountry(
+function buildComparisonCountryCard(
     country
 ) {
 
-    const atAGlance =
-        country.atAGlance ||
-        {};
-
-    const government =
-        country.government ||
-        {};
-
-    const relationships =
-        getCountryCrisisRelationships(
+    const facts =
+        getExtraCountryFacts(
             country
         );
 
 
-    const card =
-        document.createElement(
-            "div"
+    const population =
+        firstAvailableValue(
+            facts.population,
+            country.population
         );
 
-    card.className =
-        "comparison-country";
 
-
-    const title =
-        document.createElement(
-            "div"
+    const capital =
+        firstAvailableValue(
+            facts.capital,
+            country.capital
         );
 
-    title.className =
-        "comparison-country-title";
 
-
-    const flag =
-        document.createElement(
-            "span"
+    const region =
+        firstAvailableValue(
+            facts.region,
+            country.region
         );
 
-    flag.className =
-        "comparison-country-flag";
 
-    flag.textContent =
-        country.flag ||
-        "";
-
-
-    const heading =
-        document.createElement(
-            "h4"
+    const subregion =
+        firstAvailableValue(
+            facts.subregion,
+            country.subregion
         );
 
-    heading.textContent =
-        country.name;
+
+    const government =
+        firstAvailableValue(
+            facts.governmentType,
+            facts.government,
+            country.governmentType,
+            country.government
+        );
 
 
-    title.appendChild(
-        flag
-    );
-
-    title.appendChild(
-        heading
-    );
-
-    card.appendChild(
-        title
-    );
+    const headOfState =
+        firstAvailableValue(
+            facts.headOfState,
+            country.headOfState
+        );
 
 
-    card.appendChild(
-        createComparisonRow(
-            "Population",
-            formatPopulation(
-                atAGlance.population
-            )
-        )
-    );
+    const headOfGovernment =
+        firstAvailableValue(
+            facts.headOfGovernment,
+            country.headOfGovernment
+        );
 
 
-    card.appendChild(
-        createComparisonRow(
-            "Capital",
-            displayValue(
-                atAGlance.capital ||
-                country.capital
-            )
-        )
-    );
+    const languages =
+        firstAvailableValue(
+            facts.languages,
+            country.languages
+        );
 
 
-    card.appendChild(
-        createComparisonRow(
-            "Region",
-            displayValue(
-                atAGlance.region ||
-                country.region
-            )
-        )
-    );
+    const currency =
+        firstAvailableValue(
+            facts.currency,
+            facts.currencies,
+            country.currency,
+            country.currencies
+        );
 
 
-    card.appendChild(
-        createComparisonRow(
-            "Subregion",
-            displayValue(
-                atAGlance.subregion ||
-                country.subregion
-            )
-        )
-    );
+    const relatedCrises =
+        getCrisesForCountry(
+            country
+        );
 
 
-    card.appendChild(
-        createComparisonRow(
-            "Area",
-            formatArea(
-                atAGlance.areaKm2
-            )
-        )
-    );
+    return `
+        <div class="comparison-country">
 
+            <h4>
+                ${escapeHtml(
+                    getCountryName(
+                        country
+                    )
+                )}
+            </h4>
 
-    card.appendChild(
-        createComparisonRow(
-            "Languages",
-            formatList(
-                atAGlance.languages
-            )
-        )
-    );
+            ${comparisonFact(
+                "Population",
+                population
+            )}
 
+            ${comparisonFact(
+                "Capital",
+                capital
+            )}
 
-    card.appendChild(
-        createComparisonRow(
-            "Currency",
-            displayValue(
-                atAGlance.currency
-            )
-        )
-    );
+            ${comparisonFact(
+                "Region",
+                region
+            )}
 
+            ${comparisonFact(
+                "Subregion",
+                subregion
+            )}
 
-    card.appendChild(
-        createComparisonRow(
-            "Government Type",
-            displayValue(
-                government.governmentType
-            )
-        )
-    );
+            ${comparisonFact(
+                "Government Type",
+                government
+            )}
 
+            ${comparisonFact(
+                "Head of State",
+                headOfState
+            )}
 
-    card.appendChild(
-        createComparisonRow(
-            "Head of State",
-            formatPerson(
-                government.headOfState
-            )
-        )
-    );
+            ${comparisonFact(
+                "Head of Government",
+                headOfGovernment
+            )}
 
+            ${comparisonFact(
+                "Languages",
+                languages
+            )}
 
-    card.appendChild(
-        createComparisonRow(
-            "Head of Government",
-            formatPerson(
-                government.headOfGovernment
-            )
-        )
-    );
+            ${comparisonFact(
+                "Currency",
+                currency
+            )}
 
+            ${comparisonFact(
+                "Related Crises",
+                relatedCrises.length
+            )}
 
-    card.appendChild(
-        createComparisonRow(
-            "United Nations Status",
-            formatUnStatus(
-                government.unStatus
-            )
-        )
-    );
-
-
-    card.appendChild(
-        createComparisonRow(
-            "Related Crises",
-            String(
-                relationships.length
-            )
-        )
-    );
-
-
-    return card;
+        </div>
+    `;
 
 }
 
 
 // ============================================================
-// UPDATE COUNTRY COMPARISON
+// EXPLORE — UPDATE COUNTRY COMPARISON
 // ============================================================
 
 function updateCountryComparison() {
@@ -4615,47 +6181,24 @@ function updateCountryComparison() {
         );
 
 
-    comparison.innerHTML =
-        "";
-
-
     if (
-        !firstSelect.value ||
-        !secondSelect.value
+        !firstSelect ||
+        !secondSelect ||
+        !comparison
     ) {
-
-        const placeholder =
-            document.createElement(
-                "div"
-            );
-
-        placeholder.className =
-            "comparison-placeholder";
-
-        placeholder.textContent =
-            "Select two countries above to compare them.";
-
-        comparison.appendChild(
-            placeholder
-        );
-
         return;
-
     }
 
 
     const firstCountry =
-        countries.find(
-            country =>
-                country.iso3 ===
-                firstSelect.value
+        getComparisonCountry(
+            firstSelect.value
         );
 
+
     const secondCountry =
-        countries.find(
-            country =>
-                country.iso3 ===
-                secondSelect.value
+        getComparisonCountry(
+            secondSelect.value
         );
 
 
@@ -4664,2384 +6207,7 @@ function updateCountryComparison() {
         !secondCountry
     ) {
 
-        return;
-
-    }
-
-
-    const grid =
-        document.createElement(
-            "div"
-        );
-
-    grid.className =
-        "comparison-grid";
-
-
-    grid.appendChild(
-        buildComparisonCountry(
-            firstCountry
-        )
-    );
-
-    grid.appendChild(
-        buildComparisonCountry(
-            secondCountry
-        )
-    );
-
-
-    comparison.appendChild(
-        grid
-    );
-
-}
-
-
-// ============================================================
-// HUMANITARIAN ORGANIZATIONS IN EXPLORE
-// ============================================================
-
-function buildExploreOrganizations() {
-
-    const organizationGrid =
-        document.getElementById(
-            "explore-organization-grid"
-        );
-
-
-    if (
-        !organizationGrid
-    ) {
-
-        return;
-
-    }
-
-
-    const organizationMap =
-        new Map();
-
-
-    function addOrganization(
-        organization
-    ) {
-
-        if (
-            !organization
-        ) {
-
-            return;
-
-        }
-
-
-        const name =
-            typeof organization ===
-            "string"
-                ? organization
-                : (
-                    organization.name ||
-                    organization.label ||
-                    organization.title ||
-                    ""
-                );
-
-
-        if (
-            !name
-        ) {
-
-            return;
-
-        }
-
-
-        const key =
-            name
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            organizationMap.has(
-                key
-            )
-        ) {
-
-            organizationMap.get(
-                key
-            ).references +=
-                1;
-
-            return;
-
-        }
-
-
-        organizationMap.set(
-            key,
-            {
-                name: name,
-                references: 1
-            }
-        );
-
-    }
-
-
-    conflicts.forEach(
-        conflict => {
-
-            (
-                conflict.aid ||
-                []
-            ).forEach(
-                addOrganization
-            );
-
-        }
-    );
-
-
-    countries.forEach(
-        country => {
-
-            (
-                country.organizations ||
-                []
-            ).forEach(
-                addOrganization
-            );
-
-        }
-    );
-
-
-    const organizations =
-        Array.from(
-            organizationMap.values()
-        )
-            .sort(
-                (
-                    organizationA,
-                    organizationB
-                ) =>
-                    organizationB.references -
-                        organizationA.references ||
-                    organizationA.name.localeCompare(
-                        organizationB.name
-                    )
-            )
-            .slice(
-                0,
-                12
-            );
-
-
-    organizationGrid.innerHTML =
-        "";
-
-
-    if (
-        organizations.length ===
-        0
-    ) {
-
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-        empty.className =
-            "comparison-placeholder";
-
-        empty.textContent =
-            "Humanitarian organizations will appear here as they are referenced in the database.";
-
-        organizationGrid.appendChild(
-            empty
-        );
-
-        return;
-
-    }
-
-
-    organizations.forEach(
-        organization => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "explore-organization-card";
-
-
-            const name =
-                document.createElement(
-                    "strong"
-                );
-
-            name.textContent =
-                organization.name;
-
-
-            const references =
-                document.createElement(
-                    "span"
-                );
-
-            references.textContent =
-                "Referenced in " +
-                organization.references +
-                (
-                    organization.references ===
-                    1
-                        ? " profile"
-                        : " profiles"
-                );
-
-
-            card.appendChild(
-                name
-            );
-
-            card.appendChild(
-                references
-            );
-
-
-            organizationGrid.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// EXPLORE CATEGORY BUTTONS
-// ============================================================
-
-document
-    .querySelectorAll(
-        ".explore-category-card"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const category =
-                        button.dataset
-                            .exploreCategory;
-
-                    switchToCrisisView();
-
-
-                    filterButtons.forEach(
-                        filterButton => {
-
-                            filterButton.classList.remove(
-                                "active"
-                            );
-
-
-                            if (
-                                filterButton.dataset.filter ===
-                                category
-                            ) {
-
-                                filterButton.classList.add(
-                                    "active"
-                                );
-
-                            }
-
-                        }
-                    );
-
-
-                    conflictMarkers.forEach(
-                        item => {
-
-                            const shouldShow =
-                                (
-                                    item.conflict.categories ||
-                                    []
-                                ).includes(
-                                    category
-                                );
-
-
-                            if (
-                                shouldShow
-                            ) {
-
-                                if (
-                                    !map.hasLayer(
-                                        item.marker
-                                    )
-                                ) {
-
-                                    item.marker.addTo(
-                                        map
-                                    );
-
-                                }
-
-                            } else {
-
-                                if (
-                                    map.hasLayer(
-                                        item.marker
-                                    )
-                                ) {
-
-                                    map.removeLayer(
-                                        item.marker
-                                    );
-
-                                }
-
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-// ============================================================
-// SWITCH TO EXPLORE VIEW
-// ============================================================
-
-function switchToExploreView() {
-
-    currentView =
-        "explore";
-
-    resetViewButtons();
-
-    exploreViewButton.classList.add(
-        "active"
-    );
-
-    infoPanel.classList.remove(
-        "open"
-    );
-
-    countryPanel.classList.remove(
-        "open"
-    );
-
-    clearSearch();
-
-    crisisFilters.style.display =
-        "none";
-
-    searchArea.style.display =
-        "none";
-
-    crisisLegend.style.display =
-        "none";
-
-    countryLegend.style.display =
-        "none";
-
-    atlasMain.style.display =
-        "none";
-
-    aboutView.classList.remove(
-        "active"
-    );
-
-    aboutView.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    exploreView.classList.add(
-        "active"
-    );
-
-    exploreView.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    updateExploreStatistics();
-
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-// ============================================================
-// SWITCH TO ABOUT VIEW
-// ============================================================
-
-function switchToAboutView() {
-
-    currentView =
-        "about";
-
-    resetViewButtons();
-
-    aboutViewButton.classList.add(
-        "active"
-    );
-
-    infoPanel.classList.remove(
-        "open"
-    );
-
-    countryPanel.classList.remove(
-        "open"
-    );
-
-    clearSearch();
-
-    crisisFilters.style.display =
-        "none";
-
-    searchArea.style.display =
-        "none";
-
-    crisisLegend.style.display =
-        "none";
-
-    countryLegend.style.display =
-        "none";
-
-    atlasMain.style.display =
-        "none";
-
-    hideExploreView();
-
-    aboutView.classList.add(
-        "active"
-    );
-
-    aboutView.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-// ============================================================
-// VIEW BUTTON EVENTS
-// ============================================================
-
-crisisViewButton.addEventListener(
-    "click",
-    function () {
-
-        switchToCrisisView();
-
-    }
-);
-
-
-countryViewButton.addEventListener(
-    "click",
-    function () {
-
-        switchToCountryView();
-
-    }
-);
-
-
-exploreViewButton.addEventListener(
-    "click",
-    function () {
-
-        switchToExploreView();
-
-    }
-);
-
-
-aboutViewButton.addEventListener(
-    "click",
-    function () {
-
-        switchToAboutView();
-
-    }
-);
-
-
-// ============================================================
-// BUILD EXPLORE CONTENT
-// ============================================================
-
-buildExploreRegions();
-
-buildCountryComparisonSelectors();
-
-buildExploreOrganizations();
-
-updateExploreStatistics();
-
-
-// ============================================================
-// SEARCH
-// ============================================================
-
-crisisSearch.addEventListener(
-    "input",
-    function () {
-
-        const searchTerm =
-            crisisSearch.value
-                .trim()
-                .toLowerCase();
-
-        searchResults.innerHTML =
-            "";
-
-        if (
-            searchTerm ===
-            ""
-        ) {
-
-            searchResults.style.display =
-                "none";
-
-            return;
-
-        }
-
-        if (
-            currentView ===
-            "crises"
-        ) {
-
-            searchCrises(
-                searchTerm
-            );
-
-        } else if (
-            currentView ===
-            "countries"
-        ) {
-
-            searchCountries(
-                searchTerm
-            );
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// SEARCH CRISES
-// ============================================================
-
-function searchCrises(
-    searchTerm
-) {
-
-    const matches =
-        conflicts
-            .filter(
-                conflict => {
-
-                    const nameMatch =
-                        conflict.name
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            );
-
-                    const categoryMatch =
-                        conflict.categories
-                            .some(
-                                category => {
-
-                                    const readableName =
-                                        categoryNames[
-                                            category
-                                        ] ||
-                                        category;
-
-                                    return readableName
-                                        .toLowerCase()
-                                        .includes(
-                                            searchTerm
-                                        );
-
-                                }
-                            );
-
-                    const actorMatch =
-                        (
-                            conflict.actors ||
-                            []
-                        )
-                            .some(
-                                actor =>
-                                    actor
-                                        .toLowerCase()
-                                        .includes(
-                                            searchTerm
-                                        )
-                            );
-
-                    return (
-                        nameMatch ||
-                        categoryMatch ||
-                        actorMatch
-                    );
-
-                }
-            )
-            .slice(
-                0,
-                8
-            );
-
-    if (
-        matches.length ===
-        0
-    ) {
-
-        showNoSearchResult(
-            "No matching crisis found."
-        );
-
-        return;
-
-    }
-
-    matches.forEach(
-        conflict => {
-
-            const primaryCategory =
-                conflict.primaryCategory ||
-                conflict.categories[0];
-
-            createSearchResult(
-                conflict.name,
-
-                categoryNames[
-                    primaryCategory
-                ] ||
-                primaryCategory,
-
-                function () {
-
-                    selectCrisisSearchResult(
-                        conflict
-                    );
-
-                }
-            );
-
-        }
-    );
-
-    searchResults.style.display =
-        "block";
-
-}
-
-
-// ============================================================
-// SEARCH COUNTRIES
-// ============================================================
-
-function searchCountries(
-    searchTerm
-) {
-
-    const matches =
-        countries
-            .filter(
-                country => {
-
-                    return (
-                        country.name
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.capital ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.region ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.subregion ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        country.iso2
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        country.iso3
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            )
-                    );
-
-                }
-            )
-            .slice(
-                0,
-                10
-            );
-
-    if (
-        matches.length ===
-        0
-    ) {
-
-        showNoSearchResult(
-            "No matching country found."
-        );
-
-        return;
-
-    }
-
-    matches.forEach(
-        country => {
-
-            createSearchResult(
-                country.flag +
-                    " " +
-                    country.name,
-
-                country.subregion,
-
-                function () {
-
-                    selectCountrySearchResult(
-                        country
-                    );
-
-                }
-            );
-
-        }
-    );
-
-    searchResults.style.display =
-        "block";
-
-}
-// ============================================================
-// SEARCH
-// ============================================================
-
-crisisSearch.addEventListener(
-    "input",
-    function () {
-
-        const searchTerm =
-            crisisSearch.value
-                .trim()
-                .toLowerCase();
-
-        searchResults.innerHTML =
-            "";
-
-        if (
-            searchTerm ===
-            ""
-        ) {
-
-            searchResults.style.display =
-                "none";
-
-            return;
-
-        }
-
-        if (
-            currentView ===
-            "crises"
-        ) {
-
-            searchCrises(
-                searchTerm
-            );
-
-        } else if (
-            currentView ===
-            "countries"
-        ) {
-
-            searchCountries(
-                searchTerm
-            );
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// SEARCH CRISES
-// ============================================================
-
-function searchCrises(
-    searchTerm
-) {
-
-    const matches =
-        conflicts
-            .filter(
-                conflict => {
-
-                    const nameMatch =
-                        conflict.name
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            );
-
-                    const categoryMatch =
-                        conflict.categories
-                            .some(
-                                category => {
-
-                                    const readableName =
-                                        categoryNames[
-                                            category
-                                        ] ||
-                                        category;
-
-                                    return readableName
-                                        .toLowerCase()
-                                        .includes(
-                                            searchTerm
-                                        );
-
-                                }
-                            );
-
-                    const actorMatch =
-                        (
-                            conflict.actors ||
-                            []
-                        )
-                            .some(
-                                actor =>
-                                    actor
-                                        .toLowerCase()
-                                        .includes(
-                                            searchTerm
-                                        )
-                            );
-
-                    return (
-                        nameMatch ||
-                        categoryMatch ||
-                        actorMatch
-                    );
-
-                }
-            )
-            .slice(
-                0,
-                8
-            );
-
-    if (
-        matches.length ===
-        0
-    ) {
-
-        showNoSearchResult(
-            "No matching crisis found."
-        );
-
-        return;
-
-    }
-
-    matches.forEach(
-        conflict => {
-
-            const primaryCategory =
-                conflict.primaryCategory ||
-                conflict.categories[0];
-
-            createSearchResult(
-                conflict.name,
-
-                categoryNames[
-                    primaryCategory
-                ] ||
-                primaryCategory,
-
-                function () {
-
-                    selectCrisisSearchResult(
-                        conflict
-                    );
-
-                }
-            );
-
-        }
-    );
-
-    searchResults.style.display =
-        "block";
-
-}
-
-
-// ============================================================
-// SEARCH COUNTRIES
-// ============================================================
-
-function searchCountries(
-    searchTerm
-) {
-
-    const matches =
-        countries
-            .filter(
-                country => {
-
-                    return (
-                        country.name
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.capital ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.region ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        (
-                            country.subregion ||
-                            ""
-                        )
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        country.iso2
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            ) ||
-
-                        country.iso3
-                            .toLowerCase()
-                            .includes(
-                                searchTerm
-                            )
-                    );
-
-                }
-            )
-            .slice(
-                0,
-                10
-            );
-
-    if (
-        matches.length ===
-        0
-    ) {
-
-        showNoSearchResult(
-            "No matching country found."
-        );
-
-        return;
-
-    }
-
-    matches.forEach(
-        country => {
-
-            createSearchResult(
-                country.flag +
-                    " " +
-                    country.name,
-
-                country.subregion,
-
-                function () {
-
-                    selectCountrySearchResult(
-                        country
-                    );
-
-                }
-            );
-
-        }
-    );
-
-    searchResults.style.display =
-        "block";
-
-}
-
-
-// ============================================================
-// CREATE SEARCH RESULT
-// ============================================================
-
-function createSearchResult(
-    name,
-    subtitle,
-    clickFunction
-) {
-
-    const result =
-        document.createElement(
-            "button"
-        );
-
-    result.type =
-        "button";
-
-    result.className =
-        "search-result-item";
-
-    const resultName =
-        document.createElement(
-            "span"
-        );
-
-    resultName.className =
-        "search-result-name";
-
-    resultName.textContent =
-        name;
-
-    const resultCategory =
-        document.createElement(
-            "span"
-        );
-
-    resultCategory.className =
-        "search-result-category";
-
-    resultCategory.textContent =
-        subtitle ||
-        "";
-
-    result.appendChild(
-        resultName
-    );
-
-    result.appendChild(
-        resultCategory
-    );
-
-    result.addEventListener(
-        "click",
-        clickFunction
-    );
-
-    searchResults.appendChild(
-        result
-    );
-
-}
-
-
-// ============================================================
-// NO SEARCH RESULT
-// ============================================================
-
-function showNoSearchResult(
-    message
-) {
-
-    const noResult =
-        document.createElement(
-            "div"
-        );
-
-    noResult.className =
-        "search-no-result";
-
-    noResult.textContent =
-        message;
-
-    searchResults.appendChild(
-        noResult
-    );
-
-    searchResults.style.display =
-        "block";
-
-}
-
-
-// ============================================================
-// SELECT CRISIS SEARCH RESULT
-// ============================================================
-
-function selectCrisisSearchResult(
-    conflict
-) {
-
-    filterButtons.forEach(
-        button => {
-
-            button.classList.remove(
-                "active"
-            );
-
-            if (
-                button.dataset.filter ===
-                "all"
-            ) {
-
-                button.classList.add(
-                    "active"
-                );
-
-            }
-
-        }
-    );
-
-    conflictMarkers.forEach(
-        item => {
-
-            if (
-                !map.hasLayer(
-                    item.marker
-                )
-            ) {
-
-                item.marker.addTo(
-                    map
-                );
-
-            }
-
-        }
-    );
-
-    const selectedMarker =
-        conflictMarkers.find(
-            item =>
-                item.conflict.id ===
-                conflict.id
-        );
-
-    map.flyTo(
-        conflict.coordinates,
-        5,
-        {
-            animate: true,
-            duration: 1.2
-        }
-    );
-
-    openConflictPanel(
-        conflict
-    );
-
-    if (
-        selectedMarker
-    ) {
-
-        selectedMarker
-            .marker
-            .openTooltip();
-
-    }
-
-    crisisSearch.value =
-        conflict.name;
-
-    searchResults.innerHTML =
-        "";
-
-    searchResults.style.display =
-        "none";
-
-}
-
-
-// ============================================================
-// SELECT COUNTRY SEARCH RESULT
-// ============================================================
-
-function selectCountrySearchResult(
-    country
-) {
-
-    const countryLayer =
-        countryLayersByIso3.get(
-            country.iso3
-        );
-
-    if (
-        countryLayer
-    ) {
-
-        selectCountryLayer(
-            country,
-            countryLayer,
-            true
-        );
-
-    } else {
-
-        map.flyTo(
-            country.coordinates,
-            6,
-            {
-                animate: true,
-                duration: 1.2
-            }
-        );
-
-        openCountryPanel(
-            country
-        );
-
-        const fallbackMarker =
-            fallbackCountryMarkers.find(
-                item =>
-                    item.country.iso3 ===
-                    country.iso3
-            );
-
-        if (
-            fallbackMarker
-        ) {
-
-            fallbackMarker
-                .marker
-                .openTooltip();
-
-        }
-
-    }
-
-    crisisSearch.value =
-        country.name;
-
-    searchResults.innerHTML =
-        "";
-
-    searchResults.style.display =
-        "none";
-
-}
-
-
-// ============================================================
-// CLEAR SEARCH
-// ============================================================
-
-function clearSearch() {
-
-    crisisSearch.value =
-        "";
-
-    searchResults.innerHTML =
-        "";
-
-    searchResults.style.display =
-        "none";
-
-}
-
-
-// ============================================================
-// EXPLORE HELPERS
-// ============================================================
-
-function getExploreCountryRegion(
-    country
-) {
-
-    const region =
-        (
-            country.region ||
-            country.atAGlance?.region ||
-            ""
-        ).toLowerCase();
-
-    const subregion =
-        (
-            country.subregion ||
-            country.atAGlance?.subregion ||
-            ""
-        ).toLowerCase();
-
-    const combined =
-        region +
-        " " +
-        subregion;
-
-
-    if (
-        combined.includes(
-            "middle east"
-        ) ||
-        combined.includes(
-            "western asia"
-        )
-    ) {
-
-        return "Middle East";
-
-    }
-
-
-    if (
-        combined.includes(
-            "africa"
-        )
-    ) {
-
-        return "Africa";
-
-    }
-
-
-    if (
-        combined.includes(
-            "europe"
-        )
-    ) {
-
-        return "Europe";
-
-    }
-
-
-    if (
-        combined.includes(
-            "asia"
-        ) ||
-        combined.includes(
-            "oceania"
-        ) ||
-        combined.includes(
-            "pacific"
-        )
-    ) {
-
-        return "Asia-Pacific";
-
-    }
-
-
-    if (
-        combined.includes(
-            "america"
-        ) ||
-        combined.includes(
-            "caribbean"
-        )
-    ) {
-
-        return "Americas";
-
-    }
-
-
-    return "Other";
-
-}
-
-
-function getExploreRegions() {
-
-    const regionOrder = [
-        "Africa",
-        "Middle East",
-        "Europe",
-        "Asia-Pacific",
-        "Americas"
-    ];
-
-    const regions = {};
-
-    regionOrder.forEach(
-        region => {
-
-            regions[region] = [];
-
-        }
-    );
-
-
-    countries.forEach(
-        country => {
-
-            const region =
-                getExploreCountryRegion(
-                    country
-                );
-
-            if (
-                regions[region]
-            ) {
-
-                regions[
-                    region
-                ].push(
-                    country
-                );
-
-            }
-
-        }
-    );
-
-
-    regionOrder.forEach(
-        region => {
-
-            regions[
-                region
-            ].sort(
-                (
-                    countryA,
-                    countryB
-                ) =>
-                    countryA.name.localeCompare(
-                        countryB.name
-                    )
-            );
-
-        }
-    );
-
-
-    return regions;
-
-}
-
-
-function getCountriesConnectedToCrises() {
-
-    return countries.filter(
-        country =>
-            getCountryCrisisRelationships(
-                country
-            ).length > 0
-    );
-
-}
-
-
-function getCategoryCount(
-    category
-) {
-
-    return conflicts.filter(
-        conflict =>
-            (
-                conflict.categories ||
-                []
-            ).includes(
-                category
-            )
-    ).length;
-
-}
-
-
-// ============================================================
-// EXPLORE GLOBAL STATS
-// ============================================================
-
-function updateExploreStats() {
-
-    const crisisTotal =
-        document.getElementById(
-            "explore-crisis-total"
-        );
-
-    const countryTotal =
-        document.getElementById(
-            "explore-country-total"
-        );
-
-    const relatedCountryTotal =
-        document.getElementById(
-            "explore-related-country-total"
-        );
-
-    const regionTotal =
-        document.getElementById(
-            "explore-region-total"
-        );
-
-
-    if (
-        crisisTotal
-    ) {
-
-        crisisTotal.textContent =
-            conflicts.length;
-
-    }
-
-
-    if (
-        countryTotal
-    ) {
-
-        countryTotal.textContent =
-            countries.length;
-
-    }
-
-
-    if (
-        relatedCountryTotal
-    ) {
-
-        relatedCountryTotal.textContent =
-            getCountriesConnectedToCrises()
-                .length;
-
-    }
-
-
-    if (
-        regionTotal
-    ) {
-
-        const regions =
-            getExploreRegions();
-
-        regionTotal.textContent =
-            Object.values(
-                regions
-            )
-                .filter(
-                    regionCountries =>
-                        regionCountries.length >
-                        0
-                )
-                .length;
-
-    }
-
-
-    const categoryIds = {
-        conflict:
-            "explore-conflict-count",
-
-        humanitarian:
-            "explore-humanitarian-count",
-
-        displacement:
-            "explore-displacement-count",
-
-        disaster:
-            "explore-disaster-count"
-    };
-
-
-    Object.entries(
-        categoryIds
-    ).forEach(
-        (
-            [
-                category,
-                elementId
-            ]
-        ) => {
-
-            const element =
-                document.getElementById(
-                    elementId
-                );
-
-            if (
-                element
-            ) {
-
-                element.textContent =
-                    getCategoryCount(
-                        category
-                    );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// EXPLORE REGION CARDS
-// ============================================================
-
-function renderExploreRegions() {
-
-    const regionGrid =
-        document.getElementById(
-            "explore-region-grid"
-        );
-
-    const regionResults =
-        document.getElementById(
-            "explore-region-results"
-        );
-
-
-    if (
-        !regionGrid ||
-        !regionResults
-    ) {
-
-        return;
-
-    }
-
-
-    regionGrid.innerHTML =
-        "";
-
-    const regions =
-        getExploreRegions();
-
-
-    Object.entries(
-        regions
-    ).forEach(
-        (
-            [
-                regionName,
-                regionCountries
-            ]
-        ) => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "explore-region-button";
-
-
-            const name =
-                document.createElement(
-                    "span"
-                );
-
-            name.className =
-                "explore-region-name";
-
-            name.textContent =
-                regionName;
-
-
-            const count =
-                document.createElement(
-                    "span"
-                );
-
-            count.className =
-                "explore-region-count";
-
-            count.textContent =
-                regionCountries.length +
-                (
-                    regionCountries.length ===
-                    1
-                        ? " country"
-                        : " countries"
-                );
-
-
-            button.appendChild(
-                name
-            );
-
-            button.appendChild(
-                count
-            );
-
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    document
-                        .querySelectorAll(
-                            ".explore-region-button"
-                        )
-                        .forEach(
-                            regionButton => {
-
-                                regionButton
-                                    .classList
-                                    .remove(
-                                        "active"
-                                    );
-
-                            }
-                        );
-
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    showExploreRegionCountries(
-                        regionName,
-                        regionCountries
-                    );
-
-                }
-            );
-
-
-            regionGrid.appendChild(
-                button
-            );
-
-        }
-    );
-
-}
-
-
-function showExploreRegionCountries(
-    regionName,
-    regionCountries
-) {
-
-    const regionResults =
-        document.getElementById(
-            "explore-region-results"
-        );
-
-
-    regionResults.innerHTML =
-        "";
-
-    regionResults.classList.add(
-        "active"
-    );
-
-
-    const heading =
-        document.createElement(
-            "h4"
-        );
-
-    heading.textContent =
-        regionName +
-        " — " +
-        regionCountries.length +
-        (
-            regionCountries.length ===
-            1
-                ? " country"
-                : " countries"
-        );
-
-
-    const countryList =
-        document.createElement(
-            "div"
-        );
-
-    countryList.className =
-        "explore-country-list";
-
-
-    regionCountries.forEach(
-        country => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "explore-country-chip";
-
-            button.textContent =
-                (
-                    country.flag
-                        ? country.flag +
-                          " "
-                        : ""
-                ) +
-                country.name;
-
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    switchToCountryView();
-
-                    selectCountrySearchResult(
-                        country
-                    );
-
-                }
-            );
-
-
-            countryList.appendChild(
-                button
-            );
-
-        }
-    );
-
-
-    regionResults.appendChild(
-        heading
-    );
-
-    regionResults.appendChild(
-        countryList
-    );
-
-}
-
-
-// ============================================================
-// EXPLORE CRISIS CATEGORY CARDS
-// ============================================================
-
-document
-    .querySelectorAll(
-        ".explore-category-card"
-    )
-    .forEach(
-        card => {
-
-            card.addEventListener(
-                "click",
-                function () {
-
-                    const category =
-                        card.dataset
-                            .exploreCategory;
-
-
-                    switchToCrisisView();
-
-
-                    filterButtons.forEach(
-                        button => {
-
-                            button.classList.remove(
-                                "active"
-                            );
-
-
-                            if (
-                                button.dataset.filter ===
-                                category
-                            ) {
-
-                                button.classList.add(
-                                    "active"
-                                );
-
-                                button.click();
-
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-// ============================================================
-// COMPARE COUNTRIES
-// ============================================================
-
-const compareCountryOne =
-    document.getElementById(
-        "compare-country-one"
-    );
-
-const compareCountryTwo =
-    document.getElementById(
-        "compare-country-two"
-    );
-
-const countryComparison =
-    document.getElementById(
-        "country-comparison"
-    );
-
-
-function populateCountryComparisonSelectors() {
-
-    const sortedCountries =
-        [...countries].sort(
-            (
-                countryA,
-                countryB
-            ) =>
-                countryA.name.localeCompare(
-                    countryB.name
-                )
-        );
-
-
-    [
-        compareCountryOne,
-        compareCountryTwo
-    ].forEach(
-        select => {
-
-            if (
-                !select
-            ) {
-
-                return;
-
-            }
-
-
-            sortedCountries.forEach(
-                country => {
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-                    option.value =
-                        country.iso3;
-
-                    option.textContent =
-                        (
-                            country.flag
-                                ? country.flag +
-                                  " "
-                                : ""
-                        ) +
-                        country.name;
-
-                    select.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-function comparisonValue(
-    value
-) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-
-        return "—";
-
-    }
-
-    return String(
-        value
-    );
-
-}
-
-
-function getComparisonCountryData(
-    country
-) {
-
-    const atAGlance =
-        country.atAGlance ||
-        {};
-
-    const government =
-        country.government ||
-        {};
-
-    const relationships =
-        getCountryCrisisRelationships(
-            country
-        );
-
-
-    return {
-
-        name:
-            country.name,
-
-        flag:
-            country.flag ||
-            "",
-
-        population:
-            formatPopulation(
-                atAGlance.population
-            ),
-
-        capital:
-            comparisonValue(
-                atAGlance.capital ||
-                country.capital
-            ),
-
-        region:
-            comparisonValue(
-                atAGlance.region ||
-                country.region
-            ),
-
-        subregion:
-            comparisonValue(
-                atAGlance.subregion ||
-                country.subregion
-            ),
-
-        area:
-            formatArea(
-                atAGlance.areaKm2
-            ),
-
-        languages:
-            formatList(
-                atAGlance.languages
-            ),
-
-        currency:
-            comparisonValue(
-                atAGlance.currency
-            ),
-
-        governmentType:
-            comparisonValue(
-                government.governmentType
-            ),
-
-        headOfState:
-            formatPerson(
-                government.headOfState
-            ),
-
-        headOfGovernment:
-            formatPerson(
-                government.headOfGovernment
-            ),
-
-        unStatus:
-            formatUnStatus(
-                government.unStatus
-            ),
-
-        relatedCrises:
-            relationships.length ===
-            0
-                ? "None currently documented"
-                : relationships
-                    .map(
-                        item =>
-                            item.conflict.name
-                    )
-                    .join(", ")
-
-    };
-
-}
-
-
-function createComparisonCountryCard(
-    data
-) {
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-    card.className =
-        "comparison-country";
-
-
-    const title =
-        document.createElement(
-            "div"
-        );
-
-    title.className =
-        "comparison-country-title";
-
-
-    const flag =
-        document.createElement(
-            "span"
-        );
-
-    flag.className =
-        "comparison-country-flag";
-
-    flag.textContent =
-        data.flag;
-
-
-    const heading =
-        document.createElement(
-            "h4"
-        );
-
-    heading.textContent =
-        data.name;
-
-
-    title.appendChild(
-        flag
-    );
-
-    title.appendChild(
-        heading
-    );
-
-    card.appendChild(
-        title
-    );
-
-
-    const rows = [
-        [
-            "Population",
-            data.population
-        ],
-        [
-            "Capital",
-            data.capital
-        ],
-        [
-            "Region",
-            data.region
-        ],
-        [
-            "Subregion",
-            data.subregion
-        ],
-        [
-            "Area",
-            data.area
-        ],
-        [
-            "Languages",
-            data.languages
-        ],
-        [
-            "Currency",
-            data.currency
-        ],
-        [
-            "Government Type",
-            data.governmentType
-        ],
-        [
-            "Head of State",
-            data.headOfState
-        ],
-        [
-            "Head of Government",
-            data.headOfGovernment
-        ],
-        [
-            "UN Status",
-            data.unStatus
-        ],
-        [
-            "Related Crises",
-            data.relatedCrises
-        ]
-    ];
-
-
-    rows.forEach(
-        (
-            [
-                labelText,
-                valueText
-            ]
-        ) => {
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-            row.className =
-                "comparison-row";
-
-
-            const label =
-                document.createElement(
-                    "span"
-                );
-
-            label.className =
-                "comparison-label";
-
-            label.textContent =
-                labelText;
-
-
-            const value =
-                document.createElement(
-                    "span"
-                );
-
-            value.className =
-                "comparison-value";
-
-            value.textContent =
-                valueText;
-
-
-            row.appendChild(
-                label
-            );
-
-            row.appendChild(
-                value
-            );
-
-            card.appendChild(
-                row
-            );
-
-        }
-    );
-
-
-    return card;
-
-}
-
-
-function updateCountryComparison() {
-
-    if (
-        !compareCountryOne ||
-        !compareCountryTwo ||
-        !countryComparison
-    ) {
-
-        return;
-
-    }
-
-
-    const firstIso =
-        compareCountryOne.value;
-
-    const secondIso =
-        compareCountryTwo.value;
-
-
-    if (
-        !firstIso ||
-        !secondIso
-    ) {
-
-        countryComparison.innerHTML =
+        comparison.innerHTML =
             `
                 <div class="comparison-placeholder">
                     Select two countries above to compare them.
@@ -7049,99 +6215,92 @@ function updateCountryComparison() {
             `;
 
         return;
-
     }
 
 
-    const firstCountry =
-        countries.find(
-            country =>
-                country.iso3 ===
-                firstIso
-        );
+    comparison.innerHTML =
+        `
+            <div class="comparison-grid">
 
-    const secondCountry =
-        countries.find(
-            country =>
-                country.iso3 ===
-                secondIso
-        );
+                ${buildComparisonCountryCard(
+                    firstCountry
+                )}
 
+                ${buildComparisonCountryCard(
+                    secondCountry
+                )}
 
-    if (
-        !firstCountry ||
-        !secondCountry
-    ) {
-
-        return;
-
-    }
-
-
-    countryComparison.innerHTML =
-        "";
-
-
-    const comparisonGrid =
-        document.createElement(
-            "div"
-        );
-
-    comparisonGrid.className =
-        "comparison-grid";
-
-
-    comparisonGrid.appendChild(
-        createComparisonCountryCard(
-            getComparisonCountryData(
-                firstCountry
-            )
-        )
-    );
-
-
-    comparisonGrid.appendChild(
-        createComparisonCountryCard(
-            getComparisonCountryData(
-                secondCountry
-            )
-        )
-    );
-
-
-    countryComparison.appendChild(
-        comparisonGrid
-    );
-
-}
-
-
-if (
-    compareCountryOne
-) {
-
-    compareCountryOne.addEventListener(
-        "change",
-        updateCountryComparison
-    );
-
-}
-
-
-if (
-    compareCountryTwo
-) {
-
-    compareCountryTwo.addEventListener(
-        "change",
-        updateCountryComparison
-    );
+            </div>
+        `;
 
 }
 
 
 // ============================================================
-// HUMANITARIAN ORGANIZATIONS
+// EXPLORE — INITIALIZE COMPARISON EVENTS
+// ============================================================
+
+function initializeCountryComparison() {
+
+    const firstSelect =
+        document.getElementById(
+            "compare-country-one"
+        );
+
+    const secondSelect =
+        document.getElementById(
+            "compare-country-two"
+        );
+
+
+    if (
+        !firstSelect ||
+        !secondSelect
+    ) {
+        return;
+    }
+
+
+    if (
+        firstSelect.dataset
+            .comparisonInitialized !==
+        "true"
+    ) {
+
+        firstSelect.dataset
+            .comparisonInitialized =
+            "true";
+
+
+        firstSelect.addEventListener(
+            "change",
+            updateCountryComparison
+        );
+
+    }
+
+
+    if (
+        secondSelect.dataset
+            .comparisonInitialized !==
+        "true"
+    ) {
+
+        secondSelect.dataset
+            .comparisonInitialized =
+            "true";
+
+
+        secondSelect.addEventListener(
+            "change",
+            updateCountryComparison
+        );
+
+    }
+
+}
+// ============================================================
+// EXPLORE — HUMANITARIAN ORGANIZATIONS
 // ============================================================
 
 function getExploreOrganizations() {
@@ -7154,52 +6313,71 @@ function getExploreOrganizations() {
         organization
     ) {
 
-        if (
-            !organization
-        ) {
-
+        if (!organization) {
             return;
-
         }
 
 
-        const name =
+        let name = "";
+        let description = "";
+
+
+        if (
             typeof organization ===
             "string"
-                ? organization
-                : (
-                    organization.name ||
-                    organization.label ||
-                    organization.title ||
-                    ""
-                );
-
-
-        if (
-            !name
         ) {
 
-            return;
+            name =
+                organization;
+
+        } else if (
+            typeof organization ===
+            "object"
+        ) {
+
+            name =
+                organization.name ||
+                organization.organization ||
+                organization.title ||
+                organization.label ||
+                "";
+
+            description =
+                organization.description ||
+                organization.role ||
+                organization.text ||
+                "";
 
         }
 
 
-        const normalizedName =
-            name
-                .trim()
-                .toLowerCase();
+        name =
+            String(name).trim();
+
+
+        if (!name) {
+            return;
+        }
+
+
+        const key =
+            normalizeText(
+                name
+            );
 
 
         if (
             !organizations.has(
-                normalizedName
+                key
             )
         ) {
 
             organizations.set(
-                normalizedName,
+                key,
                 {
-                    name: name.trim(),
+                    name: name,
+                    description:
+                        description,
                     appearances: 0
                 }
             );
@@ -7207,93 +6385,168 @@ function getExploreOrganizations() {
         }
 
 
-        organizations.get(
-            normalizedName
-        ).appearances +=
+        const savedOrganization =
+            organizations.get(
+                key
+            );
+
+
+        savedOrganization.appearances +=
             1;
+
+
+        if (
+            !savedOrganization.description &&
+            description
+        ) {
+
+            savedOrganization.description =
+                description;
+
+        }
 
     }
 
 
-    conflicts.forEach(
-        conflict => {
+// ------------------------------------------------------------
+// ORGANIZATIONS FROM CRISES
+// ------------------------------------------------------------
 
-            (
-                conflict.aid ||
-                []
-            ).forEach(
-                addOrganization
-            );
+    getCrisisDatabase()
+        .forEach(
+            crisis => {
 
-        }
-    );
-
-
-    countries.forEach(
-        country => {
-
-            (
-                country.organizations ||
-                country.humanitarianOrganizations ||
-                []
-            ).forEach(
-                addOrganization
-            );
-
-        }
-    );
+                const crisisOrganizations =
+                    firstAvailableValue(
+                        crisis.aid,
+                        crisis.humanitarianAid,
+                        crisis.organizations,
+                        []
+                    );
 
 
-    return [
-        ...organizations.values()
-    ].sort(
-        (
-            organizationA,
-            organizationB
-        ) => {
+                if (
+                    Array.isArray(
+                        crisisOrganizations
+                    )
+                ) {
 
-            if (
-                organizationB.appearances !==
-                organizationA.appearances
-            ) {
+                    crisisOrganizations
+                        .forEach(
+                            addOrganization
+                        );
 
-                return (
-                    organizationB.appearances -
-                    organizationA.appearances
-                );
+                } else if (
+                    crisisOrganizations
+                ) {
+
+                    addOrganization(
+                        crisisOrganizations
+                    );
+
+                }
 
             }
+        );
 
 
-            return organizationA.name.localeCompare(
-                organizationB.name
-            );
+// ------------------------------------------------------------
+// ORGANIZATIONS FROM COUNTRIES
+// ------------------------------------------------------------
 
-        }
-    );
+    getCountryDatabase()
+        .forEach(
+            country => {
+
+                const facts =
+                    getExtraCountryFacts(
+                        country
+                    );
+
+
+                const countryOrganizations =
+                    firstAvailableValue(
+                        facts.humanitarianOrganizations,
+                        country.humanitarianOrganizations,
+                        facts.aidOrganizations,
+                        country.aidOrganizations,
+                        []
+                    );
+
+
+                if (
+                    Array.isArray(
+                        countryOrganizations
+                    )
+                ) {
+
+                    countryOrganizations
+                        .forEach(
+                            addOrganization
+                        );
+
+                } else if (
+                    countryOrganizations
+                ) {
+
+                    addOrganization(
+                        countryOrganizations
+                    );
+
+                }
+
+            }
+        );
+
+
+    return Array.from(
+        organizations.values()
+    )
+        .sort(
+            (
+                organizationA,
+                organizationB
+            ) => {
+
+                if (
+                    organizationB.appearances !==
+                    organizationA.appearances
+                ) {
+
+                    return (
+                        organizationB.appearances -
+                        organizationA.appearances
+                    );
+
+                }
+
+
+                return organizationA.name
+                    .localeCompare(
+                        organizationB.name
+                    );
+
+            }
+        );
 
 }
 
 
+// ============================================================
+// EXPLORE — RENDER HUMANITARIAN ORGANIZATIONS
+// ============================================================
+
 function renderExploreOrganizations() {
 
-    const grid =
+    const organizationGrid =
         document.getElementById(
             "explore-organization-grid"
         );
 
 
-    if (
-        !grid
-    ) {
-
+    if (!organizationGrid) {
         return;
-
     }
-
-
-    grid.innerHTML =
-        "";
 
 
     const organizations =
@@ -7301,171 +6554,455 @@ function renderExploreOrganizations() {
 
 
     if (
-        organizations.length ===
-        0
+        !organizations.length
     ) {
 
-        const emptyMessage =
-            document.createElement(
-                "p"
-            );
-
-        emptyMessage.textContent =
-            "No humanitarian organizations are currently listed in the database.";
-
-        grid.appendChild(
-            emptyMessage
-        );
+        organizationGrid.innerHTML =
+            `
+                <div class="comparison-placeholder">
+                    No humanitarian organizations are currently
+                    listed in the database.
+                </div>
+            `;
 
         return;
+    }
+
+
+    organizationGrid.innerHTML =
+        organizations
+            .map(
+                organization => {
+
+                    return `
+                        <div
+                            class="explore-organization-card"
+                        >
+
+                            <strong>
+                                ${escapeHtml(
+                                    organization.name
+                                )}
+                            </strong>
+
+                            <span>
+                                Referenced in
+                                ${organization.appearances}
+                                ${
+                                    organization.appearances === 1
+                                        ? "profile"
+                                        : "profiles"
+                                }.
+                            </span>
+
+                            ${
+                                organization.description
+                                    ? `
+                                        <span
+                                            style="
+                                                margin-top:6px;
+                                            "
+                                        >
+                                            ${escapeHtml(
+                                                organization.description
+                                            )}
+                                        </span>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+// ============================================================
+// EXPLORE — UPDATE COMPLETE VIEW
+// ============================================================
+
+function updateExploreView() {
+
+    updateExploreStatistics();
+
+    updateExploreCategoryCounts();
+
+    initializeExploreCategoryCards();
+
+    renderExploreRegions();
+
+    populateCountryComparisonSelectors();
+
+    initializeCountryComparison();
+
+    updateCountryComparison();
+
+    renderExploreOrganizations();
+
+}
+
+
+// ============================================================
+// KEYBOARD — ESCAPE
+// ============================================================
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key !==
+            "Escape"
+        ) {
+            return;
+        }
+
+
+        clearSearchResults();
+
+        closeCrisisPanel();
+
+        closeCountryPanel();
+
+    }
+);
+
+
+// ============================================================
+// WINDOW RESIZE
+// ============================================================
+
+window.addEventListener(
+    "resize",
+    function () {
+
+        if (
+            currentView === "crises" ||
+            currentView === "countries"
+        ) {
+
+            window.setTimeout(
+                function () {
+
+                    map.invalidateSize();
+
+                },
+                50
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+
+function initializeSite() {
+
+    buildCrisisMarkers();
+
+    loadCountryBoundaries();
+
+    initializeExploreCategoryCards();
+
+
+// ------------------------------------------------------------
+// DEFAULT TO CRISIS VIEW
+// ------------------------------------------------------------
+
+    currentView =
+        "crises";
+
+
+    setViewButtonState(
+        crisisViewButton
+    );
+
+
+    if (aboutView) {
+
+        aboutView.classList.remove(
+            "active"
+        );
+
+        aboutView.setAttribute(
+            "aria-hidden",
+            "true"
+        );
 
     }
 
 
-    organizations.forEach(
-        organization => {
+    if (exploreView) {
 
-            const card =
-                document.createElement(
-                    "div"
-                );
+        exploreView.classList.remove(
+            "active"
+        );
 
-            card.className =
-                "explore-organization-card";
+        exploreView.setAttribute(
+            "aria-hidden",
+            "true"
+        );
 
-
-            const name =
-                document.createElement(
-                    "strong"
-                );
-
-            name.textContent =
-                organization.name;
+    }
 
 
-            const count =
-                document.createElement(
-                    "span"
-                );
+    if (atlasMain) {
 
-            count.textContent =
-                "Referenced in " +
-                organization.appearances +
-                (
-                    organization.appearances ===
-                    1
-                        ? " profile"
-                        : " profiles"
-                ) +
-                ".";
+        atlasMain.style.display =
+            "";
+
+    }
 
 
-            card.appendChild(
-                name
-            );
+    if (crisisFilters) {
 
-            card.appendChild(
-                count
-            );
+        crisisFilters.style.display =
+            "";
 
-            grid.appendChild(
-                card
-            );
+    }
 
-        }
+
+    if (searchArea) {
+
+        searchArea.style.display =
+            "";
+
+    }
+
+
+    if (crisisLegend) {
+
+        crisisLegend.style.display =
+            "";
+
+    }
+
+
+    if (countryLegend) {
+
+        countryLegend.style.display =
+            "none";
+
+    }
+
+
+    if (crisisSearch) {
+
+        crisisSearch.placeholder =
+            "Search crises...";
+
+    }
+
+
+    activeCrisisFilter =
+        "all";
+
+
+    applyCrisisFilter(
+        "all"
+    );
+
+
+    window.setTimeout(
+        function () {
+
+            map.invalidateSize();
+
+        },
+        100
     );
 
 }
 
 
 // ============================================================
-// RENDER EXPLORE
+// START SITE
 // ============================================================
 
-let exploreInitialized =
-    false;
+initializeSite();
+// ============================================================
+// FINAL CATEGORY VALIDATION
+// ============================================================
+
+const supportedCrisisCategories = [
+    "conflict",
+    "humanitarian",
+    "displacement",
+    "disaster",
+    "unrest"
+];
 
 
-function initializeExploreView() {
+// ============================================================
+// VALIDATE CRISIS CATEGORIES
+// ============================================================
 
-    if (
-        exploreInitialized
-    ) {
+function validateCrisisCategories() {
 
-        updateExploreStats();
+    getCrisisDatabase()
+        .forEach(
+            crisis => {
 
-        return;
-
-    }
-
-
-    updateExploreStats();
-
-    renderExploreRegions();
-
-    populateCountryComparisonSelectors();
-
-    renderExploreOrganizations();
+                const categories =
+                    getCrisisCategories(
+                        crisis
+                    );
 
 
-    exploreInitialized =
-        true;
+                categories.forEach(
+                    category => {
+
+                        if (
+                            !supportedCrisisCategories
+                                .includes(
+                                    category
+                                )
+                        ) {
+
+                            console.warn(
+                                "Unknown crisis category:",
+                                category,
+                                crisis.name ||
+                                crisis.id ||
+                                crisis
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
 
 }
 
 
 // ============================================================
-// CLICK OUTSIDE SEARCH
+// FINAL CIVIL UNREST CHECK
 // ============================================================
 
-document.addEventListener(
-    "click",
-    function (
-        event
-    ) {
+function validateCivilUnrestCategory() {
 
-        if (
-            !crisisSearch.contains(
-                event.target
-            ) &&
-            !searchResults.contains(
-                event.target
+    const unrestCrises =
+        getCrisisDatabase()
+            .filter(
+                crisis =>
+                    crisisHasCategory(
+                        crisis,
+                        "unrest"
+                    )
+            );
+
+
+    const unrestFilter =
+        Array.from(
+            document.querySelectorAll(
+                ".filter"
             )
-        ) {
+        )
+            .find(
+                button => {
 
-            searchResults.style.display =
-                "none";
+                    return (
+                        normalizeText(
+                            button.dataset.category
+                        ) === "unrest" ||
+                        normalizeText(
+                            button.dataset.filter
+                        ) === "unrest"
+                    );
 
-        }
+                }
+            );
+
+
+    const unrestExploreCard =
+        document.querySelector(
+            '[data-explore-category="unrest"]'
+        );
+
+
+    const unrestCount =
+        document.getElementById(
+            "explore-unrest-count"
+        );
+
+
+    if (!unrestFilter) {
+
+        console.warn(
+            "Civil Unrest filter button was not found in index.html."
+        );
 
     }
-);
 
 
-// ============================================================
-// ESCAPE KEY
-// ============================================================
+    if (!unrestExploreCard) {
 
-document.addEventListener(
-    "keydown",
-    function (
-        event
+        console.warn(
+            "Civil Unrest Explore card was not found."
+        );
+
+    }
+
+
+    if (!unrestCount) {
+
+        console.warn(
+            "Civil Unrest Explore counter was not found."
+        );
+
+    }
+
+
+    if (
+        unrestCount
     ) {
 
+        unrestCount.textContent =
+            String(
+                unrestCrises.length
+            );
+
+    }
+
+}
+
+
+// ============================================================
+// SUPPORT BOTH FILTER DATA ATTRIBUTE FORMATS
+// ============================================================
+
+filterButtons.forEach(
+    button => {
+
         if (
-            event.key ===
-            "Escape"
+            !button.dataset.category &&
+            button.dataset.filter
         ) {
 
-            infoPanel.classList.remove(
-                "open"
-            );
+            button.dataset.category =
+                button.dataset.filter;
 
-            countryPanel.classList.remove(
-                "open"
-            );
+        }
 
-            clearSearch();
+
+        if (
+            !button.dataset.filter &&
+            button.dataset.category
+        ) {
+
+            button.dataset.filter =
+                button.dataset.category;
 
         }
 
@@ -7474,9 +7011,42 @@ document.addEventListener(
 
 
 // ============================================================
-// INITIALIZE DEFAULT VIEW
+// REFRESH COUNTERS
 // ============================================================
 
-initializeExploreView();
+function refreshSiteCounts() {
 
-switchToCrisisView();
+    if (
+        currentView ===
+        "crises"
+    ) {
+
+        applyCrisisFilter(
+            activeCrisisFilter
+        );
+
+    }
+
+
+    updateExploreStatistics();
+
+    updateExploreCategoryCounts();
+
+}
+
+
+// ============================================================
+// FINAL DATABASE CHECK
+// ============================================================
+
+validateCrisisCategories();
+
+validateCivilUnrestCategory();
+
+refreshSiteCounts();
+
+
+// ============================================================
+// ONE WORLD, ONE LIFE
+// END OF SCRIPT.JS — VERSION 10
+// ============================================================
