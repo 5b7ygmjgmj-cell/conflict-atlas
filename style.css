@@ -1,7 +1,7 @@
 /* ============================================================
    ONE WORLD, ONE LIFE
    MAIN STYLESHEET
-   VERSION 5
+   VERSION 6
    ============================================================ */
 
 
@@ -463,6 +463,12 @@ body {
     background: #3182ce;
 }
 
+/* NEW FIFTH CATEGORY */
+
+.legend-unrest {
+    background: #9b59b6;
+}
+
 .country-legend {
     display: none;
 }
@@ -626,8 +632,6 @@ body {
 
     border-radius: 50%;
 }
-
-
 /* ============================================================
    ABOUT NOTICE
    ============================================================ */
